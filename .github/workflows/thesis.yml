@@ -15,9 +15,10 @@ jobs:
     steps:
       - name: Build And Send Diploma Thesis
         uses: HTL-Leoben/da-base-template@main
-        with:
-          mail-address: ${{ secrets.MAIL }}
-          mail-address-password: ${{ secrets.MAIL_PASSWORD }}
-          smtp-server: ${{ secrets.SMTP_SERVER }}
-          smtp-port: ${{ secrets.SMTP_PORT }}
-          teams-mail: ${{ secrets.TEAMS_MAIL }}
+        # Uncomment following lines to enable email notification
+        #with:
+          #mail-address: ${{ secrets.MAIL }}
+          #mail-address-password: ${{ secrets.MAIL_PASSWORD }}
+          #smtp-server: ${{ secrets.SMTP_SERVER }}
+          #smtp-port: ${{ secrets.SMTP_PORT }}
+          #teams-mail: ${{ secrets.TEAMS_MAIL }}
