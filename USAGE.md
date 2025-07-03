@@ -35,10 +35,13 @@ Das Deckblatt, die eidesstattliche Erklärung und einige andere Teile der Arbeit
 - [ ] Namen aller Gruppenmitglieder korrekt ?
 - [ ] (Sub-)thema jedes Gruppenmitgliedes genau so wie im Diplomarbeitenportal ?
 - [ ] Namen und Titel der Betreuer korrekt ?
+- [ ] Befüllen Sie die Dateien "HTL_DA_Doku*.docx", erstellen Sie davon jeweils ein PDF und verlinken Sie es korrekt unter `Diplomatbeitsvereinbarung Englisch` sowie `Diplomatbeitsvereinbarung Deutsch`
+- [ ] Kommentieren Sie anderen Dateien die in den Appendix kommen aus, weil sie nur der Illustration dienen und im Rahemn der Arbeit dann durch Ohre eigenen ersetzt werdn
 
 Die Kurzfassung auf Deutsch und Englisch erstellen Sie auch in dieser Datei. Sie gibt einen kompakten Überblick über die gesamte Arbeit. Sie ist typischerweise eine halbe bis eine Seite lang (meist max. 250 Wörter) und folgt einer klaren Struktur und enthält keine Bilder.
-Wenn Sie das erledigt haben, können Sie damit beginnen die *.md Dateien zu bearbeiten und mit sinnvollem Inhalt zu befüllen. Jeder Schüler muss seinen Teil in einer eigenen Datei haben und pflegen. Es muss zuerst ein Theorieteil und dann der Praxisteil folgen.
-Entfernen Sie die Inhalte aus den Ausarbeitunngen und erzeugen Sie Ihren Teil der Diplomarbeit indem Sie beginnen eine sinnvolle Kapitelstruktur zu erzeugen und selbige zu befüllen.
+Wenn Sie das erledigt haben, können Sie damit beginnen die *.md Dateien zu bearbeiten und mit sinnvollem Inhalt zu befüllen. Jeder Schüler muss seinen Teil in einer eigenen Datei haben und pflegen. Es muss zuerst ein Theorieteil und dann der Praxisteil folgen. Entfernen Sie die Inhalte aus den Ausarbeitunngen und erzeugen Sie Ihren Teil der Diplomarbeit indem Sie beginnen eine sinnvolle Kapitelstruktur zu erzeugen und selbige zu befüllen.
+
+
 
 ### Hinweise zur Diplomarbeit
 
