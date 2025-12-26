@@ -362,8 +362,8 @@ Das Package `flutter_localization` stellt jedoch keine automatische Übersetzung
 Das folgende Codebeispiel zeigt die Formatierung eines Geldbetrags im österreichischen Zahlenformat. [@intl, @flutter_docs]
 
 ```dart
-final eur = NumberFormat.currency(locale: 'de_AT', symbol: '€');
-print(eur.format(1234.56)); // 1.234,56 €
+final eur = NumberFormat.currency(locale: 'de_AT', symbol: 'EUR');
+print(eur.format(1234.56)); // 1.234,56 EUR
 ```
 
 ### App-Architektur
