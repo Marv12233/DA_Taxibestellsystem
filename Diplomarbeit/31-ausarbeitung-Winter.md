@@ -240,7 +240,7 @@ Der Widget-Tree beschreibt in Flutter die hierarchische Struktur der Widgets, au
 
 Die Anordnung der Widgets im Widget-Tree bestimmt unmittelbar das Layout der Benutzeroberfläche. So kann beispielsweise ein `Text`-Widget innerhalb eines `Center`-Widgets platziert werden, um den Text zentriert darzustellen. Jedes Widget besitzt dabei ein übergeordnetes Element, wobei der Widget-Tree stets ein einzelnes Wurzel-Widget aufweist. [@flutter_docs]
 
-![hierarchische Struktur eines Widget-Trees [@widgetTreePicture]](img/Winter/widgetTree_diagram.png){width=300px}
+![hierarchische Struktur eines Widget-Trees [@widgetTreePicture]](Diplomarbeit/img/Winter/widgetTree_diagram.png){width=300px}
 
 ##### Build
 Der Build-Prozess in Flutter beschreibt die Schritte, mit denen der Quellcode in eine ausführbare Anwendung überführt wird. Während der Entwicklung wird die Anwendung im Debug-Modus meist *Just-in-Time* (JIT) kompiliert, während für den Release-Modus eine *Ahead-of-Time* (AOT)-Kompilierung erfolgt. Aus dem Quellcode wird dabei zunächst der Widget-Tree aufgebaut, welcher anschließend über die Render-Pipeline, unter anderem mithilfe der Grafikbibliothek Skia, auf dem Bildschirm dargestellt wird.
@@ -320,7 +320,7 @@ Column(
   ],
 );
 ```
-![klassisches FormWidget](img/Winter/TextFormField.png){width=300px}
+![klassisches FormWidget](Diplomarbeit/img/Winter/TextFormField.png){width=300px}
 
 #### PDF & Drucken (pdf, printing)
 In Flutter können PDF-Dokumente mithilfe externer Packages erstellt und verarbeitet werden. Das Package `pdf` ermöglicht die programmgesteuerte Erstellung von PDF-Dateien, die Text, Bilder und weitere Layout-Elemente enthalten können. Nach dem Einbinden der entsprechenden Dependency in der Datei `pubspec.yaml` kann die PDF-Erstellung direkt innerhalb der Anwendung erfolgen.
@@ -379,7 +379,7 @@ Im Ordner `config` werden zentrale Konfigurationsdateien abgelegt, beispielsweis
 Datenmodelle, beispielsweise zur Abbildung von Datenbanktabellen oder API-Strukturen, werden im Ordner `models` definiert. Die sichtbaren Seiten der Anwendung werden im Ordner `screens` abgelegt. Dieser kann weiter unterteilt werden, etwa in einen Bereich für Authentifizierung (z. B. Login und Registrierung) und einen Hauptbereich für die eigentlichen Anwendungsseiten.
 
 Wiederverwendbare UI-Komponenten werden im Ordner `widgets` gesammelt. Dazu zählen beispielsweise benutzerdefinierte Eingabefelder oder andere häufig genutzte UI-Elemente, die in mehreren Screens eingesetzt werden.
-![klassisches Ordnerstruktur](img/Winter/Ordnerstruktur.png){width=300px}
+![klassisches Ordnerstruktur](Diplomarbeit/img/Winter/Ordnerstruktur.png){width=300px}
 
 #### Schichtenmodell
 Das Schichtenmodell beschreibt die klare Trennung der Anwendung in mehrere logische Ebenen, insbesondere in Benutzeroberfläche (UI), Service-Schicht und Backend beziehungsweise Datenzugriff. Diese Struktur wird durch die zuvor beschriebene Projekt- und Ordnerstruktur zusätzlich unterstützt.
@@ -387,7 +387,7 @@ Das Schichtenmodell beschreibt die klare Trennung der Anwendung in mehrere logis
 Die Kommunikation zwischen den einzelnen Schichten erfolgt dabei in einer klar definierten Reihenfolge. Die Benutzeroberfläche interagiert ausschließlich mit der Service-Schicht, welche die Geschäftslogik kapselt und bei Bedarf Anfragen an das Backend oder den Datenzugriff weiterleitet, beispielsweise für Datenbankoperationen oder API-Aufrufe.
 
 Durch diese Trennung der Verantwortlichkeiten wird die Wartbarkeit und Erweiterbarkeit der Anwendung deutlich verbessert. Zudem erleichtert das Schichtenmodell die Zusammenarbeit im Team, da einzelne Komponenten unabhängig voneinander entwickelt und angepasst werden können.
-![Schichtenmodell der App-Architektur](img/Winter/Schichtenmodell.png){width=400px}
+![Schichtenmodell der App-Architektur](Diplomarbeit/img/Winter/Schichtenmodell.png){width=400px}
 
 #### Wiederverwendbare Komponenten (Widgets)
 Unter wiederverwendbaren Komponenten versteht man in Flutter selbst erstellte Widgets, die mehrfach innerhalb einer Anwendung eingesetzt werden können. In vielen Anwendungen sollen bestimmte UI-Elemente, wie beispielsweise Buttons oder Eingabefelder, ein einheitliches Design sowie identische Funktionalitäten aufweisen.
