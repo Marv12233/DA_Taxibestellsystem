@@ -1,84 +1,88 @@
 ---
-da-titel: Erstellen einer Diplomarbeit mit LaTex
+da-titel: Taxibestellsystem mit Supabase
 
-da-jahr: 2020/21 
+da-jahr: 2025/26
 
-da-keywords: HTLLE, Keyword1, Keyword2, Keyword3
-
-#lang: english
+da-keywords: HTLLE, Taxi, Bestellsystem, Flutter, Supabase, React, Next.js, Mobile App, Adminpanel
 
 bibliography: [literatur.bib]
 
 da-author:
-- vorname: Joltawan 
-  nachname: Barodscheff
+- vorname: Nikola
+  nachname: Maksic
   klasse: 5AHWIN
-  thema: Bauen des LaTex Templates
+  thema: Admin-Weboberfläche, Servermanagement
   ki-tools:
-  - name: ChatGPT3.5
-    zweck: Informationsbeschaffung
-  - name: Midjourney
-    zweck: Künstlerische Illustration
+  - name: ChatGPT-5 / ChagtGPT-5.1
+    zweck: Informationsbeschaffung / Codeerzeugung / Refactoring / Rechtschreibüberprüfung
 
-- vorname: Craig 
-  nachname: Tester
+- vorname: Marvin
+  nachname: Winter
   klasse: 5AHWIN
-  thema: Entwicklung eines Prototypen
+  thema: Kunden-App (Flutter)
   ki-tools:
-  - name: Github Copilot
-    zweck: Boilerplate codegenerierung, Codedokumentation
+  - name: ChatGPT-5.2
+    zweck: Rechtschreibüberprüfung / Stilkorrektur / Formulierungshilfe
 
-- vorname: Karl 
-  nachname: Ranseier
+- vorname: David
+  nachname: Iszovits
   klasse: 5AHWIN
-  thema: API-Mockups und Testen der Applikation
-
-- vorname: Frank 
-  nachname: Borland
-  klasse: 5AHWIN
-  thema: GUI Generierung
+  thema: Fahrer-App (Flutter)
   ki-tools:
-  - name: Galileo AI
-    zweck: Setendesign sowie UI/UX Design der App
-  - name: Grammarly Go
-    zweck: Stilverbesserung sowie Rechtschreibkorrekturen
+  - name: ChatGPT-5 / ChagtGPT-5.1
+    zweck: Informationsbeschaffung / Codeerzeugung
+
+- vorname: Marvin
+  nachname: Luschenz
+  klasse: 5AHWIN
+  thema: Projektmanagement, Dokumentation
+  ki-tools:
+  - name: ChatGPT-5 / ChagtGPT-5.1
+    zweck: Informationsbeschaffung / Strukturierung / Rechtschreibüberprüfung
 
 da-betreuer:
-- paraffe: hg
-  name: Ing. DI(FH) Günther Hutter, Msc.
+- paraffe: KUW
+  name: DI Kondert Uwe
 
-- paraffe: me
-  name: DI Dr. mont Thomas Messner
+- paraffe: SCHR
+  name: Ing. DI Dr. Schindler Christian
 
-da-kurzfassung-de: Hier kommt eine deutsche Kurzfassung hin.
+da-kurzfassung-de: In vielen Taxi- und Mietwagenbetrieben werden Fahrten noch überwiegend telefonisch entgegengenommen und manuell an Fahrer weitergegeben. Dies erschwert eine effiziente Disposition, führt zu Medienbrüchen und macht die Nachverfolgung von Fahrten und Umsätzen unübersichtlich. Ziel dieser Diplomarbeit ist die Entwicklung eines digitalen Taxibestellsystems, bestehend aus einer Kunden-App, einer Fahrer-App und einer webbasierten Adminoberfläche. Kunden können über die App Fahrten anfragen und ihren Fahrstatus in Echtzeit verfolgen, Fahrer erhalten Aufträge direkt auf ihr mobiles Endgerät und verwalten ihren Status sowie ihre Umsätze. Die Adminoberfläche ermöglicht die zentrale Verwaltung von Fahrten, Fahrern und grundlegenden Systemeinstellungen. Technische Basis bildet Supabase als Backend-as-a-Service für Authentifizierung, Datenspeicherung und Echtzeitkommunikation. Durch diese Lösung soll der Vermittlungsprozess digitalisiert, die Transparenz erhöht und die tägliche Arbeit für unseren Auftraggeber Nsj-Cars Taxi und Mietwagenbetriebs OG deutlich vereinfacht werden.
 
-da-kurzfassung-en: Hier kommt eine englische Kurzfassung hin.
-
+da-kurzfassung-en: In many taxi and private hire companies, rides are still mainly accepted by phone and manually dispatched to drivers. This makes efficient dispatching difficult, leads to media disruptions and complicates the tracking of rides and revenues. The aim of this diploma thesis is to develop a digital taxi ordering system consisting of a customer app, a driver app and a web-based admin interface. Customers can request rides via the app and track their ride status in real-time, while drivers receive jobs directly on their mobile device and manage their status and revenues. The admin interface enables central management of rides, drivers and basic system settings. Supabase is used as a backend-as-a-service platform for authentication, data storage and real-time communication. With this solution, the dispatch process is to be digitalised, transparency increased and the daily work of our client Nsj-Cars Taxi und Mietwagenbetriebs OG significantly simplified.
 
 da-kiquellen:
-- ki: ChatGPT4
-  short-prompt: Erklärung Pandoc
-  pdf-file: gpt-pandoc.pdf
+# Nikola Maksic
+# - ki: ChatGPT-4o
+#   short-prompt: (z. B. Erklärung Supabase Auth Flow)
+#   pdf-file: Maksic/KI/Theorie/platzhalter
 
-- ki: ChatGPT3.5
-  short-prompt: Aufbau eines Atoms
-  pdf-file: gpt-atom.pdf
+# Marvin Winter
+# - ki: ChatGPT-4o
+#   short-prompt: (z. B. State-Management in Flutter)
+#   pdf-file: Winter/KI/Theorie/platzhalter
 
+# David Iszovits
+# - ki: ChatGPT-4o
+#   short-prompt: (z. B. Push-Benachrichtigungen in Flutter)
+#   pdf-file: Iszovits/KI/Theorie/platzhalter
+
+# Marvin Luschenz
+# - ki: ChatGPT-4o
+#   short-prompt: (z. B. Strukturierung der Dokumentation)
+#   pdf-file: Luschenz/KI/Theorie/platzhalter
 
 da-appendix:
-- abschnitt: Technische Dokumentation
-  pdf-file: pandoc-manual.pdf
-  seiten: 53-73
+# Hier können später Anhänge wie Protokolle, technische Unterlagen oder Zusatzmaterial
+# zur Diplomarbeit eingetragen werden, z. B.:
 
-- abschnitt: Betreuungsprotokolle
-  pdf-file: betreuungsprotokolle.pdf    
+# - abschnitt: Betreuungsprotokoll 2024-10-01
+#   pdf-file: Protokolle/platzhalter
 
-# Diplomarbeitsvereinbarungen müssen zum Schluss sein 
+# - abschnitt: UI-Design Leitfaden
+#   pdf-file: Anhang/platzhalter
 
-- abschnitt: Diplomatbeitsvereinbarung Englisch
-  pdf-file: HTL-DA-Doku-EN.pdf
+# - abschnitt: API-Spezifikation
+#   pdf-file: Anhang/platzhalter
 
-- abschnitt: Diplomatbeitsvereinbarung Deutsch
-  pdf-file: HTL-DA-Doku-DE.pdf
-  
 ---
