@@ -1,52 +1,25 @@
-# Aufgabenstellung 
+# Aufgabenstellung
 
-## Auftraggeber
-Wer ist der Auftraggeber, wie ist es zu dieser Arbeit gekommen, was verspricht sich der Auftraggeber davon
+## Auftraggeber und Projektpartner
+
+Der Auftraggeber dieses Projekts ist die **Nsj-Cars Taxi und Mietwagenbetriebs OG**.  
+Das Unternehmen stellt die Anforderungen an das System, liefert Praxisfeedback aus dem laufenden Betrieb und prüft, ob die entwickelte Lösung im Alltag einsetzbar ist.
+
+Die **HTL Leoben** fungiert dabei als betreuende Ausbildungsstätte: Die Schule, insbesondere die betreuenden Lehrpersonen, begleiten den Entwicklungsprozess, unterstützen fachlich und bewerten die Arbeit im Rahmen der Diplomarbeit.
+
+Das Projekt entsteht somit als Diplomarbeit, bei der wir Schüler eine praxisnahe Lösung für ein Problem im Bereich der digitalen Vermittlung und Verwaltung von Taxifahrten für unseren Auftraggeber Nsj-Cars entwickeln.
 
 ## Ausgangssituation
 
-Eine allgemeine Aufgabenstellung 
+### Aktuelle Arbeitsweise
 
-* Was ist die derzeitige Situation ? 
-* Wie wird derzeit gearbeitet ?
+Im Umfeld unseres Auftraggebers exestiert kein einheitliches, vollständig digitales System zur Vermittlung von Taxifahrten zwischen Kunden und Fahrern. Fahrten werden häufig telefonisch entgegengenommen, manuell in Listen oder einfache Systeme eingetragen und anschließend per Anruf oder SMS an Fahrer weitergegeben.  
+Dies erschwert eine effiziente Disposition, führt zu Medienbrüchen, erschwert die Nachverfolgung von Fahrten und Umsätzen und bietet weder Kunden noch Fahrern eine moderne, transparente Lösung mit Echtzeitinformationen.
 
+### Lösungsansatz
 
-### So gehen Zitate
+Um diese Probleme zu lösen, wird ein vernetztes System entwickelt, das aus einer **Kunden-App**, einer **Fahrer-App** und einer **webbasierten Adminoberfläche** besteht. Kunden können über die App Fahrten anfragen, ihren Fahrstatus verfolgen und vergangene Fahrten einsehen. Fahrer erhalten neue Fahrten in Echtzeit, können diese annehmen oder ablehnen und ihren Status sowie Umsatz verwalten.  
 
-Hier ein einzel Zitat eines Buches das auf der Seite 17 zu finden ist:  
-([@hattie_lernen_2013] S. 17) 
+Die Admin-Weboberfläche ermöglicht es, Fahrer und Fahrten zentral zu verwalten, Statistiken auszuwerten und das System zu konfigurieren. Als technologische Basis dient **Supabase** als Backend-as-a-Service, über das Authentifizierung, Datenspeicherung und Echtzeitkommunikation abgewickelt werden.  
 
-Zitatsammlung:  
-(vergleich dazu @heise oder @t3n)  
-[@hattie_lernen_2013, S. 33-35; außerdem @leeb_einfuhrung_2016, S. 6 f.]
-
-Zitat ohne Autor  
-Hattie sagte bla bla [-@hattie_lernen_2013]
-
-Name des Autors mit Jahr in Klammern  
-@hattie_lernen_2013 sagte einmal bla bla bla
-
-Auch Videos kann man Zitieren wi Zum Biespiel hier [@Zatko15] in dieser Referenz.
-
-Hier noch ein Zitat mit Seitenangabe [[@Zatko15] Seite 5f.]
-
-Man darf auch ChatGPT oder andere KIs befragen um Wissen zu erlangen. Dazu muss allerdings ein PDF Log des exakten Chats in die Metadata.yaml eingetragen werden und der dort eingetragene `short-prompt` auch in der bib Datei eingefügt werden. Dann könnten indirekte Zitate so aussehen [@gpt-pandoc] oder auch so [@gpt-atomaufbau].
-
-Wichtig ist es, das beim Author die verwendete KI eingetragen wird (mit Versionsnummern - so genau wie möglich), beim title eine kurze Referenz zum Prompt und beim Jahr - das Jahr in dem die Abfrage gemacht wurde. Das hat dem `short-prompt` aus der metadata.yaml zu entsprechen.
-
-~~~~~
-@unpublished{gpt-pandoc,
-  author = {{ChatGPT 4.0}},
-  title  = {Was ist Pandoc ?},
-  year   = {2024},
-  url={https://chat.openai.com/c/ef535195-0e39-4d5c-9c85-cdb7ec18ad03},
-  urldate = {2023-02-29}
-}
-~~~~~ 
-
-Oben sieht man wie ein korrekter Bibtech Eintrag für eine ChatGPT Konversation aussieht. Zusätzlich wurden hier bei URL noch die url des Chats eingetragen - was zwar praktisch ist, uns allerdings nicht von der Pflicht entbindet den Chatverlauf in der DA als PDF einzufügen.
-Anzumerkein ist ebenfalls noch das wir hier ein `unpublished` Tag verwenden weil wir hier eben Quellen verwenden die in dieser Form nicht gepublished wurden.
-
-### Systembeschreibung Y 
-
-### Systembeschreibung Z 
+Dadurch sollen der Vermittlungsprozess digitalisiert, die Transparenz erhöht und die tägliche Arbeit für Fahrer, Kunden und Disposition vereinfacht werden.
