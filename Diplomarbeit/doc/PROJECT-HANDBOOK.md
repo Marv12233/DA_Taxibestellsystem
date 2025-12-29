@@ -11,7 +11,7 @@
 
 | Version | Datum       | Autor              | Änderung                   |
 |---------|-------------|-------------------|----------------------------|
-| 2.5     | 23.09.2025  | Marvin Luschenz    | Aktualisierte Version Projekthandbuch |
+| 3.0     | 29.12.2025  | Marvin Luschenz    | Aktualisierte Version Projekthandbuch |
 
 ---
 
