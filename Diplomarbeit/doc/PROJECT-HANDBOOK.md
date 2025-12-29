@@ -143,7 +143,7 @@ So wird sichergestellt, dass alle definierten Anforderungen technisch korrekt um
 
 ## 5. Projektplanung
 - **Zeitplan:**  
-   TODO: Bitte konkrete Termine (z. B. Kalenderwochen oder Deadlines) eintragen.  
+   - Im Github mit GithubProjects festgehalten 
 
 - **Ressourcenplanung:**  
   - Hardware: Entwicklungsrechner, Smartphones (iOS & Android), Testgeräte  
