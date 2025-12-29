@@ -258,7 +258,7 @@
 
 ---
 
-## FR-A5: Statistiken und Auswertungen
+## FR-A4: Statistiken und Auswertungen
 
 | Feld | Inhalt |
 |------|--------|
