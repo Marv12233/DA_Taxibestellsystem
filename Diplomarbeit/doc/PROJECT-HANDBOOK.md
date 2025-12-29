@@ -44,7 +44,6 @@
   - Anwendung agiler Projektmanagement-Methoden (Kanban)  
 
 - **Nicht-Ziele / Abgrenzung:**  
-  - Keine Integration mit externen Payment-Gateways (Kreditkarte, PayPal etc.)  
   - Keine KI-basierte Routenoptimierung  
   - Kein Support für Betriebssysteme außerhalb Android/iOS und Browser  
 
@@ -52,7 +51,7 @@
   - Partnerunternehmen (Auftraggeber)  
   - Fahrgäste (Endkunden)  
   - Fahrer  
-  - Admins/Disponenten  
+  
 ###  3.1 Bezug zu den Sustainable Development Goals (SDGs)
 
 Das Projekt **„Digitales Taxibestellsystem“** trägt zur Erreichung mehrerer globaler Nachhaltigkeitsziele der Vereinten Nationen (UN) bei.  
