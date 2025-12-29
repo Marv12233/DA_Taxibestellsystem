@@ -251,7 +251,7 @@ Im Rahmen dieser Diplomarbeit liegt der Fokus darauf, Risiken realistisch einzus
 
 - **Kennzahlen / KPIs:**  
   - Anzahl geschlossener Issues  
-  - TODO: Fertiggestellte User Stories  
+  - Fertiggestellte User Stories  
   - Testabdeckung  
 
 ---
