@@ -448,7 +448,7 @@ Das Session-Handling beschäftigt sich mit der Verwaltung dieses Anmeldestatus. 
 Eine benutzerfreundliche Möglichkeit zur Navigation zwischen den Hauptbereichen einer App ist die Verwendung einer `BottomNavigationBar`. Dabei befindet sich am unteren Rand des Bildschirms eine dauerhaft sichtbare Navigationsleiste mit mehreren Auswahlpunkten, beispielsweise „Startseite“, „Nachrichten“ oder „Profil“.
 
 Durch die Auswahl eines Eintrags in der `BottomNavigationBar` kann zwischen den zugehörigen Seiten gewechselt werden, ohne dass der Benutzer die Orientierung in der App verliert. In Flutter wird die Umsetzung über die Klasse `BottomNavigationBar` beziehungsweise über die modernere `NavigationBar` realisiert. [@dart-docs]
-![Beispiel einer BottomNavigationBar in Flutter](img/Winter/bottom_nav_example.png){width=300px}
+![Beispiel einer BottomNavigationBar in Flutter](img/Winter/bottomNavExample.png){width=300px}
 
 ### Standort & Karten in Flutter
 Zur Arbeit mit Standortdaten und Karten in Flutter werden in der Regel mehrere Packages kombiniert eingesetzt. Für den Zugriff auf den Gerätestandort ist zunächst die Einholung der entsprechenden Berechtigungen erforderlich, was beispielsweise mit dem Package `permission_handler` umgesetzt werden kann.
@@ -507,7 +507,7 @@ Vor der Standortbestimmung muss überprüft werden, ob der Benutzer die erforder
 
 #### Kartenanzeige (flutter_map, latlong2)
 Zur Darstellung von Karten in Flutter kann das Package `flutter_map` verwendet werden. Damit lässt sich über das `FlutterMap`-Widget eine interaktive Karte in die Anwendung einbinden, die typische Funktionen wie Zoomen und Verschieben unterstützt. Häufig werden dafür OpenStreetMap-Kartenkacheln verwendet. Zur Verbesserung der Benutzerfreundlichkeit können Karten sowohl im hellen als auch im dunklen Design eingebunden werden.
-![Beispiel einer mit flutter_map eingebundenen OpenStreetMap-Karte](img/Winter/map_example.png){width=300px}
+![Beispiel einer mit flutter_map eingebundenen OpenStreetMap-Karte](img/Winter/mapExample.png){width=300px}
 
 Für die Arbeit mit geografischen Koordinaten wird ergänzend das Package `latlong2` eingesetzt. Es stellt Datentypen für Längen- und Breitengrade bereit und ermöglicht unter anderem die Berechnung von Distanzen zwischen zwei Koordinatenpunkten. [@latlong2]
 ```dart
@@ -522,19 +522,19 @@ final int meters = distance(
 Neben statischen Markern, die direkt über das Package `flutter_map` gesetzt werden können, besteht häufig die Anforderung, die aktuelle Position des Benutzers in Echtzeit darzustellen. Für diesen Zweck kann das Package `flutter_map_location_marker` eingesetzt werden, das speziell zur Erweiterung von `flutter_map` entwickelt wurde.
 
 Es ermöglicht die kontinuierliche Aktualisierung der Benutzerposition sowie die Darstellung eines dynamischen Positionsmarkers auf der Karte. Darüber hinaus können Marker hinsichtlich Form, Farbe und Symbolik individuell gestaltet werden, sodass sie an das Design der jeweiligen Anwendung angepasst werden können.
-![Beispiel eines Positionsmarkers mit flutter_map_location_marker](img/Winter/map_marker_example.png){width=300px}
+![Beispiel eines Positionsmarkers mit flutter_map_location_marker](img/Winter/mapMarkerExample.png){width=300px}
 
 #### Suche & Geocoding (nominatim_flutter, flutter_typeahead)
 Mithilfe des Packages `nominatim_flutter` können Geocoding-Funktionen in Flutter integriert werden. Unter Geocoding versteht man die Umwandlung zwischen Adressen und geografischen Koordinaten. Beim Reverse Geocoding werden Koordinaten in eine lesbare Adresse umgewandelt, beispielsweise von Breiten- und Längengrad zu einem Ortsnamen wie „Wien“. Umgekehrt können auch Adressen oder Postleitzahlen in Koordinaten übersetzt werden.
 
 In Verbindung mit dem Package `flutter_typeahead` lassen sich Suchfelder mit automatischen Vorschlägen realisieren. Während der Eingabe werden bereits passende Ortsvorschläge angezeigt, etwa bei der Eingabe von „Leo“ der Vorschlag „Leoben“. Diese Kombination ermöglicht eine komfortable und benutzerfreundliche Ortssuche, wie sie auch in großen Kartendiensten eingesetzt wird. [@nominatim_flutter, @flutter_typeahead]
-![Ortssuche mit Autovervollständigung mittels nominatim_flutter und flutter_typeahead](img/Winter/location_search.png){width=300px}
+![Ortssuche mit Autovervollständigung mittels nominatim_flutter und flutter_typeahead](img/Winter/locationSearch.png){width=300px}
 
 #### Routing / Route-Line (OSRM + http)
 Wenn zwei geografische Punkte auf einer Karte gegeben sind, besteht häufig die Anforderung, eine dazugehörige Route – beispielsweise für die Autofahrt – zu berechnen. Hierfür kann der Routingdienst **OSRM (Open Source Routing Machine)** verwendet werden. OSRM stellt eine API bereit, über die Routen zwischen Koordinatenpunkten berechnet und als Geodaten zurückgegeben werden.
 
 Für die Kommunikation mit dem Routingdienst kommt in Flutter in der Regel das `http`-Package zum Einsatz. Es ermöglicht das Senden von HTTP-Anfragen an die OSRM-API und das Auswerten der erhaltenen Antworten. Die vom Dienst zurückgelieferten Routendaten können anschließend verarbeitet und als Route-Linie in einer Kartenansicht dargestellt werden. [@http, @osrm_docs]
-![Route auf einer Flutter-Map](img/Winter/route_example.png){width=300px}
+![Route auf einer Flutter-Map](img/Winter/routeExample.png){width=300px}
 
 
 ### Supabase
