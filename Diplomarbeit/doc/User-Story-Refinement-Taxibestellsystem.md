@@ -77,22 +77,7 @@
 
 ---
 
-## FR-K6: Zahlungsmethoden verwalten
-
-| Feld | Inhalt |
-|------|--------|
-| **Req-ID** | FR-K6 |
-| **Req-Heading** | Zahlungsmethoden verwalten |
-| **Req-Text** | Als Kunde möchte ich eine bevorzugte Zahlungsmethode hinterlegen können, damit die Abwicklung der Fahrtzahlung eindeutig geregelt ist. |
-| **Comments** | Keine Online-Zahlung, nur Auswahl bzw. Hinterlegung der Zahlungsmethode. |
-| **Creator** | Projektteam |
-| **Priority** | Should |
-| **Revision** | 1.0 |
-| **Date** | 23.09.2025 |
-
----
-
-## FR-K7: Fahrtprotokoll
+## FR-K6: Fahrtprotokoll
 
 | Feld | Inhalt |
 |------|--------|
@@ -270,20 +255,6 @@
 | **Revision** | 1.0 |
 | **Date** | 23.09.2025 |
 
----
-
-## FR-A4: System-Logs und Fehler
-
-| Feld | Inhalt |
-|------|--------|
-| **Req-ID** | FR-A4 |
-| **Req-Heading** | Einsicht in System-Logs |
-| **Req-Text** | Als Administrator möchte ich technische System-Logs einsehen können, damit Fehler und Probleme im System analysiert werden können. |
-| **Comments** | Anzeige von API-Fehlern, Authentifizierungsfehlern, Fahrtenfehlern und App-Fehlermeldungen. |
-| **Creator** | Projektteam |
-| **Priority** | Should |
-| **Revision** | 1.0 |
-| **Date** | 23.09.2025 |
 
 ---
 
