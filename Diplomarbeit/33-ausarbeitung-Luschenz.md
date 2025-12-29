@@ -9,6 +9,7 @@ Ein Projekt ist ein zeitlich begrenztes Vorhaben mit einem klar definierten Ziel
 Als Projektmanager besteht meine Aufgabe darin, einen klaren organisatorischen Rahmen für das Projekt zu schaffen. Ziel ist es, den Projektverlauf von Beginn an nachvollziehbar zu strukturieren und eine gemeinsame Orientierung für alle Beteiligten sicherzustellen. Der Projektüberblick bildet dafür die Grundlage und dient als Einstieg in die weitere Planung.
 
 Ein klar formulierter Projektüberblick unterstützt eine strukturierte Vorgehensweise und erleichtert die Koordination der einzelnen Projektphasen.
+[@atlassian-kanban]
 
 ---
 
@@ -19,6 +20,7 @@ Das Projektziel beschreibt konkret, was durch das Projekt erreicht werden soll, 
 Im Rahmen meiner Rolle als Projektmanager ist es wesentlich, ein eindeutiges Projektziel festzulegen, das als Orientierung für Planung, Umsetzung und Kontrolle dient. Die Projektvision ergänzt dieses Ziel, indem sie den übergeordneten Nutzen des Projekts verdeutlicht und als Leitlinie für strategische Entscheidungen herangezogen wird.
 
 Durch die klare Trennung zwischen Projektziel und Projektvision wird sichergestellt, dass sowohl kurzfristige Anforderungen als auch langfristige Perspektiven im Projekt berücksichtigt werden.
+[@atlassian-kanban]
 
 ---
 
@@ -29,6 +31,7 @@ Der Projektumfang legt fest, welche Aufgaben und Inhalte Teil des Projekts sind.
 Eine zentrale Aufgabe im Projektmanagement besteht darin, den Projektumfang realistisch zu definieren und klare Grenzen zu setzen. Dadurch kann der Arbeitsaufwand besser geplant und eine unkontrollierte Erweiterung des Projekts vermieden werden.
 
 Eine saubere Abgrenzung trägt dazu bei, Zeit und Ressourcen effizient einzusetzen und das Projekt innerhalb des vorgegebenen Rahmens erfolgreich abzuschließen.
+[@atlassian-kanban]
 
 ---
 
@@ -42,6 +45,7 @@ Die Berücksichtigung der Stakeholder trägt wesentlich zum Projekterfolg bei, d
 
 
 Eine frühzeitige Auseinandersetzung mit den Stakeholdern trägt dazu bei, mögliche Konflikte zu erkennen, die Kommunikation zu verbessern und den Projekterfolg langfristig zu sichern. Neben fachlichen Aspekten spielen dabei auch soziale und organisatorische Faktoren eine entscheidende Rolle.
+[@pmi-stakeholder-2003]
 
 # Projektorganisation
 
@@ -52,6 +56,7 @@ Die Projektorganisation beschreibt, wie ein Projekt strukturell aufgebaut ist un
 Im Rahmen des Projekts übernimmt der Projektmanager die koordinierende und organisatorische Rolle. Ziel ist es, die Zusammenarbeit innerhalb des Projektteams zu strukturieren und sicherzustellen, dass alle Beteiligten ihre Aufgaben kennen und effizient erfüllen können. Die Rollenverteilung dient dabei als Grundlage für eine klare Aufgabenverteilung und unterstützt eine transparente Arbeitsweise.
 
 Durch eine eindeutige Zuordnung der Rollen wird vermieden, dass Zuständigkeiten unklar bleiben oder Aufgaben doppelt bearbeitet werden.
+[@pmi-communication-1999]
 
 ---
 
@@ -62,6 +67,7 @@ Verantwortlichkeiten und Zuständigkeiten legen fest, wer für welche Aufgabenbe
 Eine der zentralen Aufgaben des Projektmanagers besteht darin, Verantwortlichkeiten eindeutig zu definieren und deren Einhaltung zu überwachen. Dadurch wird sichergestellt, dass Aufgaben fristgerecht bearbeitet werden und der Projektfortschritt kontrollierbar bleibt.
 
 Klare Zuständigkeiten tragen dazu bei, Missverständnisse im Projektteam zu vermeiden und ermöglichen eine effiziente Zusammenarbeit zwischen den einzelnen Projektmitgliedern.
+[@pmi-communication-1999]
 
 ---
 
@@ -72,12 +78,14 @@ Eine funktionierende Kommunikation ist entscheidend für den Erfolg eines Projek
 Der Projektmanager übernimmt die Rolle der zentralen Kommunikationsschnittstelle. Ziel ist es, einen regelmäßigen und strukturierten Informationsaustausch sicherzustellen. Dazu gehören unter anderem Teambesprechungen, Statusmeldungen sowie die Dokumentation wichtiger Entscheidungen.
 
 Eskalationswege definieren, wie bei Problemen, Verzögerungen oder Konflikten vorzugehen ist. Der Projektmanager ist dabei die erste Anlaufstelle für Eskalationen und entscheidet über weitere Schritte. Klare Eskalationswege ermöglichen es, Probleme frühzeitig zu erkennen und geeignete Maßnahmen einzuleiten, um negative Auswirkungen auf den Projektverlauf zu minimieren.
+[@pmi-communication-1999]
 
 ## Vorgehensmodell
 
 Das Vorgehensmodell beschreibt die grundsätzliche Art und Weise, wie ein Projekt geplant, gesteuert und umgesetzt wird. Es legt fest, wie Aufgaben organisiert werden, wie mit Änderungen umgegangen wird und wie der Projektfortschritt kontrolliert wird. Ein geeignetes Vorgehensmodell trägt wesentlich dazu bei, Projekte strukturiert, transparent und zielgerichtet umzusetzen.
 
 Im Rahmen des Projektmanagements dient das Vorgehensmodell als verbindlicher Rahmen für alle organisatorischen Entscheidungen. Es stellt sicher, dass Planung, Umsetzung und Kontrolle auf einer gemeinsamen Methodik basieren und für alle Projektbeteiligten nachvollziehbar sind.
+[@atlassian-kanban; @kanban-guide-2025]
 
 ---
 
@@ -88,6 +96,7 @@ Die Auswahl eines geeigneten Vorgehensmodells ist eine zentrale Aufgabe im Proje
 Für dieses Projekt wurde bewusst ein agiles Vorgehen gewählt, da sich Anforderungen im Projektverlauf weiterentwickeln können und eine flexible Reaktion auf neue Erkenntnisse erforderlich ist. Klassische, streng sequenzielle Modelle wie das Wasserfallmodell sind für Projekte mit sich ändernden Anforderungen weniger geeignet, da Anpassungen mit hohem organisatorischem Aufwand verbunden sind.
 
 Das gewählte Vorgehensmodell unterstützt eine iterative Arbeitsweise, regelmäßige Überprüfung des Projektfortschritts und eine transparente Aufgabenverteilung.
+[@atlassian-kanban]
 
 ---
 
@@ -101,6 +110,7 @@ Der Einsatz von Kanban ermöglicht:
 - eine flexible Anpassung von Prioritäten ohne Neuplanung des gesamten Projekts  
 
 Im Projektmanagement wird Kanban eingesetzt, um den Überblick über den Projektfortschritt zu behalten und Engpässe frühzeitig zu erkennen. Durch die visuelle Darstellung der Aufgaben kann der Projektstand jederzeit nachvollzogen werden, was die Koordination im Team erleichtert und die Eigenverantwortung der Projektmitglieder stärkt.
+[@atlassian-kanban; @kanban-guide-2025]
 
 ---
 
@@ -115,6 +125,7 @@ Typische Projektphasen im Rahmen des Projektmanagements sind:
 - Dokumentation und Abschluss  
 
 Meilensteine markieren wichtige Zwischenergebnisse innerhalb dieser Phasen. Sie ermöglichen eine objektive Bewertung des Projektfortschritts und dienen als Kontrollpunkte für Zeit- und Qualitätsziele. Im Projektmanagement stellen Meilensteine sicher, dass das Projekt planmäßig voranschreitet und Abweichungen frühzeitig erkannt werden.
+[@kanban-guide-2025]
 
 ---
 
@@ -155,6 +166,7 @@ Dabei werden Anforderungen in folgende Kategorien eingeteilt:
 - **Won’t-have:** bewusst nicht umgesetzte Anforderungen  
 
 Diese Priorisierung unterstützt eine realistische Planung und stellt sicher, dass essenzielle Anforderungen bevorzugt umgesetzt werden. Sie bietet zudem eine klare Entscheidungsgrundlage bei zeitlichen oder organisatorischen Einschränkungen.
+[@productplan-moscow]
 
 ---
 
@@ -236,6 +248,7 @@ Typische Statusphasen sind:
 - Done (abgeschlossene Aufgaben)  
 
 Die Nutzung des Kanban-Boards unterstützt eine transparente Arbeitsweise und ermöglicht es dem Projektmanagement, Engpässe frühzeitig zu erkennen und gezielt gegenzusteuern.
+[@atlassian-kanban]
 
 ---
 
@@ -248,6 +261,7 @@ Die Iterationsplanung dient dazu, größere Aufgabenpakete in überschaubare Arb
 Dadurch wird eine kontinuierliche Weiterentwicklung des Projekts ermöglicht, ohne den Überblick über den Gesamtfortschritt zu verlieren.
 
 Im Projektmanagement stellt diese iterative Vorgehensweise sicher, dass neue Erkenntnisse oder notwendige Anpassungen flexibel berücksichtigt werden können.
+[@kanban-guide-2025]
 
 ---
 
@@ -269,6 +283,7 @@ Diese strukturierte Fortschrittskontrolle ermöglicht es, Abweichungen vom gepla
 
 Das Qualitätsmanagement stellt sicher, dass das Projekt die definierten Anforderungen erfüllt und die erwartete Qualität erreicht.  
 Es umfasst alle organisatorischen Maßnahmen zur Planung, Sicherstellung und Überprüfung der Projektqualität.
+[@pmi-quality-1987]
 
 ---
 
@@ -284,6 +299,7 @@ Zentrale Qualitätsziele im Projektmanagement sind:
 - stabile und zuverlässige Umsetzung der definierten Anforderungen  
 
 Durch klar definierte Qualitätsziele wird sichergestellt, dass der Projekterfolg nicht nur anhand des Funktionsumfangs, sondern auch anhand qualitativer Kriterien bewertet wird.
+[@pmi-quality-1987]
 
 ---
 
@@ -296,6 +312,7 @@ Im Rahmen des Projektmanagements wird auf eine kontinuierliche Überprüfung der
 Tests erfolgen schrittweise im Zuge der Umsetzung einzelner Aufgaben und dienen dazu, Fehler frühzeitig zu erkennen und zu beheben.
 
 Diese systematische Vorgehensweise trägt dazu bei, spätere Korrekturen zu minimieren und die Gesamtqualität des Projekts sicherzustellen.
+[@pmi-quality-1987]
 
 ---
 
@@ -311,6 +328,7 @@ Dabei wird geprüft, ob:
 - keine offensichtlichen Mängel vorliegen  
 
 Durch diese strukturierte Abnahme wird eine gleichbleibende Qualität im Projektverlauf gewährleistet.
+[@pmi-quality-1987]
 
 ---
 
@@ -363,6 +381,7 @@ Durch ein aktives Risikomanagement wird die Stabilität des Projektverlaufs erh�
 
 Das Änderungs- und Entscheidungsmanagement regelt den Umgang mit Anpassungen während des Projektverlaufs.  
 Da Projekte selten exakt nach der ursprünglichen Planung verlaufen, ist ein strukturierter Prozess notwendig, um Änderungen kontrolliert umzusetzen und fundierte Entscheidungen treffen zu können.
+[@pmi-change-control-2006]
 
 ---
 
@@ -382,6 +401,7 @@ haben könnte.
 Erst nach dieser Bewertung wird entschieden, ob und in welcher Form eine Änderung umgesetzt wird.
 
 Durch dieses strukturierte Vorgehen bleibt der Projektumfang kontrollierbar und die Projektziele werden nicht unbeabsichtigt verwässert.
+[@pmi-change-control-2006]
 
 ---
 
@@ -450,6 +470,7 @@ Zur Unterstützung der Kommunikation und Dokumentation werden geeignete Werkzeug
 Tools wie Discord und Teams dienen der Aufgabenverwaltung, dem Informationsaustausch sowie der gemeinsamen Ablage von Projektunterlagen.
 
 Der Einsatz solcher Werkzeuge ermöglicht eine transparente Zusammenarbeit und erleichtert die Nachverfolgung von Aufgaben, Entscheidungen und Dokumenten.  
+[@pmi-communication-1999]
 
 
 # Controlling und Erfolgsmessung
