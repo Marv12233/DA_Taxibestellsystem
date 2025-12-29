@@ -104,7 +104,7 @@ In diesem Codebeispiel wird ein Datenbankzugriff simuliert, der asynchron ausgef
 #### Packages & pubspec.yaml
 In Dart werden Packages verwendet, um externe Bibliotheken und Werkzeuge in ein Projekt einzubinden und zu verwalten. Hierfür kommt der Package-Manager `pub` zum Einsatz. Die Verwaltung der Abhängigkeiten erfolgt über die Datei `pubspec.yaml`, welche zentrale Projektinformationen sowie die verwendeten Packages enthält.
 
-Der grundlegende Aufbau einer `pubspec.yaml`-Datei ist im folgenden Beispiel dargestellt. [@packages_dartdocs]
+Der grundlegende Aufbau einer `pubspec.yaml`-Datei ist im folgenden Beispiel dargestellt. [@Packages-DartDocs]
 
 ```yaml
 name: demo # Name der App
@@ -121,7 +121,7 @@ Um die definierten Packages im Projekt zu installieren, wird der Befehl `dart pu
 ### Flutter
 Flutter ist ein von Google entwickeltes Framework zur plattformübergreifenden Entwicklung von mobilen Anwendungen für Betriebssysteme wie Android und iOS. Ziel von Flutter ist es, mit einer einzigen Codebasis Anwendungen für mehrere Plattformen zu erstellen, ohne systemspezifischen Code schreiben zu müssen.
 
-Die mit Flutter entwickelten Anwendungen werden als native Apps kompiliert und können somit auf den jeweiligen Zielplattformen ausgeführt werden. Aufgrund dieses Ansatzes wird Flutter häufig als Cross-Plattform-Framework bezeichnet. Flutter wird in Kombination mit der Programmiersprache Dart eingesetzt, welche im vorherigen Kapitel vorgestellt wurde. [@flutter_framework]
+Die mit Flutter entwickelten Anwendungen werden als native Apps kompiliert und können somit auf den jeweiligen Zielplattformen ausgeführt werden. Aufgrund dieses Ansatzes wird Flutter häufig als Cross-Plattform-Framework bezeichnet. Flutter wird in Kombination mit der Programmiersprache Dart eingesetzt, welche im vorherigen Kapitel vorgestellt wurde. [@Flutter_Framework]
 
 #### Flutter-Konzept (Widgets, Widget-Tree, Build)
 
@@ -240,7 +240,7 @@ Der Widget-Tree beschreibt in Flutter die hierarchische Struktur der Widgets, au
 
 Die Anordnung der Widgets im Widget-Tree bestimmt unmittelbar das Layout der Benutzeroberfläche. So kann beispielsweise ein `Text`-Widget innerhalb eines `Center`-Widgets platziert werden, um den Text zentriert darzustellen. Jedes Widget besitzt dabei ein übergeordnetes Element, wobei der Widget-Tree stets ein einzelnes Wurzel-Widget aufweist. [@flutter_docs]
 
-![hierarchische Struktur eines Widget-Trees [@widgetTreePicture]](Diplomarbeit/img/Winter/widgetTree_diagram.png){width=300px}
+![hierarchische Struktur eines Widget-Trees [@widgetTreePicture]](img/Winter/widgetTree_diagram.png){width=300px}
 
 ##### Build
 Der Build-Prozess in Flutter beschreibt die Schritte, mit denen der Quellcode in eine ausführbare Anwendung überführt wird. Während der Entwicklung wird die Anwendung im Debug-Modus meist *Just-in-Time* (JIT) kompiliert, während für den Release-Modus eine *Ahead-of-Time* (AOT)-Kompilierung erfolgt. Aus dem Quellcode wird dabei zunächst der Widget-Tree aufgebaut, welcher anschließend über die Render-Pipeline, unter anderem mithilfe der Grafikbibliothek Skia, auf dem Bildschirm dargestellt wird.
@@ -320,7 +320,7 @@ Column(
   ],
 );
 ```
-![klassisches FormWidget](Diplomarbeit/img/Winter/TextFormField.png){width=300px}
+![klassisches FormWidget](img/Winter/TextFormField.png){width=300px}
 
 #### PDF & Drucken (pdf, printing)
 In Flutter können PDF-Dokumente mithilfe externer Packages erstellt und verarbeitet werden. Das Package `pdf` ermöglicht die programmgesteuerte Erstellung von PDF-Dateien, die Text, Bilder und weitere Layout-Elemente enthalten können. Nach dem Einbinden der entsprechenden Dependency in der Datei `pubspec.yaml` kann die PDF-Erstellung direkt innerhalb der Anwendung erfolgen.
@@ -379,7 +379,7 @@ Im Ordner `config` werden zentrale Konfigurationsdateien abgelegt, beispielsweis
 Datenmodelle, beispielsweise zur Abbildung von Datenbanktabellen oder API-Strukturen, werden im Ordner `models` definiert. Die sichtbaren Seiten der Anwendung werden im Ordner `screens` abgelegt. Dieser kann weiter unterteilt werden, etwa in einen Bereich für Authentifizierung (z. B. Login und Registrierung) und einen Hauptbereich für die eigentlichen Anwendungsseiten.
 
 Wiederverwendbare UI-Komponenten werden im Ordner `widgets` gesammelt. Dazu zählen beispielsweise benutzerdefinierte Eingabefelder oder andere häufig genutzte UI-Elemente, die in mehreren Screens eingesetzt werden.
-![klassisches Ordnerstruktur](Diplomarbeit/img/Winter/Ordnerstruktur.png){width=300px}
+![klassisches Ordnerstruktur](img/Winter/Ordnerstruktur.png){width=300px}
 
 #### Schichtenmodell
 Das Schichtenmodell beschreibt die klare Trennung der Anwendung in mehrere logische Ebenen, insbesondere in Benutzeroberfläche (UI), Service-Schicht und Backend beziehungsweise Datenzugriff. Diese Struktur wird durch die zuvor beschriebene Projekt- und Ordnerstruktur zusätzlich unterstützt.
@@ -387,7 +387,7 @@ Das Schichtenmodell beschreibt die klare Trennung der Anwendung in mehrere logis
 Die Kommunikation zwischen den einzelnen Schichten erfolgt dabei in einer klar definierten Reihenfolge. Die Benutzeroberfläche interagiert ausschließlich mit der Service-Schicht, welche die Geschäftslogik kapselt und bei Bedarf Anfragen an das Backend oder den Datenzugriff weiterleitet, beispielsweise für Datenbankoperationen oder API-Aufrufe.
 
 Durch diese Trennung der Verantwortlichkeiten wird die Wartbarkeit und Erweiterbarkeit der Anwendung deutlich verbessert. Zudem erleichtert das Schichtenmodell die Zusammenarbeit im Team, da einzelne Komponenten unabhängig voneinander entwickelt und angepasst werden können.
-![Schichtenmodell der App-Architektur](Diplomarbeit/img/Winter/Schichtenmodell.png){width=400px}
+![Schichtenmodell der App-Architektur](img/Winter/Schichtenmodell.png){width=400px}
 
 #### Wiederverwendbare Komponenten (Widgets)
 Unter wiederverwendbaren Komponenten versteht man in Flutter selbst erstellte Widgets, die mehrfach innerhalb einer Anwendung eingesetzt werden können. In vielen Anwendungen sollen bestimmte UI-Elemente, wie beispielsweise Buttons oder Eingabefelder, ein einheitliches Design sowie identische Funktionalitäten aufweisen.
@@ -433,40 +433,259 @@ Unter Navigation versteht man in Flutter den Wechsel zwischen verschiedenen Seit
 Typische Anwendungsfälle sind beispielsweise der Wechsel vom Login-Screen zur Startseite nach einer erfolgreichen Anmeldung oder das Öffnen von Detailansichten aus Listen. Flutter stellt hierfür unterschiedliche Navigationsansätze bereit, unter anderem imperatives Routing mit dem `Navigator` sowie deklaratives Routing mithilfe eines Routers. [@flutter_docs]
 
 #### Navigator-Grundlagen
+Der `Navigator` verwaltet in Flutter die Navigation zwischen einzelnen Seiten (Screens) einer Anwendung. Dabei arbeitet er mit sogenannten Routen. Eine Route bezeichnet dabei eine Seite beziehungsweise einen Screen, der über einen eindeutigen Namen identifiziert werden kann, zum Beispiel `/login` für eine Login-Seite.
+
+Der Navigator organisiert die Routen in Form eines Stacks. Neue Seiten werden mit der Methode `push()` oben auf den Stack gelegt und anschließend angezeigt. Mit `pop()` wird die oberste Seite vom Stack entfernt, sodass die zuvor angezeigte Seite wieder sichtbar wird.
+
+Ein typisches Beispiel ist der Wechsel zwischen Login- und Registrierungsseite: Wird von der Login-Seite aus die Registrierung geöffnet, wird diese per `push()` auf den Stack gelegt. Nach erfolgreicher Registrierung kann über `pop()` zur Login-Seite zurückgekehrt werden, ohne dass diese neu aufgebaut werden muss. [@flutter_docs]
 
 #### Auth-Gate / Session-Handling
-#### Navigation im Hauptbereich (z.B. Tabs/Flows)
+Ein Auth-Gate steuert den Zugriff auf bestimmte Bereiche einer Anwendung basierend auf dem Anmeldestatus eines Benutzers. Es überprüft, ob ein Benutzer aktuell angemeldet ist, und entscheidet daraufhin, welche Seiten der App angezeigt oder gesperrt werden. In der Praxis bedeutet dies beispielsweise, dass nicht angemeldete Benutzer nur den Login- oder Registrierungsbereich sehen, während angemeldete Benutzer auf den Hauptbereich der Anwendung zugreifen können.
+
+Das Session-Handling beschäftigt sich mit der Verwaltung dieses Anmeldestatus. Dabei werden Sitzungsdaten gespeichert, überwacht und bei erneutem Start der Anwendung wiederhergestellt. Grundlage können unter anderem Sessions eines externen Authentifizierungssystems wie Supabase sein. Diese Sitzungsinformationen können zusätzlich lokal, etwa mithilfe von `shared_preferences`, persistiert werden, um Benutzer nach einem Neustart der App weiterhin angemeldet zu halten. [@supabase_sessions]
+
+#### Navigation mit BottomNavigationBar
+Eine benutzerfreundliche Möglichkeit zur Navigation zwischen den Hauptbereichen einer App ist die Verwendung einer `BottomNavigationBar`. Dabei befindet sich am unteren Rand des Bildschirms eine dauerhaft sichtbare Navigationsleiste mit mehreren Auswahlpunkten, beispielsweise „Startseite“, „Nachrichten“ oder „Profil“.
+
+Durch die Auswahl eines Eintrags in der `BottomNavigationBar` kann zwischen den zugehörigen Seiten gewechselt werden, ohne dass der Benutzer die Orientierung in der App verliert. In Flutter wird die Umsetzung über die Klasse `BottomNavigationBar` beziehungsweise über die modernere `NavigationBar` realisiert. [@dart-docs]
+![Beispiel einer BottomNavigationBar in Flutter](img/Winter/bottom_nav_example.png){width=300px}
 
 ### Standort & Karten in Flutter
+Zur Arbeit mit Standortdaten und Karten in Flutter werden in der Regel mehrere Packages kombiniert eingesetzt. Für den Zugriff auf den Gerätestandort ist zunächst die Einholung der entsprechenden Berechtigungen erforderlich, was beispielsweise mit dem Package `permission_handler` umgesetzt werden kann.
+
+Die eigentliche Standortbestimmung erfolgt häufig mithilfe des Packages `geolocator`, das Funktionen zur Ermittlung der aktuellen Position sowie zu Entfernungs- und Richtungsberechnungen bereitstellt. Für die Darstellung von Karten können Bibliotheken wie `flutter_map` in Kombination mit Kartendiensten wie OpenStreetMap verwendet werden. Ergänzend kommen Packages wie `latlong2` zur Verarbeitung geografischer Koordinaten zum Einsatz.
+
 #### Berechtigungen (permission_handler)
+Für den Zugriff auf sensible Funktionen eines Endgeräts, wie Kamera oder Standort, ist in modernen Betriebssystemen eine ausdrückliche Benutzerberechtigung erforderlich. In Flutter kann die Verwaltung dieser Berechtigungen mithilfe des Packages `permission_handler` umgesetzt werden. Dieses ermöglicht das Abfragen des aktuellen Berechtigungsstatus sowie das Anfordern der benötigten Rechte direkt aus der Anwendung heraus.
+
+Die Anfrage von Berechtigungen erfolgt asynchron. Der Benutzer kann verschiedene Entscheidungen treffen, beispielsweise das dauerhafte Erteilen, das einmalige Verweigern oder das permanente Ablehnen einer Berechtigung („Nie wieder fragen“). Das folgende Codebeispiel zeigt eine mögliche Implementierung zur Anforderung der Standortberechtigung. [@permission_handler]
+
+
+```dart
+Future<bool> ensureLocationPermission() async {
+  // 1) Aktuellen Status abfragen
+  var status = await Permission.location.status;
+
+  if (status.isGranted) {
+    // Standortberechtigung ist bereits erteilt
+    return true;
+  }
+
+  if (status.isDenied) {
+    // Noch nie gefragt oder abgelehnt (aber nicht permanent)
+    // => jetzt anfragen
+    status = await Permission.location.request();
+  }
+
+  if (status.isPermanentlyDenied) {
+    // User hat "Nie wieder fragen" ausgewählt
+    // => ggf. Dialog zeigen und zu den App-Einstellungen leiten
+    await openAppSettings();
+    return false;
+  }
+
+  if (status.isRestricted) {
+    // iOS: z.B. durch Elternkontrolle eingeschränkt
+    // Hier kannst du nur informieren, ändern kann das die App nicht
+    return false;
+  }
+
+  if (status.isLimited) {
+    // "ungefähre" Standortfreigabe
+    // Für viele Apps okay, sonst entsprechend informieren
+    return true; // oder false, je nach Anforderung
+  }
+
+  return status.isGranted;
+}
+```
+
 #### Standortbestimmung (geolocator)
+Zur Ermittlung des aktuellen Gerätestandorts kann in Flutter das Package `geolocator` verwendet werden. Neben der Bestimmung der aktuellen Position ermöglicht es auch die Berechnung von Distanzen zwischen zwei geografischen Koordinaten sowie weitere standortbezogene Abfragen.
+
+Vor der Standortbestimmung muss überprüft werden, ob der Benutzer die erforderlichen Berechtigungen erteilt hat und ob die Standortdienste des Geräts aktiviert sind. Anschließend kann die aktuelle Position beispielsweise über die Methode `Geolocator.getCurrentPosition()` abgefragt werden. [@geolocator]
+
 #### Kartenanzeige (flutter_map, latlong2)
+Zur Darstellung von Karten in Flutter kann das Package `flutter_map` verwendet werden. Damit lässt sich über das `FlutterMap`-Widget eine interaktive Karte in die Anwendung einbinden, die typische Funktionen wie Zoomen und Verschieben unterstützt. Häufig werden dafür OpenStreetMap-Kartenkacheln verwendet. Zur Verbesserung der Benutzerfreundlichkeit können Karten sowohl im hellen als auch im dunklen Design eingebunden werden.
+![Beispiel einer mit flutter_map eingebundenen OpenStreetMap-Karte](img/Winter/map_example.png){width=300px}
+
+Für die Arbeit mit geografischen Koordinaten wird ergänzend das Package `latlong2` eingesetzt. Es stellt Datentypen für Längen- und Breitengrade bereit und ermöglicht unter anderem die Berechnung von Distanzen zwischen zwei Koordinatenpunkten. [@latlong2]
+```dart
+final int meters = distance(
+  LatLng(52.518611, 13.408056),
+  LatLng(51.519475, 7.46694444),
+);
+
+```
+
 #### Live-Position & Marker (flutter_map_location_marker)
+Neben statischen Markern, die direkt über das Package `flutter_map` gesetzt werden können, besteht häufig die Anforderung, die aktuelle Position des Benutzers in Echtzeit darzustellen. Für diesen Zweck kann das Package `flutter_map_location_marker` eingesetzt werden, das speziell zur Erweiterung von `flutter_map` entwickelt wurde.
+
+Es ermöglicht die kontinuierliche Aktualisierung der Benutzerposition sowie die Darstellung eines dynamischen Positionsmarkers auf der Karte. Darüber hinaus können Marker hinsichtlich Form, Farbe und Symbolik individuell gestaltet werden, sodass sie an das Design der jeweiligen Anwendung angepasst werden können.
+![Beispiel eines Positionsmarkers mit flutter_map_location_marker](img/Winter/map_marker_example.png){width=300px}
+
 #### Suche & Geocoding (nominatim_flutter, flutter_typeahead)
-#### Routing/Route-Line (OSRM + http)
+Mithilfe des Packages `nominatim_flutter` können Geocoding-Funktionen in Flutter integriert werden. Unter Geocoding versteht man die Umwandlung zwischen Adressen und geografischen Koordinaten. Beim Reverse Geocoding werden Koordinaten in eine lesbare Adresse umgewandelt, beispielsweise von Breiten- und Längengrad zu einem Ortsnamen wie „Wien“. Umgekehrt können auch Adressen oder Postleitzahlen in Koordinaten übersetzt werden.
+
+In Verbindung mit dem Package `flutter_typeahead` lassen sich Suchfelder mit automatischen Vorschlägen realisieren. Während der Eingabe werden bereits passende Ortsvorschläge angezeigt, etwa bei der Eingabe von „Leo“ der Vorschlag „Leoben“. Diese Kombination ermöglicht eine komfortable und benutzerfreundliche Ortssuche, wie sie auch in großen Kartendiensten eingesetzt wird. [@nominatim_flutter, @flutter_typeahead]
+![Ortssuche mit Autovervollständigung mittels nominatim_flutter und flutter_typeahead](img/Winter/location_search.png){width=300px}
+
+#### Routing / Route-Line (OSRM + http)
+Wenn zwei geografische Punkte auf einer Karte gegeben sind, besteht häufig die Anforderung, eine dazugehörige Route – beispielsweise für die Autofahrt – zu berechnen. Hierfür kann der Routingdienst **OSRM (Open Source Routing Machine)** verwendet werden. OSRM stellt eine API bereit, über die Routen zwischen Koordinatenpunkten berechnet und als Geodaten zurückgegeben werden.
+
+Für die Kommunikation mit dem Routingdienst kommt in Flutter in der Regel das `http`-Package zum Einsatz. Es ermöglicht das Senden von HTTP-Anfragen an die OSRM-API und das Auswerten der erhaltenen Antworten. Die vom Dienst zurückgelieferten Routendaten können anschließend verarbeitet und als Route-Linie in einer Kartenansicht dargestellt werden. [@http, @osrm_docs]
+![Route auf einer Flutter-Map](img/Winter/route_example.png){width=300px}
+
 
 ### Supabase
+Supabase ist eine Plattform für Backend-as-a-Service (BaaS) und stellt Entwicklern eine Vielzahl an Diensten wie Authentifizierung, Datenbank, Storage und Realtime-Funktionen zur Verfügung. Die Plattform orientiert sich funktional an Firebase, setzt jedoch im Gegensatz dazu auf eine relationale PostgreSQL-Datenbank.
+
+Supabase verfolgt einen Low-Code-Ansatz, wodurch viele Backend-Funktionen ohne umfangreiche Programmierkenntnisse genutzt werden können. Neben einem kostenlosen Tarif für kleinere Anwendungen stehen auch kostenpflichtige Pläne für größere Projekte mit erhöhtem Ressourcenbedarf zur Verfügung. [@supabase_tutorial]
+
+
 #### Supabase Überblick (Auth, Database, Realtime)
+Supabase stellt mehrere zentrale Dienste bereit, die in modernen Anwendungen häufig benötigt werden. Dazu zählen insbesondere die Komponenten Auth, Database und Realtime.
+
+Der Dienst **Auth** dient zur Verwaltung von Benutzerkonten und unterstützt Funktionen wie Registrierung, Anmeldung, Passwortzurücksetzung und E-Mail-Bestätigung. Die Passwörter der Benutzer werden dabei nicht im Klartext gespeichert, sondern sicher gehasht. Auth lässt sich direkt in Flutter-Anwendungen integrieren und beispielsweise mit einem Login-System verbinden.
+
+Die Komponente **Database** stellt eine relationale PostgreSQL-Datenbank zur Verfügung. In dieser können Tabellen angelegt, Datensätze erstellt und Abfragen durchgeführt werden. Zusätzlich unterstützt Supabase Datenbankfunktionen, Trigger und Policies zur Zugriffskontrolle.
+
+Mit **Realtime** können Änderungen an Datenbankeinträgen in Echtzeit erkannt und an angebundene Clients weitergegeben werden. Dadurch ist es möglich, Benutzeroberflächen automatisch zu aktualisieren, sobald sich Daten verändern, ohne dass eine manuelle Aktualisierung erforderlich ist. [@supabase_docs]
+
+
 #### Authentifizierung (supabase_flutter)
+Die Authentifizierung in Supabase basiert auf dem Auth-Dienst und lässt sich über das Package `supabase_flutter` direkt in Flutter-Anwendungen integrieren. Nach der Initialisierung des Supabase-Clients können Benutzerkonten angelegt, Anmeldungen durchgeführt und Sitzungen verwaltet werden.
+
+Das folgende Beispiel zeigt die Initialisierung von Supabase in einer Flutter-App sowie die Registrierung eines Benutzers mittels E-Mail und Passwort.
+
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: SUPABASE_URL,
+    anonKey: SUPABASE_ANON_KEY,
+  );
+
+  runApp(MyApp());
+}
+
+final supabase = Supabase.instance.client;
+
+// Registrierung mit E-Mail und Passwort
+await supabase.auth.signUp(
+  email: email,
+  password: password,
+);
+```
+[@supabase_flutter]
+
 #### Datenzugriff (CRUD)
+Der Zugriff auf Daten in Supabase erfolgt in Flutter über den Supabase-Client. Typische Operationen sind das Erstellen, Lesen, Aktualisieren und Löschen von Datensätzen und werden unter dem Begriff **CRUD** (Create, Read, Update, Delete) zusammengefasst. Abfragen können gefiltert werden und ermöglichen so den gezielten Zugriff auf bestimmte Datensätze, beispielsweise in Abhängigkeit vom aktuell angemeldeten Benutzer.
+
+Das folgende Beispiel zeigt das Auslesen und Einfügen von Datensätzen in einer Tabelle mittels Supabase-Client. Auf erweiterte sicherheitsrelevante Aspekte, wie Row Level Security (RLS), wird in einem späteren Kapitel noch näher eingegangen.
+
+```dart
+// Datensätze lesen (SELECT) mit Filtern
+final data = await supabase
+    .from('cities')
+    .select()
+    .eq('country_id', 1)   // equals-Filter
+    .neq('name', 'The Shire'); // not-equals-Filter
+
+// Neuen Datensatz einfügen (INSERT)
+await supabase
+    .from('cities')
+    .insert({'name': 'The Shire', 'country_id': 554});
+```
+[@supabase_flutter]
+
 #### Realtime / Subscriptions
-#### Datenmodelle & Mapping (JSON $\leftrightarrow$ Dart)
+Die Realtime-Funktion von Supabase ermöglicht es, Datenbankänderungen in Echtzeit zu verarbeiten. Änderungen an Datensätzen werden unmittelbar an verbundene Clients übermittelt, sodass Benutzeroberflächen ohne manuelle Aktualisierung auf dem aktuellen Stand gehalten werden. Dies ist insbesondere in Anwendungen relevant, in denen Informationen ohne Verzögerung aktualisiert werden müssen, beispielsweise in Chat-, Shop- oder Tracking-Systemen.
+
+Damit Realtime genutzt werden kann, muss die Funktion für die betreffende Tabelle in Supabase aktiviert werden. In Flutter können anschließend sogenannte Subscriptions eingerichtet werden. Dabei „abonniert“ der Client eine Tabelle oder einzelne Ereignisarten (Insert, Update, Delete) und erhält bei Änderungen entsprechende Benachrichtigungen. [@supabase_flutter]
+
+```dart
+// Subscription auf eine Supabase-Tabelle
+final channel = supabase.channel('public:orders')
+  ..onPostgresChanges(
+    event: PostgresChangeEvent.all,
+    schema: 'public',
+    table: 'orders',
+    callback: (payload) {
+      debugPrint('Event: ${payload.eventType}, data: ${payload.newRecord}');
+    },
+  )
+  ..subscribe();
+
+// Verarbeitung der Änderungen
+void handleOrderChange(PostgresChangePayload payload) {
+  // neue Daten nach Insert/Update
+  final newData = payload.newRecord;
+
+  // alte Daten bei Delete/Update
+  final oldData = payload.oldRecord;
+
+  debugPrint('Event: ${payload.eventType}, data: $newData');
+
+  // hier könnte z. B. die UI aktualisiert werden
+  // (setState, Provider-Update usw.)
+}
+```
+[@supabase_flutter]
+
+#### Datenmodelle & Mapping (JSON ↔ Dart)
+Die Kommunikation zwischen Supabase und der Flutter-Anwendung erfolgt im JSON-Format. Die von Supabase empfangenen JSON-Objekte werden in Flutter in der Regel zunächst als `Map<String, dynamic>` verarbeitet und anschließend in passende Dart-Datenmodelle überführt.
+
+Für komplexere Strukturen, wie beispielsweise Benutzersitzungen oder eigene Datenobjekte, wird häufig ein klassisches Mapping über `fromJson`- und `toJson`-Methoden verwendet. Dadurch können JSON-Daten in typsichere Dart-Objekte konvertiert und umgekehrt wieder in JSON übertragen werden.
+
+Diese Datenmodelle lassen sich anschließend in der Benutzeroberfläche weiterverwenden, beispielsweise in Verbindung mit `StreamBuilder` oder State-Management-Lösungen, um Änderungen direkt in der UI darzustellen. [@supabase_flutter]
+
 
 ### Authentifizierung & Sicherheit (RLS/Policies)
+Ein wichtiger Aspekt einer Anwendung ist der sichere Umgang mit Benutzeranmeldungen und Zugriffsrechten. Nach einer erfolgreichen Authentifizierung stellt Supabase eine Sitzung (Session) bereit, die unter anderem ein Zugriffstoken enthält. Dieses Token wird bei weiteren Anfragen an das Backend verwendet, um den Benutzer eindeutig zu identifizieren und dessen Berechtigungen zu überprüfen.
+
+Neben der Authentifizierung spielt auch die Zugriffskontrolle auf Daten eine zentrale Rolle. Supabase unterstützt hierfür Row Level Security (RLS). Mithilfe von Policies kann präzise festgelegt werden, welche Datensätze ein angemeldeter Benutzer lesen, einfügen, ändern oder löschen darf. Dadurch ist es möglich, Zugriffsrechte direkt auf Datenbankebene abzusichern und zu verhindern, dass Benutzer auf fremde Daten zugreifen. [@supabase_docs]
+
 #### Session & Token-Grundidee
+Nach einer erfolgreichen Anmeldung eines Benutzers erstellt Supabase eine Sitzung (Session), die ein Authentifizierungstoken enthält. Dieses Token wird bei weiteren Anfragen der App an das Backend mitgesendet und dient dazu, den Benutzer eindeutig zu identifizieren.
+
+Anhand des Tokens wird serverseitig überprüft, ob der Benutzer angemeldet ist und welche Berechtigungen ihm zustehen. Sobald eine Sitzung abläuft oder der Benutzer sich abmeldet, verliert das Token seine Gültigkeit und der Zugriff auf geschützte Bereiche ist nicht mehr möglich. [@supabase_docs]
+
 #### Row Level Security (RLS)
+Row Level Security (RLS) ist ein Sicherheitsmechanismus von PostgreSQL, der den Zugriff auf Daten auf Zeilenebene steuert. Dadurch kann definiert werden, welche Datensätze ein Benutzer lesen oder verändern darf. Der Zugriff erfolgt somit nicht nur auf Tabellen- oder Spaltenebene, sondern auf einzelne Zeilen.
+
+In Supabase ist RLS für neu erstellte Tabellen standardmäßig aktiviert, sofern diese nicht über die grafische Oberfläche angelegt wurden. Wird eine Tabelle per SQL-Anweisung erstellt, muss RLS gegebenenfalls manuell aktiviert werden. Mithilfe von RLS lassen sich sehr fein abgestufte Sicherheitsregeln definieren, die exakt an die Anforderungen einer Anwendung angepasst werden können. [@supabase_docs]
+
+
 #### Policies (SELECT/INSERT/UPDATE/DELETE)
-#### Datenschutz bei Standortdaten
+Policies werden in Kombination mit Row Level Security (RLS) verwendet und legen fest, auf welche Datensätze einer Tabelle ein Benutzer zugreifen darf. Eine Policy ist immer einer konkreten Tabelle zugeordnet und wird bei jedem Lese- oder Schreibzugriff ausgewertet. Sie wirkt funktional ähnlich wie eine zusätzliche `WHERE`-Bedingung, die automatisch an jede Anfrage an die Tabelle angehängt wird. 
 
-### UI/UX
-#### Designprinzipien (klar, schnell, mobil)
-#### Feedback & States (Loading/Empty/Error)
-#### Konsistente Komponenten (Theme/Styles)
-#### Barrierefreiheit & Sprache
+Policies können für alle grundlegenden Datenbankoperationen definiert werden, also für **SELECT** (Lesen), **INSERT** (Einfügen), **UPDATE** (Ändern) und **DELETE** (Löschen).
+
+Policies können entweder direkt in SQL formuliert oder über die grafische Oberfläche von Supabase konfiguriert werden. Im folgenden Beispiel wird eine Policy definiert, die bewirkt, dass Benutzer nur ihre eigenen Datensätze lesen dürfen:
 
 
+```sql
+create policy "Individuals can view their own todos."
+on todos
+for select
+using ( (select auth.uid()) = user_id );
+```
+Dabei wird geprüft, ob die Benutzer-ID der aktuellen Sitzung (`auth.uid()`) mit der `user_id` der jeweiligen Tabellenzeile übereinstimmt. Nur wenn diese Bedingung erfüllt ist, wird der Datensatz zurückgegeben. Ohne eine entsprechende Policy würde RLS standardmäßig sämtliche Zugriffe blockieren. [@supabase_docs]
+
+#### Datenschutz
+Die zuvor beschriebenen Mechanismen wie Authentifizierung, Row Level Security (RLS) und Policies sind zentral für den Schutz personenbezogener Daten. In vielen Anwendungen werden sensible Informationen verarbeitet, beispielsweise Namen, E-Mail-Adressen oder Standortdaten.
+
+Durch die Kombination dieser Sicherheitsmechanismen wird sichergestellt, dass Benutzer nur auf diejenigen Daten zugreifen können, für die sie berechtigt sind. Unbefugtes Auslesen oder Verändern fremder Datensätze wird dadurch unterbunden, was einen wesentlichen Beitrag zur Einhaltung von Datenschutzanforderungen leistet.
+
+\newpage
 
 ## Praktische Arbeit
+
+
+
+
 
 
 
