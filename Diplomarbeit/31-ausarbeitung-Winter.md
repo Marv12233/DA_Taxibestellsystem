@@ -240,7 +240,7 @@ Der Widget-Tree beschreibt in Flutter die hierarchische Struktur der Widgets, au
 
 Die Anordnung der Widgets im Widget-Tree bestimmt unmittelbar das Layout der Benutzeroberfläche. So kann beispielsweise ein `Text`-Widget innerhalb eines `Center`-Widgets platziert werden, um den Text zentriert darzustellen. Jedes Widget besitzt dabei ein übergeordnetes Element, wobei der Widget-Tree stets ein einzelnes Wurzel-Widget aufweist. [@flutter_docs]
 
-![hierarchische Struktur eines Widget-Trees [@widgetTreePicture]](img/Winter/widgetTree_diagram.png){width=300px}
+![hierarchische Struktur eines Widget-Trees [@widgetTreePicture]](img/Winter/widgetTreeDiagram.png){width=300px}
 
 ##### Build
 Der Build-Prozess in Flutter beschreibt die Schritte, mit denen der Quellcode in eine ausführbare Anwendung überführt wird. Während der Entwicklung wird die Anwendung im Debug-Modus meist *Just-in-Time* (JIT) kompiliert, während für den Release-Modus eine *Ahead-of-Time* (AOT)-Kompilierung erfolgt. Aus dem Quellcode wird dabei zunächst der Widget-Tree aufgebaut, welcher anschließend über die Render-Pipeline, unter anderem mithilfe der Grafikbibliothek Skia, auf dem Bildschirm dargestellt wird.
@@ -634,7 +634,7 @@ void handleOrderChange(PostgresChangePayload payload) {
 ```
 [@supabase_flutter]
 
-#### Datenmodelle & Mapping (JSON ↔ Dart)
+#### Datenmodelle & Mapping (JSON $\leftrightarrow$ Dart)
 Die Kommunikation zwischen Supabase und der Flutter-Anwendung erfolgt im JSON-Format. Die von Supabase empfangenen JSON-Objekte werden in Flutter in der Regel zunächst als `Map<String, dynamic>` verarbeitet und anschließend in passende Dart-Datenmodelle überführt.
 
 Für komplexere Strukturen, wie beispielsweise Benutzersitzungen oder eigene Datenobjekte, wird häufig ein klassisches Mapping über `fromJson`- und `toJson`-Methoden verwendet. Dadurch können JSON-Daten in typsichere Dart-Objekte konvertiert und umgekehrt wieder in JSON übertragen werden.
