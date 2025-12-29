@@ -359,7 +359,7 @@ In Flutter wird die Lokalisierung einer Anwendung mithilfe des Packages `flutter
 
 Das Package `flutter_localization` stellt jedoch keine automatische Übersetzung eigener Texte bereit, sondern übersetzt ausschließlich die standardisierten UI-Elemente von Flutter selbst. Für die Übersetzung eigener Inhalte sowie für weitergehende Formatierungsaufgaben wird das Package `intl` verwendet. Dieses ermöglicht unter anderem die Lokalisierung von Texten sowie die länderspezifische Formatierung von Datums-, Zeit- und Währungswerten.
 
-Das folgende Codebeispiel zeigt die Formatierung eines Geldbetrags im österreichischen Zahlenformat. [@intl, @flutter_docs]
+Das folgende Codebeispiel zeigt die Formatierung eines Geldbetrags im österreichischen Zahlenformat. [@intl] [@flutter_docs]
 
 ```dart
 final eur = NumberFormat.currency(locale: 'de_AT', symbol: 'EUR');
