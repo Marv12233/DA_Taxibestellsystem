@@ -560,3 +560,170 @@ Die Abschlussbewertung des Projekts berücksichtigt sowohl die erreichten Ergebn
 Neben der fachlichen Umsetzung fließen auch organisatorische Aspekte, wie Planung, Koordination und Dokumentation, in die Bewertung ein.
 
 Der Projektabschluss stellt somit nicht nur das Ende des Projekts dar, sondern auch den Abschluss eines umfassenden Lernprozesses im Bereich des Projektmanagements.
+
+#Praxis
+
+## Übernahme der Rolle als Projektmanager
+
+### Einstieg in die Projektleiterrolle
+
+Zu Projektbeginn übernahm ich die Rolle des Projektmanagers und war damit für die organisatorische Steuerung des gesamten Projekts verantwortlich. Konkret bedeutete dies, dass ich den Projektstart strukturierte, erste organisatorische Entscheidungen traf und den Rahmen für die Zusammenarbeit im Team festlegte.  
+
+Ich koordinierte die initiale Aufgabenverteilung, legte die grundlegende Arbeitsweise fest und war für die Erstellung der ersten Planungsdokumente verantwortlich. In dieser Phase musste ich mich intensiv mit den Anforderungen eines Projektleiters auseinandersetzen, da viele organisatorische Aufgaben parallel anfielen.
+
+### Abgrenzung der eigenen Aufgaben im Projektteam
+
+Meine Aufgaben als Projektmanager grenzte ich bewusst von den Entwicklungsaufgaben ab. Während die Teammitglieder für die Umsetzung der einzelnen Softwaremodule verantwortlich waren, konzentrierte ich mich auf Planung, Organisation, Koordination und Dokumentation.  
+
+Ich übernahm keine dauerhaften Entwicklungsaufgaben, um mich vollständig auf das Projektmanagement konzentrieren zu können. Diese klare Trennung erleichterte die Steuerung des Projekts und stellte sicher, dass organisatorische Aufgaben nicht vernachlässigt wurden.
+
+---
+
+## Organisation und Strukturierung des Projekts
+
+### Festlegung der Projektorganisation
+
+Ich strukturierte das Projekt, indem ich eine klare Projektorganisation definierte. Dazu legte ich fest, welche Module im Projekt existieren und welche Teammitglieder für diese Bereiche zuständig sind. Diese Struktur diente als Grundlage für die weitere Planung und Aufgabenverteilung.
+
+Die Projektorganisation wurde schriftlich festgehalten, sodass für alle Teammitglieder jederzeit ersichtlich war, wie das Projekt aufgebaut ist und wer wofür verantwortlich ist.
+
+### Definition von Rollen, Zuständigkeiten und Verantwortlichkeiten
+
+Ich definierte die Rollen innerhalb des Projektteams klar und ordnete jedem Teammitglied einen festen Verantwortungsbereich zu. Diese Zuständigkeiten wurden im Projekthandbuch dokumentiert und dienten als verbindliche Grundlage für die Zusammenarbeit.
+
+Durch diese klare Zuordnung konnte ich Aufgaben gezielt vergeben und den Fortschritt der einzelnen Projektbereiche effektiv überwachen.
+
+---
+
+## Planung des Projektverlaufs
+
+### Erstellung der Zeit- und Meilensteinplanung
+
+Ich erstellte eine Zeitplanung, in der der Projektverlauf grob in einzelne Phasen unterteilt wurde. Zusätzlich definierte ich Meilensteine, die wichtige Zwischenergebnisse abbildeten, wie etwa abgeschlossene Projektphasen oder Abgabetermine im Rahmen der Diplomarbeit.
+
+Die Planung erfolgte realistisch und wurde im Projektverlauf mehrfach angepasst, wenn sich zeigte, dass bestimmte Aufgaben mehr Zeit benötigten als ursprünglich angenommen.
+
+### Festlegung des Projektumfangs und der Abgrenzungen
+
+Ich legte den Projektumfang fest, indem ich definierte, welche Funktionen umgesetzt werden und welche bewusst nicht Teil des Projekts sind. Diese Abgrenzungen dokumentierte ich, um spätere Missverständnisse zu vermeiden.
+
+Der Fokus lag dabei auf der Umsetzung der Kernfunktionen, während optionale Erweiterungen nur umgesetzt wurden, sofern Zeit und Ressourcen dies zuließen.
+
+---
+
+## Auswahl und Anwendung des Vorgehensmodells
+
+### Entscheidung für ein agiles Vorgehen
+
+Ich entschied mich für ein agiles Vorgehen, da sich Anforderungen im Projektverlauf ändern konnten und eine flexible Anpassung notwendig war. Diese Entscheidung traf ich bewusst, um auf neue Erkenntnisse reagieren zu können, ohne den gesamten Projektplan neu erstellen zu müssen.
+
+### Praktischer Einsatz von Kanban im Projektalltag
+
+Zur praktischen Umsetzung nutzte ich ein Kanban-Board in GitHub. Ich richtete das Board ein, definierte die Spalten (Backlog, In Progress, Review, Done) und nutzte es als zentrales Steuerungsinstrument.
+
+Alle Aufgaben wurden von mir dort angelegt und laufend aktualisiert. Das Board diente mir täglich zur Kontrolle des Projektfortschritts.
+
+---
+
+## Praktische Umsetzung des Aufgabenmanagements
+
+### Aufbau und Pflege des Kanban-Boards
+
+Ich erstellte für jede Aufgabe ein eigenes GitHub-Issue und ordnete dieses dem Kanban-Board zu. Dabei formulierte ich die Aufgaben klar und nachvollziehbar, sodass für die zuständigen Teammitglieder keine Unklarheiten bestanden.
+
+Das Board wurde von mir regelmäßig gepflegt, indem ich Aufgabenstatus aktualisierte und neue Aufgaben ergänzte.
+
+### Erfassung, Priorisierung und Nachverfolgung von Aufgaben
+
+Ich priorisierte die Aufgaben anhand ihrer Wichtigkeit für den Projekterfolg. Wesentliche Aufgaben wurden als Must-have behandelt und zuerst umgesetzt.  
+
+Durch die Nachverfolgung der Aufgaben im Kanban-Board konnte ich jederzeit erkennen, welche Arbeiten abgeschlossen waren und wo es zu Verzögerungen kam.
+
+---
+
+## Durchführung des Anforderungsmanagements
+
+### Analyse des bestehenden Systems
+
+Ich analysierte gemeinsam mit dem Team das bestehende Taxibestellsystem und dokumentierte erkannte Schwächen. Diese Analyse bildete die Grundlage für die Definition neuer Anforderungen.
+
+### Erstellung und Dokumentation von User Stories
+
+Auf Basis der Analyse erstellte ich User Stories für alle relevanten Projektbereiche. Diese Stories legte ich in GitHub an und dokumentierte sie zusätzlich im User-Story-Refinement-Dokument.
+
+### Anwendung des einheitlichen User-Story-Schemas
+
+Ich stellte sicher, dass alle User Stories nach einem einheitlichen Schema erstellt wurden. Jede Story enthielt eine eindeutige ID, eine Beschreibung aus Nutzerperspektive, eine Priorität sowie ergänzende Kommentare. Dadurch war eine klare und konsistente Dokumentation gewährleistet.
+
+---
+
+## Koordination und Kommunikation im Projektteam
+
+### Organisation von Abstimmungen
+
+Ich organisierte regelmäßige Abstimmungen, um den aktuellen Projektstand zu besprechen und offene Aufgaben zu klären. Diese Abstimmungen halfen dabei, Probleme frühzeitig zu erkennen.
+
+### Weitergabe relevanter Informationen
+
+Als Projektmanager war ich dafür verantwortlich, relevante Informationen gesammelt an das Team weiterzugeben. Dadurch wurde sichergestellt, dass alle Teammitglieder stets auf demselben Informationsstand waren.
+
+### Rolle als zentrale Ansprechperson
+
+Ich fungierte während des gesamten Projekts als zentrale Ansprechperson für organisatorische und projektbezogene Fragen. Dadurch konnten Unklarheiten schnell geklärt werden.
+
+---
+
+## Umgang mit Änderungen und Entscheidungen
+
+### Bewertung von Änderungsanforderungen
+
+Änderungsanforderungen wurden von mir geprüft und hinsichtlich ihrer Auswirkungen auf Zeitplan und Projektumfang bewertet. Nicht jede Änderung wurde umgesetzt, wenn sie den Projektfortschritt gefährdet hätte.
+
+### Treffen und Dokumentation von Entscheidungen
+
+Ich traf organisatorische Entscheidungen eigenständig oder in Abstimmung mit dem Team und dokumentierte diese, um sie später nachvollziehen zu können.
+
+---
+
+## Überwachung des Projektfortschritts
+
+### Kontrolle von Aufgabenstatus und Meilensteinen
+
+Ich überprüfte regelmäßig den Status der Aufgaben im Kanban-Board sowie den Fortschritt im Vergleich zu den geplanten Meilensteinen.
+
+### Reaktion auf Abweichungen vom Projektplan
+
+Bei Abweichungen passte ich Prioritäten oder Zeitpläne an, um den Projektfortschritt sicherzustellen.
+
+---
+
+## Qualitäts- und Risikomanagement in der Praxis
+
+### Identifikation und Bewertung von Projektrisiken
+
+Ich identifizierte Risiken wie Zeitmangel oder technische Unsicherheiten und bewertete diese hinsichtlich ihrer Auswirkungen auf das Projekt.
+
+### Umsetzung von Maßnahmen zur Risikominimierung
+
+Zur Risikominimierung setzte ich Maßnahmen wie klare Priorisierung, zusätzliche Abstimmungen und Anpassungen der Planung um.
+
+### Sicherstellung der Projektqualität aus organisatorischer Sicht
+
+Ich achtete darauf, dass Aufgaben vollständig abgeschlossen und dokumentiert wurden, bevor sie als erledigt galten.
+
+---
+
+## Projektabschluss aus Sicht des Projektmanagements
+
+### Vorbereitung der Abnahme
+
+Zum Projektende überprüfte ich, ob alle geplanten Aufgaben abgeschlossen und dokumentiert waren.
+
+### Durchführung des Projektabschlusses
+
+Ich koordinierte den Abschluss des Projekts, indem ich alle Ergebnisse zusammenführte und den Projektverlauf abschließend bewertete.
+
+### Reflexion des eigenen Projektmanagements (Lessons Learned)
+
+Rückblickend zeigte sich, dass insbesondere die Aufgabenplanung und Priorisierung zentrale Herausforderungen darstellten. Durch praktische Erfahrung konnte ich meine Fähigkeiten im Projektmanagement deutlich verbessern.
+
