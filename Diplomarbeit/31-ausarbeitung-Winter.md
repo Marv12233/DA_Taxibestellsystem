@@ -2465,7 +2465,7 @@ class SumUpService {
     required String description,
   }) async {
     try {
-      debugPrint('SumUp: Starting card payment for €$amount');
+      debugPrint('SumUp: Starting card payment for EUR$amount');
 
       // Prepare request body for Checkouts API
       final checkoutRef = 'checkout_${DateTime.now().millisecondsSinceEpoch}';
@@ -2629,7 +2629,7 @@ class _PaymentFormState extends State<PaymentForm> {
   }
 
   Future<void> _processCardPayment(double amount) async {
-    debugPrint('Processing card payment via SumUp: €$amount');
+    debugPrint('Processing card payment via SumUp: EUR$amount');
 
     // Show processing dialog
     if (mounted) {
@@ -2672,7 +2672,7 @@ class _PaymentFormState extends State<PaymentForm> {
   }
 
   Future<void> _processInvoicePayment(double amount) async {
-    debugPrint('Processing invoice: €$amount');
+    debugPrint('Processing invoice: EUR$amount');
 
     // Rechnungen bleiben pending bis Admin bestätigt
     _status = PaymentStatus.pending;
@@ -3036,7 +3036,7 @@ debugPrint('Calculating route from $from to $to');
 debugPrint('Route calculated: ${route.distanceKilometers} km, ${route.durationMinutes} min');
 
 // SumUpService
-debugPrint('SumUp: Starting card payment for €$amount');
+debugPrint('SumUp: Starting card payment for EUR$amount');
 debugPrint('SumUp Checkout Created: $transactionId');
 debugPrint('DEMO MODE: Simulating successful payment for thesis');
 
