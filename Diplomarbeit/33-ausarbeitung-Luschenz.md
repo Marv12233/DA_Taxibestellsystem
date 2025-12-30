@@ -650,7 +650,7 @@ Ich analysierte gemeinsam mit dem Team das bestehende Taxibestellsystem und doku
 
 ### Erstellung und Dokumentation von User Stories
 
-Auf Basis der Analyse erstellte ich User Stories für alle relevanten Projektbereiche. Diese Stories legte ich in GitHub an und dokumentierte sie zusätzlich im User-Story-Refinement-Dokument.
+Auf Basis der Analyse erstellte ich User Stories für alle relevanten Projektbereiche. Diese Stories legte ich in GitHub an und dokumentierte sie zusätzlich im User-Story-Dokument.
 
 ### Anwendung des einheitlichen User-Story-Schemas
 
