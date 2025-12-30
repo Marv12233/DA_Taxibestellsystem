@@ -2376,7 +2376,7 @@ Future<pw.Document> _createInvoicePdf(Ride ride) async {
               ),
             ),
             child: pw.Text(
-              'Gemäß § 11 UStG  Personenbeförderung  ATU12345678',
+              'Gemäß Paragraph 11 UStG  Personenbeförderung  ATU12345678',
               style: pw.TextStyle(fontSize: 8, fontStyle: pw.FontStyle.italic),
               textAlign: pw.TextAlign.center,
             ),
