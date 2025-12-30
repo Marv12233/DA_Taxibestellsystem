@@ -2209,7 +2209,7 @@ class InvoiceWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
-              'Gemäß Paragraph 11 UStG • Personenbeförderung • ${AppConstants.companyUid}',
+              'Gemäß Paragraph 11 UStG  Personenbeförderung  ${AppConstants.companyUid}',
               style: AppTheme.bodySmall(context).copyWith(
                 fontSize: 10,
                 color: colorScheme.onSurface.withOpacity(0.6),
@@ -2376,7 +2376,7 @@ Future<pw.Document> _createInvoicePdf(Ride ride) async {
               ),
             ),
             child: pw.Text(
-              'Gemäß § 11 UStG • Personenbeförderung • ATU12345678',
+              'Gemäß § 11 UStG  Personenbeförderung  ATU12345678',
               style: pw.TextStyle(fontSize: 8, fontStyle: pw.FontStyle.italic),
               textAlign: pw.TextAlign.center,
             ),
