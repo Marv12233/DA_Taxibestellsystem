@@ -279,7 +279,7 @@ In diesem Beispiel werden Typannotationen für die Funktionsparameter verwendet.
 
 ### React & Next.js
 #### Next.js
-Next.js ist ein auf React basierendes Web-Framework zur Entwicklung moderner Webanwendungen. Es erweitert React um zentrale Funktionen wie serverseitiges Rendern (Server-Side Rendering, SSR), statische Seitengenerierung (Static Site Generation, SSG), dateibasiertes Routing, API-Routen sowie integrierte Mechanismen zur Optimierung von Performance.[@nextjs-docs]
+Next.js ist ein auf React basierendes Web-Framework zur Entwicklung moderner Webanwendungen. Es erweitert React um zentrale Funktionen wie serverseitiges Rendern (Server-Side Rendering, SSR), statische Seitengenerierung (Static Site Generation, SSG), dateibasiertes Routing, API-Routen sowie integrierte Mechanismen zur Optimierung von Performance. [@nextjs-docs]
 
 ##### Server-Side Rendering
 In Next.js werden Layouts und Seiten standardmäßig serverseitig gerendert: Der benötigte Inhalt wird dabei auf dem Server erzeugt und anschließend an den Browser übertragen. [@nextjs-docs]
@@ -291,30 +291,32 @@ Dabei gibt es 2 Varianten: Static Rendering (auch Prerendering) erstellt die Sei
 Routing ist in Next.js die Navigation zwischen verschiedenen Seiten (Routen) einer Webanwendung. Routen werden standardmäßig serverseitig gerendert, wobei Layouts und Pages als React Server Components umgesetzt sind. Bei einer Navigation wird der sogenannte Server Component Payload auf dem Server erzeugt und anschließend an den Client übertragen. [@nextjs-docs]
 
 #### React
-React ist eine von Meta entwickelte JavaScript-Bibliothek zur Erstellung von Benutzeroberflächen. Sie basiert auf einem komponentenorientierten Ansatz, bei dem die Oberfläche in wiederverwendbare, unabhängige Bausteine (Components) zerlegt wird.
+React ist eine von Meta entwickelte JavaScript-Bibliothek zur Erstellung von Benutzeroberflächen. Sie basiert auf einem komponentenorientierten Ansatz, bei dem die Oberfläche in wiederverwendbare, unabhängige Bausteine (Components) zerlegt wird.[@reactdev-learn]
 
 ##### Komponenten-Konzept
-React basiert auf dem Konzept von Komponenten, die als wiederverwendbare Bausteine zur Erstellung von Benutzeroberflächen dienen. Eine Komponente beschreibt, wie ein Teil der Benutzeroberfläche aussehen und sich verhalten soll, abhängig von Eingabedaten und internem Zustand.
+React basiert auf dem Konzept von Komponenten, die als wiederverwendbare Bausteine zur Erstellung von Benutzeroberflächen dienen. Eine Komponente beschreibt, wie ein Teil der Benutzeroberfläche aussehen und sich verhalten soll, abhängig von Eingabedaten und internem Zustand. [@reactdev-learn]
 
-In modernen React-Anwendungen werden Komponenten als Function Components umgesetzt. Dabei handelt es sich um normale JavaScript-Funktionen, die ein React-Element in Form von JSX zurückgeben. JSX ist eine Syntaxerweiterung für JavaScript, mit der UI-Strukturen wie HTML direkt im Code beschrieben werden können. React interpretiert JSX als JavaScript-Funktionsaufrufe.
+In modernen React-Anwendungen werden Komponenten als Function Components umgesetzt. Dabei handelt es sich um normale JavaScript-Funktionen, die ein React-Element in Form von JSX zurückgeben. JSX ist eine Syntaxerweiterung für JavaScript, mit der UI-Strukturen wie HTML direkt im Code beschrieben werden können. React interpretiert JSX als JavaScript-Funktionsaufrufe. [@reactdev-learn]
 
-Function Components können Props (Eingabewerte) entgegennehmen und mithilfe von Hooks internen Zustand und Logik verwalten. Dadurch lassen sich Darstellung und Verhalten einer Benutzeroberfläche klar kapseln. 
+Function Components können Props (Eingabewerte) entgegennehmen und mithilfe von Hooks internen Zustand und Logik verwalten. Dadurch lassen sich Darstellung und Verhalten einer Benutzeroberfläche klar kapseln. [@reactdev-learn]
+
 ##### Component-Tree, Props & State  
-In React ist die Benutzeroberfläche als Component-Tree aufgebaut. Das bedeutet, dass eine Anwendung aus einer Wurzel-Komponente besteht, die weitere untergeordnete Komponenten enthält. Diese hierarchische Struktur ähnelt einem Baum, bei dem Eltern-Komponenten ihre Kinder rendern und steuern.
+In React ist die Benutzeroberfläche als Component-Tree aufgebaut. Das bedeutet, dass eine Anwendung aus einer Wurzel-Komponente besteht, die weitere untergeordnete Komponenten enthält. Diese hierarchische Struktur ähnelt einem Baum, bei dem Eltern-Komponenten ihre Kinder rendern und steuern. [@reactdev-learn]
 
-Props (Properties) dienen dazu, Daten von einer übergeordneten Komponente an eine untergeordnete Komponente weiterzugeben. Sie sind read-only, das heißt, eine Komponente darf ihre Props nicht selbst verändern. Props ermöglichen die Wiederverwendbarkeit von Komponenten, da deren Verhalten und Darstellung über übergebene Werte gesteuert werden kann.
+Props (Properties) dienen dazu, Daten von einer übergeordneten Komponente an eine untergeordnete Komponente weiterzugeben. Sie sind read-only, das heißt, eine Komponente darf ihre Props nicht selbst verändern. Props ermöglichen die Wiederverwendbarkeit von Komponenten, da deren Verhalten und Darstellung über übergebene Werte gesteuert werden kann. [@reactdev-learn]
 
-State beschreibt den internen, veränderbaren Zustand einer Komponente. Er wird verwendet, um dynamische Daten zu speichern, die sich während der Laufzeit ändern können. Ändert sich der State, rendert React die betroffene Komponente automatisch neu, sodass die Benutzeroberfläche stets den aktuellen Zustand widerspiegelt.
+State beschreibt den internen, veränderbaren Zustand einer Komponente. Er wird verwendet, um dynamische Daten zu speichern, die sich während der Laufzeit ändern können. Ändert sich der State, rendert React die betroffene Komponente automatisch neu, sodass die Benutzeroberfläche stets den aktuellen Zustand widerspiegelt. [@reactdev-learn]
 
 ##### Rendering & Hooks (useState, useEffect, useContext)  
-In React beschreibt Rendering den Prozess, bei dem React anhand des aktuellen Zustands (State) und der übergebenen Eigenschaften (Props) bestimmt, wie die Benutzeroberfläche aussehen soll. Immer wenn sich Props oder State ändern, wird die betroffene Komponente erneut gerendert. React aktualisiert dabei effizient nur jene Teile der Oberfläche, deren Darstellung sich tatsächlich geändert hat.
+In React beschreibt Rendering den Prozess, bei dem React anhand des aktuellen Zustands (State) und der übergebenen Eigenschaften (Props) bestimmt, wie die Benutzeroberfläche aussehen soll. Immer wenn sich Props oder State ändern, wird die betroffene Komponente erneut gerendert. React aktualisiert dabei effizient nur jene Teile der Oberfläche, deren Darstellung sich tatsächlich geändert hat. [@reactdev-learn]
+
 | Hook | Zweck | Kurzbeschreibung|
 | -------- | ------- | ------ |
 | `useState`   | Zustand | Ermöglicht das Speichern und Aktualisieren von lokalen Zustandswerten innerhalb einer Komponente. Eine Zustandsänderung löst ein erneutes Rendering aus. |
 | `useEffect`  | Seiteneffekte  | Wird verwendet, um Code auszuführen, der nicht direkt zur Darstellung gehört, z. B. Daten laden, Timer starten oder auf Änderungen reagieren.|
 | `useContext` | Kontextzugriff | Erlaubt den Zugriff auf globale Daten, ohne Props durch viele Komponenten weiterreichen zu müssen.|
 
-Hooks sind spezielle Funktionen, mit denen Funktionskomponenten zusätzliche Fähigkeiten erhalten. Sie ermöglichen es, Zustand zu verwalten, auf Lebenszyklus-Ereignisse zu reagieren oder globale Daten bereitzustellen, ohne Klassenkomponenten verwenden zu müssen.
+Hooks sind spezielle Funktionen, mit denen Funktionskomponenten zusätzliche Fähigkeiten erhalten. Sie ermöglichen es, Zustand zu verwalten, auf Lebenszyklus-Ereignisse zu reagieren oder globale Daten bereitzustellen, ohne Klassenkomponenten verwenden zu müssen. [@reactdev-learn]
 
 ```tsx
 import { useState } from "react";
@@ -356,6 +358,7 @@ function ThemeText() {
 }
 ```
 Hier sieht man wie ``useContext`` den Zugriff auf globale Werte ohne Props weiterzugeben erlaubt.
+
 ### Styling mit Tailwind CSS
 
 #### Utility-First-Konzept  
