@@ -2053,7 +2053,7 @@ Fehler werden im Debug-Modus zusätzlich über `debugPrint()` protokolliert, um 
 
 ### Erstellen und Drucken von PDF-Dokumenten
 
-PDF-Dokumentationen werden bei Fahrten verwendet, um Rechnungen zu exportieren. Diese werden mithilfe der `pdf`-Bibliothek dynamisch erzeugt und können anschließend über das `printing`-Package geteilt oder gedruckt werden. Die Implementierung ist österreich-konform gemäß § 11 UStG (Personenbeförderung).
+PDF-Dokumentationen werden bei Fahrten verwendet, um Rechnungen zu exportieren. Diese werden mithilfe der `pdf`-Bibliothek dynamisch erzeugt und können anschließend über das `printing`-Package geteilt oder gedruckt werden. Die Implementierung ist österreich-konform gemäß Paragraph 11 UStG (Personenbeförderung).
 
 **Zwei Implementierungen:**
 
@@ -2209,7 +2209,7 @@ class InvoiceWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
-              'Gemäß § 11 UStG • Personenbeförderung • ${AppConstants.companyUid}',
+              'Gemäß Paragraph 11 UStG • Personenbeförderung • ${AppConstants.companyUid}',
               style: AppTheme.bodySmall(context).copyWith(
                 fontSize: 10,
                 color: colorScheme.onSurface.withOpacity(0.6),
@@ -2465,7 +2465,7 @@ class SumUpService {
     required String description,
   }) async {
     try {
-      debugPrint('💳 SumUp: Starting card payment for €$amount');
+      debugPrint('SumUp: Starting card payment for €$amount');
 
       // Prepare request body for Checkouts API
       final checkoutRef = 'checkout_${DateTime.now().millisecondsSinceEpoch}';
@@ -2477,7 +2477,7 @@ class SumUpService {
         'merchant_code': _merchantCode,
       };
 
-      debugPrint('📤 SumUp Request: $requestBody');
+      debugPrint('SumUp Request: $requestBody');
 
       // Make API request
       final response = await http.post(
@@ -2494,8 +2494,8 @@ class SumUpService {
         },
       );
 
-      debugPrint('📥 SumUp Response Status: ${response.statusCode}');
-      debugPrint('📥 SumUp Response Body: ${response.body}');
+      debugPrint('SumUp Response Status: ${response.statusCode}');
+      debugPrint('SumUp Response Body: ${response.body}');
 
       // Parse response
       final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -2504,11 +2504,11 @@ class SumUpService {
         final transactionId = responseData['id']?.toString() ?? 'txn_unknown';
         final checkoutStatus = responseData['status']?.toString() ?? 'PENDING';
 
-        debugPrint('✅ SumUp Checkout Created: $transactionId (Status: $checkoutStatus)');
+        debugPrint('SumUp Checkout Created: $transactionId (Status: $checkoutStatus)');
         
         // DEMO MODE: Simulate immediate payment success für Diplomarbeit
         // In production: User würde zur Zahlungsseite weitergeleitet oder SDK genutzt
-        debugPrint('🎓 DEMO MODE: Simulating successful payment for thesis');
+        debugPrint('DEMO MODE: Simulating successful payment for thesis');
 
         return SumUpPaymentResult(
           success: true,
@@ -2521,7 +2521,7 @@ class SumUpService {
             responseData['error_message']?.toString() ?? 
             'Zahlungsfehler';
 
-        debugPrint('❌ SumUp Payment Failed: $errorMessage');
+        debugPrint('SumUp Payment Failed: $errorMessage');
 
         return SumUpPaymentResult(
           success: false,
@@ -2531,7 +2531,7 @@ class SumUpService {
         );
       }
     } catch (e) {
-      debugPrint('❌ SumUp Exception: $e');
+      debugPrint('SumUp Exception: $e');
       return SumUpPaymentResult(
         success: false,
         transactionId: null,
@@ -2629,7 +2629,7 @@ class _PaymentFormState extends State<PaymentForm> {
   }
 
   Future<void> _processCardPayment(double amount) async {
-    debugPrint('💳 Processing card payment via SumUp: €$amount');
+    debugPrint('Processing card payment via SumUp: €$amount');
 
     // Show processing dialog
     if (mounted) {
@@ -2653,7 +2653,7 @@ class _PaymentFormState extends State<PaymentForm> {
       if (result.success) {
         _transactionId = result.transactionId;
         _status = PaymentStatus.paid;
-        debugPrint('✅ SumUp payment successful: $_transactionId');
+        debugPrint('SumUp payment successful: $_transactionId');
 
         if (mounted) {
           Navigator.pop(context); // Close processing dialog
@@ -2666,13 +2666,13 @@ class _PaymentFormState extends State<PaymentForm> {
         Navigator.pop(context); // Close processing dialog
       }
       _status = PaymentStatus.failed;
-      debugPrint('❌ Card payment error: $e');
+      debugPrint('Card payment error: $e');
       rethrow;
     }
   }
 
   Future<void> _processInvoicePayment(double amount) async {
-    debugPrint('📋 Processing invoice: €$amount');
+    debugPrint('Processing invoice: €$amount');
 
     // Rechnungen bleiben pending bis Admin bestätigt
     _status = PaymentStatus.pending;
@@ -2704,7 +2704,7 @@ try {
     paymentId: _existingPayment?.id,
   );
 
-  debugPrint('✅ Payment saved successfully to database');
+  debugPrint('Payment saved successfully to database');
 
   if (mounted) {
     setState(() => _showSuccess = true);
@@ -2761,7 +2761,7 @@ class NotificationService {
         final android = _localNotifications
             .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         await android?.requestNotificationsPermission();
-        debugPrint('✅ NOTIFICATION: Android permission requested');
+        debugPrint('NOTIFICATION: Android permission requested');
       }
 
       // Android Settings
@@ -2785,7 +2785,7 @@ class NotificationService {
       );
 
       _initialized = initialized ?? false;
-      debugPrint('✅ NOTIFICATION: Service initialized: $_initialized');
+      debugPrint('NOTIFICATION: Service initialized: $_initialized');
       return _initialized;
     } catch (e) {
       debugPrint('Failed to initialize notifications: $e');
@@ -2795,7 +2795,7 @@ class NotificationService {
 
   /// Starte Ride-Monitoring mit Supabase Realtime
   void startRideMonitoring(String userId) {
-    debugPrint('🚀 NOTIFICATION SERVICE: Starting ride monitoring for user: $userId');
+    debugPrint('NOTIFICATION SERVICE: Starting ride monitoring for user: $userId');
     
     // Cleanup alte Subscription
     _rideSubscription?.unsubscribe();
@@ -2816,61 +2816,61 @@ class NotificationService {
         )
         .subscribe();
 
-    debugPrint('✅ NOTIFICATION SERVICE: Listening for updates on channel: ride_updates_$userId');
+    debugPrint('NOTIFICATION SERVICE: Listening for updates on channel: ride_updates_$userId');
   }
 
   /// Handle Ride Updates von Supabase Realtime
   void _handleRideUpdate(PostgresChangePayload payload) {
-    debugPrint('📬 NOTIFICATION: Ride update received!');
+    debugPrint('NOTIFICATION: Ride update received!');
     
     final oldRecord = payload.oldRecord;
     final newRecord = payload.newRecord;
 
     if (oldRecord == null || newRecord == null) {
-      debugPrint('❌ NOTIFICATION: Missing record data');
+      debugPrint('NOTIFICATION: Missing record data');
       return;
     }
 
     final oldStatus = oldRecord['status'] as String?;
     final newStatus = newRecord['status'] as String?;
 
-    debugPrint('📊 NOTIFICATION: Status changed from $oldStatus to $newStatus');
+    debugPrint('NOTIFICATION: Status changed from $oldStatus to $newStatus');
 
     // Status hat sich geändert -> Notification zeigen!
     if (oldStatus != newStatus) {
-      debugPrint('✅ NOTIFICATION: Showing notification for status: $newStatus');
+      debugPrint('NOTIFICATION: Showing notification for status: $newStatus');
       _showRideStatusNotification(newStatus);
     }
   }
 
   /// Zeige Notification bei Status-Änderung
   Future<void> _showRideStatusNotification(String? status) async {
-    debugPrint('🔔 NOTIFICATION: Preparing notification for status: $status');
+    debugPrint('NOTIFICATION: Preparing notification for status: $status');
     
     String title = 'Fahrt-Update';
     String body = '';
 
     switch (status?.toLowerCase()) {
       case 'assigned':
-        title = '🚕 Fahrer zugewiesen!';
+        title = 'Fahrer zugewiesen!';
         body = 'Ein Fahrer wurde Ihrer Fahrt zugewiesen';
         break;
       case 'in_progress':
       case 'inprogress':
       case 'unterwegs':
-        title = '🚗 Fahrt gestartet!';
+        title = 'Fahrt gestartet!';
         body = 'Die Fahrt hat gestartet';
         break;
       case 'completed':
-        title = '✅ Fahrt abgeschlossen';
+        title = 'Fahrt abgeschlossen';
         body = 'Ihre Fahrt wurde erfolgreich abgeschlossen';
         break;
       default:
-        debugPrint('⚠️ NOTIFICATION: Unknown status, skipping: $status');
+        debugPrint('NOTIFICATION: Unknown status, skipping: $status');
         return;
     }
 
-    debugPrint('📤 NOTIFICATION: Showing - Title: $title, Body: $body');
+    debugPrint('NOTIFICATION: Showing - Title: $title, Body: $body');
     await showNotification(
       title: title,
       body: body,
@@ -2996,9 +2996,9 @@ Die Benachrichtigungen werden über **Supabase Realtime** ausgelöst, wenn sich 
 
 Die Benachrichtigungen werden mit benutzerfreundlichen Emojis und Meldungen dargestellt:
 
-- **🚕 Fahrer zugewiesen**: "Ein Fahrer wurde Ihrer Fahrt zugewiesen"
-- **🚗 Fahrt gestartet**: "Die Fahrt hat gestartet"
-- **✅ Fahrt abgeschlossen**: "Ihre Fahrt wurde erfolgreich abgeschlossen"
+- **Fahrer zugewiesen**: "Ein Fahrer wurde Ihrer Fahrt zugewiesen"
+- **Fahrt gestartet**: "Die Fahrt hat gestartet"
+- **Fahrt abgeschlossen**: "Ihre Fahrt wurde erfolgreich abgeschlossen"
 
 Tipp auf eine Notification navigiert automatisch zur Activity-Seite (`/main`), um die Fahrtdetails zu sehen. Sound und Vibration sind für beide Plattformen aktiviert.
 
@@ -3028,26 +3028,26 @@ Statt umfassender Unit-Tests wurde während der Entwicklung ein strukturiertes D
 
 ```dart
 // LocationService
-debugPrint('📍 LocationService: Requesting location permission');
-debugPrint('✅ Location obtained: ${position.latitude}, ${position.longitude}');
+debugPrint('LocationService: Requesting location permission');
+debugPrint('Location obtained: ${position.latitude}, ${position.longitude}');
 
 // RoutingService
-debugPrint('🗺️ Calculating route from $from to $to');
-debugPrint('✅ Route calculated: ${route.distanceKilometers} km, ${route.durationMinutes} min');
+debugPrint('Calculating route from $from to $to');
+debugPrint('Route calculated: ${route.distanceKilometers} km, ${route.durationMinutes} min');
 
 // SumUpService
-debugPrint('💳 SumUp: Starting card payment for €$amount');
-debugPrint('✅ SumUp Checkout Created: $transactionId');
-debugPrint('🎓 DEMO MODE: Simulating successful payment for thesis');
+debugPrint('SumUp: Starting card payment for €$amount');
+debugPrint('SumUp Checkout Created: $transactionId');
+debugPrint('DEMO MODE: Simulating successful payment for thesis');
 
 // NotificationService
-debugPrint('🚀 NOTIFICATION SERVICE: Starting ride monitoring for user: $userId');
-debugPrint('📬 NOTIFICATION: Ride update received!');
-debugPrint('✅ NOTIFICATION: Showing notification for status: $newStatus');
+debugPrint('NOTIFICATION SERVICE: Starting ride monitoring for user: $userId');
+debugPrint('NOTIFICATION: Ride update received!');
+debugPrint('NOTIFICATION: Showing notification for status: $newStatus');
 
 // PaymentForm
-debugPrint('💾 Saving payment to database: status=$_status, amount=$amount');
-debugPrint('✅ Payment saved successfully to database');
+debugPrint('Saving payment to database: status=$_status, amount=$amount');
+debugPrint('Payment saved successfully to database');
 ```
 
 Diese strukturierte Fehlerbehandlung mit Emojis und aussagekräftigen Meldungen half bei der schnellen Lokalisierung von Problemen während der Entwicklung.
