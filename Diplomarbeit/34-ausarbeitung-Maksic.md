@@ -5,11 +5,11 @@
 ### Webtechnologien & Grundlagen
 #### HTML 
 ##### Definition und Zweck von HTML
-HTML (HyperText Markup Language) ist eine Auszeichnungssprache und bildet das Gerüst einer Website. Sie beschreibt die Struktur sowie die Inhalte einer Webseite mithilfe von sogenannten Elementen. Diese Elemente dienen als Bausteine und definieren beispielsweise Überschriften, Absätze, Links oder Bilder. 
+HTML (HyperText Markup Language) ist eine Auszeichnungssprache und bildet das Gerüst einer Website. Sie beschreibt die Struktur sowie die Inhalte einer Webseite mithilfe von sogenannten Elementen. Diese Elemente dienen als Bausteine und definieren beispielsweise Überschriften, Absätze, Links oder Bilder. [@webdev-learn-html]
 
-Ein Tag bezeichnet dabei eine Auszeichnung in spitzen Klammern `< >`, mit der festgelegt wird, welche Bedeutung ein bestimmter Inhalt besitzt und wie dieser vom Webbrowser interpretiert wird. 
+Ein Tag bezeichnet dabei eine Auszeichnung in spitzen Klammern `< >`, mit der festgelegt wird, welche Bedeutung ein bestimmter Inhalt besitzt und wie dieser vom Webbrowser interpretiert wird. [@webdev-learn-html]
 
-Zusätzlich können Tags sogenannte Attribute enthalten. Attribute liefern weiterführende Informationen zu einem Element und werden im öffnenden Tag definiert. Ein typisches Beispiel ist das `href`-Attribut beim `<a>`-Tag, welches die Zieladresse eines Hyperlinks festlegt, oder das `src`-Attribut beim `<img>`-Tag, das die Quelle eines Bildes angibt. 
+Zusätzlich können Tags sogenannte Attribute enthalten. Attribute liefern weiterführende Informationen zu einem Element und werden im öffnenden Tag definiert. Ein typisches Beispiel ist das `href`-Attribut beim `<a>`-Tag, welches die Zieladresse eines Hyperlinks festlegt, oder das `src`-Attribut beim `<img>`-Tag, das die Quelle eines Bildes angibt. [@webdev-learn-html]
 ```html
 <a href="https://www.example.com">Zur Beispielseite</a>
 <img src="images/bild.jpg" alt="Beispielbild">
@@ -36,7 +36,7 @@ Zusätzlich können Tags sogenannte Attribute enthalten. Attribute liefern weite
 | `<img src="..." alt="...">` | Image | Bindet ein Bild in die Webseite ein; `alt` dient als Alternativtext. |
 
 ##### Void Elemente 
-Void Elemente (auch leere Elemente genannt) sind Elemente, die keinen Inhalt besitzen und daher kein schließendes Gegenstück benötigen. Sie bestehen ausschließlich aus einem einzelnen Tag und werden verwendet, um eigenständige Elemente einzubinden. 
+Void Elemente (auch leere Elemente genannt) sind Elemente, die keinen Inhalt besitzen und daher kein schließendes Gegenstück benötigen. Sie bestehen ausschließlich aus einem einzelnen Tag und werden verwendet, um eigenständige Elemente einzubinden. [@webdev-learn-html]
 
 Beispiele:
 | Tag | Tag Name | Beschreibung |
@@ -47,11 +47,10 @@ Beispiele:
 | `<input>` | Input | Stellt ein Formularelement (z. B. Textfeld, Checkbox) als UI-Widget bereit. |
 
 ##### Ersetzte Elemente
-Ersetzte Elemente sind HTML-Elemente, deren dargestellter Inhalt nicht aus dem HTML-Text selbst stammt, sondern durch ein externes Objekt ersetzt wird. Viele ersetzte Elemente sind Void-Elemente, aber nicht alle ersetzten Elemente sind Void-Elemente.
+Ersetzte Elemente sind HTML-Elemente, deren dargestellter Inhalt nicht aus dem HTML-Text selbst stammt, sondern durch ein externes Objekt ersetzt wird. Viele ersetzte Elemente sind Void-Elemente, aber nicht alle ersetzten Elemente sind Void-Elemente. [@webdev-learn-html]
 
 Beispiele für Ersetzte Elemente sind: `<img>`, `<video>`, `<input>`
 
-[@webdev-learn-html]
 
 ```HTML
 <!DOCTYPE html>
@@ -69,7 +68,7 @@ Beispiele für Ersetzte Elemente sind: `<img>`, `<video>`, `<input>`
         <a href="https://www.example.com">Mehr erfahren - a Element</a>
         <br><br>
     <footer>
-        <p>2025 Beispielseite</p>
+        <p>&copy 2025 Beispielseite</p>
     </footer>
 
 </body>
@@ -281,13 +280,82 @@ In diesem Beispiel werden Typannotationen für die Funktionsparameter verwendet.
 ### React & Next.js
 #### Next.js
 Next.js ist ein auf React basierendes Web-Framework zur Entwicklung moderner Webanwendungen. Es erweitert React um zentrale Funktionen wie serverseitiges Rendern (Server-Side Rendering, SSR), statische Seitengenerierung (Static Site Generation, SSG), dateibasiertes Routing, API-Routen sowie integrierte Mechanismen zur Optimierung von Performance.[@nextjs-docs]
+
+##### Server-Side Rendering
+In Next.js werden Layouts und Seiten standardmäßig serverseitig gerendert: Der benötigte Inhalt wird dabei auf dem Server erzeugt und anschließend an den Browser übertragen. [@nextjs-docs]
+
+Dabei gibt es 2 Varianten: Static Rendering (auch Prerendering) erstellt die Seiten bereits beim Build oder bei einer späteren Aktualisierung und speichert das Ergebnis im Cache. Dynamic Rendering generiert die Seite erst bei einer konkreten Anfrage zur Laufzeit. [@nextjs-docs]
+
+
+##### Routing 
+Routing ist in Next.js die Navigation zwischen verschiedenen Seiten (Routen) einer Webanwendung. Routen werden standardmäßig serverseitig gerendert, wobei Layouts und Pages als React Server Components umgesetzt sind. Bei einer Navigation wird der sogenannte Server Component Payload auf dem Server erzeugt und anschließend an den Client übertragen. [@nextjs-docs]
+
 #### React
+React ist eine von Meta entwickelte JavaScript-Bibliothek zur Erstellung von Benutzeroberflächen. Sie basiert auf einem komponentenorientierten Ansatz, bei dem die Oberfläche in wiederverwendbare, unabhängige Bausteine (Components) zerlegt wird.
+
+##### Komponenten-Konzept
+React basiert auf dem Konzept von Komponenten, die als wiederverwendbare Bausteine zur Erstellung von Benutzeroberflächen dienen. Eine Komponente beschreibt, wie ein Teil der Benutzeroberfläche aussehen und sich verhalten soll, abhängig von Eingabedaten und internem Zustand.
+
+In modernen React-Anwendungen werden Komponenten als Function Components umgesetzt. Dabei handelt es sich um normale JavaScript-Funktionen, die ein React-Element in Form von JSX zurückgeben. JSX ist eine Syntaxerweiterung für JavaScript, mit der UI-Strukturen wie HTML direkt im Code beschrieben werden können. React interpretiert JSX als JavaScript-Funktionsaufrufe.
+
+Function Components können Props (Eingabewerte) entgegennehmen und mithilfe von Hooks internen Zustand und Logik verwalten. Dadurch lassen sich Darstellung und Verhalten einer Benutzeroberfläche klar kapseln. 
+##### Component-Tree, Props & State  
+In React ist die Benutzeroberfläche als Component-Tree aufgebaut. Das bedeutet, dass eine Anwendung aus einer Wurzel-Komponente besteht, die weitere untergeordnete Komponenten enthält. Diese hierarchische Struktur ähnelt einem Baum, bei dem Eltern-Komponenten ihre Kinder rendern und steuern.
+
+Props (Properties) dienen dazu, Daten von einer übergeordneten Komponente an eine untergeordnete Komponente weiterzugeben. Sie sind read-only, das heißt, eine Komponente darf ihre Props nicht selbst verändern. Props ermöglichen die Wiederverwendbarkeit von Komponenten, da deren Verhalten und Darstellung über übergebene Werte gesteuert werden kann.
+
+State beschreibt den internen, veränderbaren Zustand einer Komponente. Er wird verwendet, um dynamische Daten zu speichern, die sich während der Laufzeit ändern können. Ändert sich der State, rendert React die betroffene Komponente automatisch neu, sodass die Benutzeroberfläche stets den aktuellen Zustand widerspiegelt.
+
+##### Rendering & Hooks (useState, useEffect, useContext)  
+In React beschreibt Rendering den Prozess, bei dem React anhand des aktuellen Zustands (State) und der übergebenen Eigenschaften (Props) bestimmt, wie die Benutzeroberfläche aussehen soll. Immer wenn sich Props oder State ändern, wird die betroffene Komponente erneut gerendert. React aktualisiert dabei effizient nur jene Teile der Oberfläche, deren Darstellung sich tatsächlich geändert hat.
+| Hook | Zweck | Kurzbeschreibung|
+| -------- | ------- | ------ |
+| `useState`   | Zustand | Ermöglicht das Speichern und Aktualisieren von lokalen Zustandswerten innerhalb einer Komponente. Eine Zustandsänderung löst ein erneutes Rendering aus. |
+| `useEffect`  | Seiteneffekte  | Wird verwendet, um Code auszuführen, der nicht direkt zur Darstellung gehört, z. B. Daten laden, Timer starten oder auf Änderungen reagieren.|
+| `useContext` | Kontextzugriff | Erlaubt den Zugriff auf globale Daten, ohne Props durch viele Komponenten weiterreichen zu müssen.|
+
+Hooks sind spezielle Funktionen, mit denen Funktionskomponenten zusätzliche Fähigkeiten erhalten. Sie ermöglichen es, Zustand zu verwalten, auf Lebenszyklus-Ereignisse zu reagieren oder globale Daten bereitzustellen, ohne Klassenkomponenten verwenden zu müssen.
+
+```tsx
+import { useState } from "react";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Klicks: {count}
+    </button>
+  );
+}
+```
+In diesem Codebeispiel kann man erkennen dass ``useState`` den Wert ``count`` speichert und eine Funktion ``setCount`` bereit stellt um diesen zu erhöhen.
 
 
-#### Komponenten-Konzept (JSX, Functional Components)
-#### Component-Tree, Props & State  
-#### Rendering & Hooks (useState, useEffect, useContext)  
+```tsx
+import { useEffect } from "react";
 
+function Logger() {
+  useEffect(() => {
+    console.log("Komponente wurde gerendert");
+  });
+
+  return <p>Öffne die Konsole</p>;
+}
+```
+Dieses Codebeispiel zeit wie ``useEffect`` nach dem Rendern der Komponente ausgeführt wird und somit eine Nachricht in die Konsole schickt.
+
+```tsx
+import { createContext, useContext } from "react";
+
+const ThemeContext = createContext("light");
+
+function ThemeText() {
+  const theme = useContext(ThemeContext);
+  return <p>Aktuelles Theme: {theme}</p>;
+}
+```
+Hier sieht man wie ``useContext`` den Zugriff auf globale Werte ohne Props weiterzugeben erlaubt.
 ### Styling mit Tailwind CSS
 
 #### Utility-First-Konzept  
