@@ -634,7 +634,7 @@ void handleOrderChange(PostgresChangePayload payload) {
 ```
 [@supabase_flutter]
 
-#### Datenmodelle & Mapping (JSON ↔ Dart)
+#### Datenmodelle & Mapping (JSON <-> Dart)
 Die Kommunikation zwischen Supabase und der Flutter-Anwendung erfolgt im JSON-Format. Die von Supabase empfangenen JSON-Objekte werden in Flutter in der Regel zunächst als `Map<String, dynamic>` verarbeitet und anschließend in passende Dart-Datenmodelle überführt.
 
 Für komplexere Strukturen, wie beispielsweise Benutzersitzungen oder eigene Datenobjekte, wird häufig ein klassisches Mapping über `fromJson`- und `toJson`-Methoden verwendet. Dadurch können JSON-Daten in typsichere Dart-Objekte konvertiert und umgekehrt wieder in JSON übertragen werden.
