@@ -561,7 +561,8 @@ Neben der fachlichen Umsetzung fließen auch organisatorische Aspekte, wie Planu
 
 Der Projektabschluss stellt somit nicht nur das Ende des Projekts dar, sondern auch den Abschluss eines umfassenden Lernprozesses im Bereich des Projektmanagements.
 
-#Praxis
+# **Praxis**
+
 
 ## Übernahme der Rolle als Projektmanager
 
