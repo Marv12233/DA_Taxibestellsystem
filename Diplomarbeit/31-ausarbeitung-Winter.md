@@ -2987,7 +2987,7 @@ class _AuthGateState extends State<AuthGate> {
 
 Die Benachrichtigungen werden über **Supabase Realtime** ausgelöst, wenn sich der Fahrt-Status ändert:
 
-- **old_status != new_status** → Notification wird angezeigt
+- **old_status != new_status** -> Notification wird angezeigt
 - **Nur UPDATE-Events** werden monitored (INSERT/DELETE werden ignoriert)
 - **Kanäle**: `ride_updates_${userId}` für benutzer-spezifisches Monitoring
 - **Filter**: `customer_id = ${userId}` auf Datenbank-Ebene
@@ -3070,7 +3070,7 @@ void main() {
 - Mock-Implementierungen von Supabase, LocationService, RoutingService
 - Fixture-Daten für Test-Szenarien
 - Tests für jeden Service separat
-- Integration-Tests für komplexe Workflows (z.B. Login → Booking → Payment)
+- Integration-Tests für komplexe Workflows (z.B. Login -> Booking -> Payment)
 
 Dies wurde auf Grund des Umfangs der Diplomarbeit priorisiert, sodass der Fokus auf der Implementierung der Kernfunktionalität lag.
 
