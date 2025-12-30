@@ -11,7 +11,7 @@ Als Projektmanager besteht meine Aufgabe darin, einen klaren organisatorischen R
 Ein klar formulierter Projektüberblick unterstützt eine strukturierte Vorgehensweise und erleichtert die Koordination der einzelnen Projektphasen.
 [@atlassian-kanban]
 
----
+
 
 ## Projektziel und Projektvision
 
@@ -22,7 +22,7 @@ Im Rahmen meiner Rolle als Projektmanager ist es wesentlich, ein eindeutiges Pro
 Durch die klare Trennung zwischen Projektziel und Projektvision wird sichergestellt, dass sowohl kurzfristige Anforderungen als auch langfristige Perspektiven im Projekt berücksichtigt werden.
 [@atlassian-kanban]
 
----
+
 
 ## Projektumfang und Abgrenzung
 
@@ -33,7 +33,7 @@ Eine zentrale Aufgabe im Projektmanagement besteht darin, den Projektumfang real
 Eine saubere Abgrenzung trägt dazu bei, Zeit und Ressourcen effizient einzusetzen und das Projekt innerhalb des vorgegebenen Rahmens erfolgreich abzuschließen.
 [@atlassian-kanban]
 
----
+
 
 ## Stakeholderanalyse
 
@@ -58,7 +58,7 @@ Im Rahmen des Projekts übernimmt der Projektmanager die koordinierende und orga
 Durch eine eindeutige Zuordnung der Rollen wird vermieden, dass Zuständigkeiten unklar bleiben oder Aufgaben doppelt bearbeitet werden.
 [@pmi-communication-1999]
 
----
+
 
 ## Verantwortlichkeiten und Zuständigkeiten
 
@@ -69,7 +69,7 @@ Eine der zentralen Aufgaben des Projektmanagers besteht darin, Verantwortlichkei
 Klare Zuständigkeiten tragen dazu bei, Missverständnisse im Projektteam zu vermeiden und ermöglichen eine effiziente Zusammenarbeit zwischen den einzelnen Projektmitgliedern.
 [@pmi-communication-1999]
 
----
+
 
 ## Kommunikations- und Eskalationswege
 
@@ -87,7 +87,7 @@ Das Vorgehensmodell beschreibt die grundsätzliche Art und Weise, wie ein Projek
 Im Rahmen des Projektmanagements dient das Vorgehensmodell als verbindlicher Rahmen für alle organisatorischen Entscheidungen. Es stellt sicher, dass Planung, Umsetzung und Kontrolle auf einer gemeinsamen Methodik basieren und für alle Projektbeteiligten nachvollziehbar sind.
 [@atlassian-kanban; @kanban-guide-2025]
 
----
+
 
 ## Auswahl des Vorgehensmodells
 
@@ -98,7 +98,7 @@ Für dieses Projekt wurde bewusst ein agiles Vorgehen gewählt, da sich Anforder
 Das gewählte Vorgehensmodell unterstützt eine iterative Arbeitsweise, regelmäßige Überprüfung des Projektfortschritts und eine transparente Aufgabenverteilung.
 [@atlassian-kanban]
 
----
+
 
 ## Begründung für den Einsatz von Kanban
 
@@ -112,7 +112,7 @@ Der Einsatz von Kanban ermöglicht:
 Im Projektmanagement wird Kanban eingesetzt, um den Überblick über den Projektfortschritt zu behalten und Engpässe frühzeitig zu erkennen. Durch die visuelle Darstellung der Aufgaben kann der Projektstand jederzeit nachvollzogen werden, was die Koordination im Team erleichtert und die Eigenverantwortung der Projektmitglieder stärkt.
 [@atlassian-kanban; @kanban-guide-2025]
 
----
+
 
 ## Projektphasen und Meilensteine
 
@@ -127,7 +127,7 @@ Typische Projektphasen im Rahmen des Projektmanagements sind:
 Meilensteine markieren wichtige Zwischenergebnisse innerhalb dieser Phasen. Sie ermöglichen eine objektive Bewertung des Projektfortschritts und dienen als Kontrollpunkte für Zeit- und Qualitätsziele. Im Projektmanagement stellen Meilensteine sicher, dass das Projekt planmäßig voranschreitet und Abweichungen frühzeitig erkannt werden.
 [@kanban-guide-2025]
 
----
+
 
 # Anforderungsmanagement
 
@@ -137,7 +137,7 @@ Das Anforderungsmanagement ist ein zentraler Bestandteil des Projektmanagements 
 
 Ein systematisches Anforderungsmanagement stellt sicher, dass alle Projektziele klar definiert sind und während des gesamten Projektverlaufs berücksichtigt werden. Es dient zudem als Referenz für Planung, Umsetzung und Kontrolle.
 
----
+
 
 ## Erhebung der Anforderungen
 
@@ -145,7 +145,7 @@ Die Erhebung der Anforderungen beschreibt den Prozess, in dem relevante Projekta
 
 Im Projektmanagement erfolgt die Anforderungserhebung strukturiert und nachvollziehbar. Dabei werden bestehende Prozesse analysiert, Verbesserungspotenziale identifiziert und Erwartungen an das Projektergebnis definiert. Eine sorgfältige Erhebung der Anforderungen reduziert das Risiko von Fehlentwicklungen und späteren Anpassungen.
 
----
+
 
 ## Strukturierung und Dokumentation der Anforderungen
 
@@ -153,7 +153,7 @@ Nach der Erhebung müssen Anforderungen systematisch strukturiert und dokumentie
 
 Die Strukturierung erfolgt in logisch zusammengehörige Bereiche, wodurch Abhängigkeiten und Zusammenhänge sichtbar werden. Die Dokumentation dient als verbindliche Grundlage für Planung, Umsetzung und Validierung und ermöglicht eine lückenlose Nachverfolgbarkeit der Anforderungen über den gesamten Projektverlauf hinweg.
 
----
+
 
 ## Priorisierung der Anforderungen (MoSCoW-Methode)
 
@@ -168,7 +168,7 @@ Dabei werden Anforderungen in folgende Kategorien eingeteilt:
 Diese Priorisierung unterstützt eine realistische Planung und stellt sicher, dass essenzielle Anforderungen bevorzugt umgesetzt werden. Sie bietet zudem eine klare Entscheidungsgrundlage bei zeitlichen oder organisatorischen Einschränkungen.
 [@productplan-moscow]
 
----
+
 
 ## Validierung und Abnahme der Anforderungen
 
@@ -182,7 +182,7 @@ Die Projektplanung bildet die organisatorische Grundlage für die erfolgreiche U
 Sie umfasst die zeitliche Strukturierung des Projektverlaufs, die Planung der benötigten Ressourcen sowie die Abschätzung und Kontrolle der entstehenden Kosten.  
 Im Projektmanagement dient die Projektplanung dazu, den Fortschritt steuerbar zu machen und den Projektabschluss innerhalb des vorgegebenen Rahmens sicherzustellen.
 
----
+
 
 ## Zeitplanung und Meilensteinplan
 
@@ -200,7 +200,7 @@ Meilensteine markieren dabei bedeutende Zwischenergebnisse, wie Präsentationen,
 Der Meilensteinplan unterstützt das Projektmanagement dabei, den zeitlichen Fortschritt transparent darzustellen und Abweichungen frühzeitig zu erkennen.  
 Durch diese strukturierte Zeitplanung können Prioritäten angepasst und Ressourcen gezielt eingesetzt werden.
 
----
+
 
 ## Ressourcenplanung
 
@@ -213,7 +213,7 @@ Die personellen Ressourcen werden durch die klare Rollenverteilung im Projekttea
 Technische Ressourcen umfassen unter anderem Entwicklungsumgebungen, Testgeräte sowie eingesetzte Software-Tools.  
 Eine frühzeitige Planung dieser Ressourcen stellt sicher, dass alle Projektphasen ohne unnötige Verzögerungen durchgeführt werden können.
 
----
+
 
 ## Budget- und Kostenplanung
 
@@ -231,7 +231,7 @@ Eine strukturierte Budgetplanung trägt dazu bei, finanzielle Risiken zu minimie
 Das Aufgaben- und Fortschrittsmanagement stellt sicher, dass alle Projektaktivitäten geplant, koordiniert und kontrolliert durchgeführt werden.  
 Es dient dazu, den Überblick über laufende Aufgaben zu behalten, Arbeitsfortschritte transparent darzustellen und rechtzeitig auf Abweichungen reagieren zu können.
 
----
+
 
 ## Aufgabenverwaltung mit Kanban-Board
 
@@ -250,7 +250,7 @@ Typische Statusphasen sind:
 Die Nutzung des Kanban-Boards unterstützt eine transparente Arbeitsweise und ermöglicht es dem Projektmanagement, Engpässe frühzeitig zu erkennen und gezielt gegenzusteuern.
 [@atlassian-kanban]
 
----
+
 
 ## Iterations- und Sprintplanung
 
@@ -263,7 +263,7 @@ Dadurch wird eine kontinuierliche Weiterentwicklung des Projekts ermöglicht, oh
 Im Projektmanagement stellt diese iterative Vorgehensweise sicher, dass neue Erkenntnisse oder notwendige Anpassungen flexibel berücksichtigt werden können.
 [@kanban-guide-2025]
 
----
+
 
 ## Fortschrittskontrolle und Statusberichte
 
@@ -277,7 +277,7 @@ Statusberichte fassen den aktuellen Stand der Arbeiten zusammen und geben Auskun
 
 Diese strukturierte Fortschrittskontrolle ermöglicht es, Abweichungen vom geplanten Projektverlauf frühzeitig zu erkennen und entsprechende Maßnahmen einzuleiten.
 
----
+
 
 # Qualitätsmanagement
 
@@ -285,7 +285,7 @@ Das Qualitätsmanagement stellt sicher, dass das Projekt die definierten Anforde
 Es umfasst alle organisatorischen Maßnahmen zur Planung, Sicherstellung und Überprüfung der Projektqualität.
 [@pmi-quality-1987]
 
----
+
 
 ## Qualitätsziele des Projekts
 
@@ -301,7 +301,7 @@ Zentrale Qualitätsziele im Projektmanagement sind:
 Durch klar definierte Qualitätsziele wird sichergestellt, dass der Projekterfolg nicht nur anhand des Funktionsumfangs, sondern auch anhand qualitativer Kriterien bewertet wird.
 [@pmi-quality-1987]
 
----
+
 
 ## Teststrategie und Qualitätssicherung
 
@@ -314,7 +314,7 @@ Tests erfolgen schrittweise im Zuge der Umsetzung einzelner Aufgaben und dienen 
 Diese systematische Vorgehensweise trägt dazu bei, spätere Korrekturen zu minimieren und die Gesamtqualität des Projekts sicherzustellen.
 [@pmi-quality-1987]
 
----
+
 
 ## Code-Reviews und Abnahmeprozesse
 
@@ -330,14 +330,14 @@ Dabei wird geprüft, ob:
 Durch diese strukturierte Abnahme wird eine gleichbleibende Qualität im Projektverlauf gewährleistet.
 [@pmi-quality-1987]
 
----
+
 
 # Risikomanagement
 
 Das Risikomanagement dient dazu, mögliche Risiken frühzeitig zu erkennen, zu bewerten und geeignete Gegenmaßnahmen zu definieren.  
 Es ist ein wesentlicher Bestandteil des Projektmanagements und trägt dazu bei, den Projekterfolg langfristig abzusichern.
 
----
+
 
 ## Identifikation von Projektrisiken
 
@@ -352,7 +352,7 @@ Typische Risikobereiche im Projektmanagement sind:
 
 Eine frühzeitige Identifikation dieser Risiken ermöglicht es, rechtzeitig geeignete Maßnahmen zu planen.
 
----
+
 
 ## Bewertung und Priorisierung der Risiken
 
@@ -362,7 +362,7 @@ Diese Bewertung dient dazu, Risiken zu priorisieren und den Fokus auf besonders 
 Im Projektmanagement werden Risiken mit hoher Wahrscheinlichkeit und hoher Auswirkung bevorzugt behandelt, um größere Projektprobleme zu vermeiden.  
 Durch diese Priorisierung können Ressourcen gezielt für präventive Maßnahmen eingesetzt werden.
 
----
+
 
 ## Maßnahmen zur Risikominimierung
 
@@ -383,7 +383,7 @@ Das Änderungs- und Entscheidungsmanagement regelt den Umgang mit Anpassungen w�
 Da Projekte selten exakt nach der ursprünglichen Planung verlaufen, ist ein strukturierter Prozess notwendig, um Änderungen kontrolliert umzusetzen und fundierte Entscheidungen treffen zu können.
 [@pmi-change-control-2006]
 
----
+
 
 ## Umgang mit Änderungsanforderungen
 
@@ -403,7 +403,7 @@ Erst nach dieser Bewertung wird entschieden, ob und in welcher Form eine Änderu
 Durch dieses strukturierte Vorgehen bleibt der Projektumfang kontrollierbar und die Projektziele werden nicht unbeabsichtigt verwässert.
 [@pmi-change-control-2006]
 
----
+
 
 ## Entscheidungsprozesse im Projekt
 
@@ -415,7 +415,7 @@ Dabei fließen Informationen aus dem Projektfortschritt, dem aktuellen Aufgabens
 
 Wesentliche Entscheidungen werden zentral koordiniert, um eine einheitliche Ausrichtung des Projekts sicherzustellen und widersprüchliche Maßnahmen zu vermeiden.
 
----
+
 
 ## Dokumentation von Änderungen
 
@@ -429,14 +429,14 @@ Sie stellt sicher, dass Anpassungen am Projektverlauf nachvollziehbar bleiben un
 
 Diese Dokumentation trägt zur Transparenz im Projekt bei und unterstützt eine strukturierte Projektabwicklung.
 
----
+
 
 # Kommunikation und Dokumentation
 
 Eine funktionierende Kommunikation sowie eine strukturierte Dokumentation sind grundlegende Voraussetzungen für den Projekterfolg.  
 Sie stellen sicher, dass alle Projektbeteiligten über den aktuellen Stand informiert sind und relevante Informationen jederzeit verfügbar bleiben.
 
----
+
 
 ## Meetingstruktur und Abstimmungen
 
@@ -448,7 +448,7 @@ Dabei werden relevante Themen strukturiert besprochen und notwendige Entscheidun
 
 Die Ergebnisse von Besprechungen werden festgehalten, um eine gemeinsame Informationsbasis für alle Beteiligten sicherzustellen.
 
----
+
 
 ## Dokumentationsstandards
 
@@ -462,7 +462,7 @@ Im Projektmanagement wird darauf geachtet, dass:
 
 Durch einheitliche Standards wird sichergestellt, dass Projektinformationen langfristig nutzbar und verständlich bleiben.
 
----
+
 
 ## Eingesetzte Tools zur Zusammenarbeit
 
@@ -479,7 +479,7 @@ Das Controlling und die Erfolgsmessung sind zentrale Bestandteile des Projektman
 
 Im Rahmen dieser Diplomarbeit dient das Controlling nicht der formalen Kontrolle, sondern der unterstützenden Steuerung des Projekts. Es liefert Entscheidungsgrundlagen, um den Projektverlauf kontinuierlich zu reflektieren und bei Bedarf organisatorische Anpassungen vorzunehmen.
 
----
+
 
 ## Projektkennzahlen und KPIs
 
@@ -489,7 +489,7 @@ Im Projektkontext dieser Arbeit beziehen sich relevante Kennzahlen vor allem auf
 
 Neben quantitativen Kennzahlen spielen auch qualitative Aspekte eine Rolle. Dazu gehören beispielsweise die Vollständigkeit der Projektdokumentation oder die Einhaltung definierter Anforderungen. Durch diese Kombination wird eine ausgewogene Bewertung des Projektstatus ermöglicht.
 
----
+
 
 ## Überwachung des Projektfortschritts
 
@@ -499,7 +499,7 @@ Im Projektmanagement dieser Diplomarbeit wird der Fortschritt anhand des aktuell
 
 Diese fortlaufende Überwachung unterstützt eine aktive Projektsteuerung und ermöglicht es, Prioritäten anzupassen oder organisatorische Maßnahmen zu setzen, bevor größere Verzögerungen entstehen.
 
----
+
 
 ## Bewertung der Zielerreichung
 
@@ -515,7 +515,7 @@ Durch diese systematische Bewertung der Zielerreichung wird der Projekterfolg tr
 Der Projektabschluss bildet den letzten Abschnitt des Projektmanagements und dient der strukturierten Beendigung des Projekts.  
 In dieser Phase wird überprüft, ob die definierten Projektziele erreicht wurden, welche Erfahrungen während des Projekts gesammelt wurden und wie das Projektergebnis abschließend bewertet werden kann.
 
----
+
 
 ## Abnahmekriterien
 
@@ -530,7 +530,7 @@ Zu den zentralen Abnahmekriterien zählen:
 
 Die Abnahme erfolgt im Projektkontext durch eine Gesamtbewertung des Projektergebnisses und dient als formaler Abschluss der Projektphase.
 
----
+
 
 ## Lessons Learned
 
@@ -549,7 +549,7 @@ Durch Fehler und Herausforderungen konnten wertvolle Erfahrungen gesammelt werde
 
 Rückblickend hat das Projekt wesentlich dazu beigetragen, ein realistisches Verständnis für die Verantwortung und den Arbeitsaufwand eines Projektmanagers zu entwickeln.
 
----
+
 
 ## Übergabe und Abschlussbewertung
 
@@ -560,3 +560,171 @@ Die Abschlussbewertung des Projekts berücksichtigt sowohl die erreichten Ergebn
 Neben der fachlichen Umsetzung fließen auch organisatorische Aspekte, wie Planung, Koordination und Dokumentation, in die Bewertung ein.
 
 Der Projektabschluss stellt somit nicht nur das Ende des Projekts dar, sondern auch den Abschluss eines umfassenden Lernprozesses im Bereich des Projektmanagements.
+
+# **Praxis**
+
+
+## Übernahme der Rolle als Projektmanager
+
+### Einstieg in die Projektleiterrolle
+
+Zu Projektbeginn übernahm ich die Rolle des Projektmanagers und war damit für die organisatorische Steuerung des gesamten Projekts verantwortlich. Konkret bedeutete dies, dass ich den Projektstart strukturierte, erste organisatorische Entscheidungen traf und den Rahmen für die Zusammenarbeit im Team festlegte.  
+
+Ich koordinierte die initiale Aufgabenverteilung, legte die grundlegende Arbeitsweise fest und war für die Erstellung der ersten Planungsdokumente verantwortlich. In dieser Phase musste ich mich intensiv mit den Anforderungen eines Projektleiters auseinandersetzen, da viele organisatorische Aufgaben parallel anfielen.
+
+### Abgrenzung der eigenen Aufgaben im Projektteam
+
+Meine Aufgaben als Projektmanager grenzte ich bewusst von den Entwicklungsaufgaben ab. Während die Teammitglieder für die Umsetzung der einzelnen Softwaremodule verantwortlich waren, konzentrierte ich mich auf Planung, Organisation, Koordination und Dokumentation.  
+
+Ich übernahm keine dauerhaften Entwicklungsaufgaben, um mich vollständig auf das Projektmanagement konzentrieren zu können. Diese klare Trennung erleichterte die Steuerung des Projekts und stellte sicher, dass organisatorische Aufgaben nicht vernachlässigt wurden.
+
+
+
+## Organisation und Strukturierung des Projekts
+
+### Festlegung der Projektorganisation
+
+Ich strukturierte das Projekt, indem ich eine klare Projektorganisation definierte. Dazu legte ich fest, welche Module im Projekt existieren und welche Teammitglieder für diese Bereiche zuständig sind. Diese Struktur diente als Grundlage für die weitere Planung und Aufgabenverteilung.
+
+Die Projektorganisation wurde schriftlich festgehalten, sodass für alle Teammitglieder jederzeit ersichtlich war, wie das Projekt aufgebaut ist und wer wofür verantwortlich ist.
+
+### Definition von Rollen, Zuständigkeiten und Verantwortlichkeiten
+
+Ich definierte die Rollen innerhalb des Projektteams klar und ordnete jedem Teammitglied einen festen Verantwortungsbereich zu. Diese Zuständigkeiten wurden im Projekthandbuch dokumentiert und dienten als verbindliche Grundlage für die Zusammenarbeit.
+
+Durch diese klare Zuordnung konnte ich Aufgaben gezielt vergeben und den Fortschritt der einzelnen Projektbereiche effektiv überwachen.
+
+
+
+## Planung des Projektverlaufs
+
+### Erstellung der Zeit- und Meilensteinplanung
+
+Ich erstellte eine Zeitplanung, in der der Projektverlauf grob in einzelne Phasen unterteilt wurde. Zusätzlich definierte ich Meilensteine, die wichtige Zwischenergebnisse abbildeten, wie etwa abgeschlossene Projektphasen oder Abgabetermine im Rahmen der Diplomarbeit.
+
+Die Planung erfolgte realistisch und wurde im Projektverlauf mehrfach angepasst, wenn sich zeigte, dass bestimmte Aufgaben mehr Zeit benötigten als ursprünglich angenommen.
+
+### Festlegung des Projektumfangs und der Abgrenzungen
+
+Ich legte den Projektumfang fest, indem ich definierte, welche Funktionen umgesetzt werden und welche bewusst nicht Teil des Projekts sind. Diese Abgrenzungen dokumentierte ich, um spätere Missverständnisse zu vermeiden.
+
+Der Fokus lag dabei auf der Umsetzung der Kernfunktionen, während optionale Erweiterungen nur umgesetzt wurden, sofern Zeit und Ressourcen dies zuließen.
+
+
+
+## Auswahl und Anwendung des Vorgehensmodells
+
+### Entscheidung für ein agiles Vorgehen
+
+Ich entschied mich für ein agiles Vorgehen, da sich Anforderungen im Projektverlauf ändern konnten und eine flexible Anpassung notwendig war. Diese Entscheidung traf ich bewusst, um auf neue Erkenntnisse reagieren zu können, ohne den gesamten Projektplan neu erstellen zu müssen.
+
+### Praktischer Einsatz von Kanban im Projektalltag
+
+Zur praktischen Umsetzung nutzte ich ein Kanban-Board in GitHub. Ich richtete das Board ein, definierte die Spalten (Backlog, In Progress, Review, Done) und nutzte es als zentrales Steuerungsinstrument.
+
+Alle Aufgaben wurden von mir dort angelegt und laufend aktualisiert. Das Board diente mir täglich zur Kontrolle des Projektfortschritts.
+
+
+
+## Praktische Umsetzung des Aufgabenmanagements
+
+### Aufbau und Pflege des Kanban-Boards
+
+Ich erstellte für jede Aufgabe ein eigenes GitHub-Issue und ordnete dieses dem Kanban-Board zu. Dabei formulierte ich die Aufgaben klar und nachvollziehbar, sodass für die zuständigen Teammitglieder keine Unklarheiten bestanden.
+
+Das Board wurde von mir regelmäßig gepflegt, indem ich Aufgabenstatus aktualisierte und neue Aufgaben ergänzte.
+
+### Erfassung, Priorisierung und Nachverfolgung von Aufgaben
+
+Ich priorisierte die Aufgaben anhand ihrer Wichtigkeit für den Projekterfolg. Wesentliche Aufgaben wurden als Must-have behandelt und zuerst umgesetzt.  
+
+Durch die Nachverfolgung der Aufgaben im Kanban-Board konnte ich jederzeit erkennen, welche Arbeiten abgeschlossen waren und wo es zu Verzögerungen kam.
+
+
+
+## Durchführung des Anforderungsmanagements
+
+### Analyse des bestehenden Systems
+
+Ich analysierte gemeinsam mit dem Team das bestehende Taxibestellsystem und dokumentierte erkannte Schwächen. Diese Analyse bildete die Grundlage für die Definition neuer Anforderungen.
+
+### Erstellung und Dokumentation von User Stories
+
+Auf Basis der Analyse erstellte ich User Stories für alle relevanten Projektbereiche. Diese Stories legte ich in GitHub an und dokumentierte sie zusätzlich im User-Story-Dokument.
+
+### Anwendung des einheitlichen User-Story-Schemas
+
+Ich stellte sicher, dass alle User Stories nach einem einheitlichen Schema erstellt wurden. Jede Story enthielt eine eindeutige ID, eine Beschreibung aus Nutzerperspektive, eine Priorität sowie ergänzende Kommentare. Dadurch war eine klare und konsistente Dokumentation gewährleistet.
+
+
+
+## Koordination und Kommunikation im Projektteam
+
+### Organisation von Abstimmungen
+
+Ich organisierte regelmäßige Abstimmungen, um den aktuellen Projektstand zu besprechen und offene Aufgaben zu klären. Diese Abstimmungen halfen dabei, Probleme frühzeitig zu erkennen.
+
+### Weitergabe relevanter Informationen
+
+Als Projektmanager war ich dafür verantwortlich, relevante Informationen gesammelt an das Team weiterzugeben. Dadurch wurde sichergestellt, dass alle Teammitglieder stets auf demselben Informationsstand waren.
+
+### Rolle als zentrale Ansprechperson
+
+Ich fungierte während des gesamten Projekts als zentrale Ansprechperson für organisatorische und projektbezogene Fragen. Dadurch konnten Unklarheiten schnell geklärt werden.
+
+
+
+## Umgang mit Änderungen und Entscheidungen
+
+### Bewertung von Änderungsanforderungen
+
+Änderungsanforderungen wurden von mir geprüft und hinsichtlich ihrer Auswirkungen auf Zeitplan und Projektumfang bewertet. Nicht jede Änderung wurde umgesetzt, wenn sie den Projektfortschritt gefährdet hätte.
+
+### Treffen und Dokumentation von Entscheidungen
+
+Ich traf organisatorische Entscheidungen eigenständig oder in Abstimmung mit dem Team und dokumentierte diese, um sie später nachvollziehen zu können.
+
+
+
+## Überwachung des Projektfortschritts
+
+### Kontrolle von Aufgabenstatus und Meilensteinen
+
+Ich überprüfte regelmäßig den Status der Aufgaben im Kanban-Board sowie den Fortschritt im Vergleich zu den geplanten Meilensteinen.
+
+### Reaktion auf Abweichungen vom Projektplan
+
+Bei Abweichungen passte ich Prioritäten oder Zeitpläne an, um den Projektfortschritt sicherzustellen.
+
+
+
+## Qualitäts- und Risikomanagement in der Praxis
+
+### Identifikation und Bewertung von Projektrisiken
+
+Ich identifizierte Risiken wie Zeitmangel oder technische Unsicherheiten und bewertete diese hinsichtlich ihrer Auswirkungen auf das Projekt.
+
+### Umsetzung von Maßnahmen zur Risikominimierung
+
+Zur Risikominimierung setzte ich Maßnahmen wie klare Priorisierung, zusätzliche Abstimmungen und Anpassungen der Planung um.
+
+### Sicherstellung der Projektqualität aus organisatorischer Sicht
+
+Ich achtete darauf, dass Aufgaben vollständig abgeschlossen und dokumentiert wurden, bevor sie als erledigt galten.
+
+
+
+## Projektabschluss aus Sicht des Projektmanagements
+
+### Vorbereitung der Abnahme
+
+Zum Projektende überprüfte ich, ob alle geplanten Aufgaben abgeschlossen und dokumentiert waren.
+
+### Durchführung des Projektabschlusses
+
+Ich koordinierte den Abschluss des Projekts, indem ich alle Ergebnisse zusammenführte und den Projektverlauf abschließend bewertete.
+
+### Reflexion des eigenen Projektmanagements (Lessons Learned)
+
+Rückblickend zeigte sich, dass insbesondere die Aufgabenplanung und Priorisierung zentrale Herausforderungen darstellten. Durch praktische Erfahrung konnte ich meine Fähigkeiten im Projektmanagement deutlich verbessern.
+
