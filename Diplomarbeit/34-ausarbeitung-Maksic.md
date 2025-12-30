@@ -1,10 +1,10 @@
 # Teilaufgabe Schüler Maksic
-
+\textauthor{Nikola Maksic}
 ## Theorie
 
 ### Webtechnologien & Grundlagen
 #### HTML 
-##### Definition und Zweck von HTML
+
 HTML (HyperText Markup Language) ist eine Auszeichnungssprache und bildet das Gerüst einer Website. Sie beschreibt die Struktur sowie die Inhalte einer Webseite mithilfe von sogenannten Elementen. Diese Elemente dienen als Bausteine und definieren beispielsweise Überschriften, Absätze, Links oder Bilder. [@webdev-learn-html]
 
 Ein Tag bezeichnet dabei eine Auszeichnung in spitzen Klammern `< >`, mit der festgelegt wird, welche Bedeutung ein bestimmter Inhalt besitzt und wie dieser vom Webbrowser interpretiert wird. [@webdev-learn-html]
@@ -78,8 +78,6 @@ Dieses Beispiel zeigt den grundlegenden Aufbau einer HTML-Seite mit Struktur (`h
 
 ![Darstellung einer einfachen HTML-Seite mit grundlegenden HTML-Elementen im Webbrowser](img/Maksic/DA_Beispielwebsite_HTML.png){width=80%}
 #### CSS
-
-##### Definition und Zweck von CSS
 CSS (Cascading Style Sheets) ist eine Stylesheet-Sprache, die zur visuellen Gestaltung und Layoutdefinition von Webseiten eingesetzt wird. Sie ergänzt HTML, indem sie das Erscheinungsbild von Elementen steuert, beispielsweise Farben, Schriftarten, Abstände, Positionierungen und Anordnungen von Inhalten. 
 [@webdev-learn-css]
 
@@ -178,8 +176,6 @@ Um ein externes CSS-Stylesheet in eine HTML-Seite einzubinden, wird im `<head>`-
 ![Darstellung einer einfachen HTML-Seite nach Einbindung eines CSS Stylesheets](img/Maksic/DA_Beispielwebsite_CSS.png){width=80%}
 
 #### JavaScript
-
-##### Definition und Zweck von JavaScript
 JavaScript ist eine skriptbasierte Programmiersprache, die zur Umsetzung von Logik, Interaktivität und dynamischem Verhalten auf Webseiten eingesetzt wird. [@webdev-learn-js]
 
 Im Gegensatz zu kompilierten Programmiersprachen wird JavaScript direkt im Webbrowser interpretiert. Der JavaScript-Code wird zusammen mit HTML und CSS an den Browser übertragen und dort Schritt für Schritt ausgeführt. Dabei analysiert der Interpreter den Quelltext, verarbeitet Anweisungen und Ausdrücke und führt die definierten Aktionen unmittelbar aus. [@webdev-learn-js]
