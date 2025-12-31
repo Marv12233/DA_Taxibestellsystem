@@ -1156,24 +1156,649 @@ Wesentliche Screens im Überblick:
 
 Durch dieses Navigations- und UI-Grundgerüst entsteht eine klar strukturierte und erweiterbare App, in der Authentifizierung, Kartenfunktionen, Fahrtenverwaltung und Bezahlung logisch miteinander verbunden sind.
 
-
 ### Standort & Karten (Geolocator, Permissions, flutter_map, Location Marker)
+
+Die Implementierung der Standort- und Kartenfunktionalität ist ein zentrales Element der Kunden-App. Der `LocationService` kapselt die gesamte Logik für Berechtigungen und Positionsbestimmung. Beim Initialisieren der App wird zunächst `initialize()` aufgerufen, das nacheinander prüft, ob Standortdienste aktiviert sind, die erforderliche Berechtigung anfordert und die initiale Position bestimmt. Der Service arbeitet als Singleton und stellt einen `Stream<LatLng>` bereit, über den die UI fortlaufend Positionsupdates erhält.
+
+```dart
+Future<bool> initialize() async {
+  _isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!_isLocationServiceEnabled) return false;
+
+  final permissionGranted = await requestLocationPermission();
+  if (!permissionGranted) return false;
+
+  await getCurrentPosition();
+  return true;
+}
+```
+
+Im Home-Screen wird dieser Stream abonniert und bei jedem Update wird `_currentLocation` aktualisiert sowie die Kartensicht entsprechend angepasst. Dies ermöglicht es dem Nutzer, seine aktuelle Position jederzeit zu sehen.
+
+Für die Kartendarstellung wird das Package `flutter_map` in Kombination mit OpenStreetMap-Tiles eingesetzt. Das zentrale `TaxiMap`-Widget ist theme-aware und rendert je nach Light/Dark-Mode unterschiedliche Kartenkacheln. Dadurch wird eine konsistente visuelle Erfahrung über die gesamte App gewährleistet. Das `CurrentLocationLayer`-Widget, das von `flutter_map_location_marker` bereitgestellt wird, zeigt die Live-Position des Nutzers als dynamischen Marker mit Genauigkeitskreis an. Dieser wird nur angezeigt, wenn der `LocationService` eine gültige Permission und aktive Standortdienste meldet.
+
+```dart
+if (widget.showCurrentLocation && _locationService.isLocationAvailable)
+  CurrentLocationLayer(
+    alignPositionOnUpdate: widget.followCurrentLocation
+        ? AlignOnUpdate.always
+        : AlignOnUpdate.never,
+    style: LocationMarkerStyle(
+      marker: DefaultLocationMarker(
+        color: AppTheme.primary,
+        child: const Icon(Icons.person_pin_circle, color: Colors.white),
+      ),
+      markerSize: const Size(30, 30),
+      accuracyCircleColor: AppTheme.primary.withOpacity(0.12),
+    ),
+  ),
+```
+
+Zusätzlich zur Live-Position des Nutzers werden in der Karte auch Pickup- und Dropoff-Marker sowie der aktuelle Fahrstandort angezeigt. Diese werden dynamisch gesetzt und ermöglichen es dem Nutzer, die Fahrt visuell zu verfolgen.
+
+In der Ride-Detail-Ansicht wird Live-Tracking aktiviert, sobald die Fahrt aktiv ist und ein Fahrer zugewiesen wurde. Ein Realtime-Channel aus Supabase liefert kontinuierlich die Fahrerpositionen. Bei jedem Update wird eine neue Route berechnet – entweder vom Fahrer zum Pickup-Punkt (Status `assigned`) oder vom Fahrer zum Zieldestination (Status `in_progress`). Diese Route wird als Polyline auf der Karte eingeblendet, und die geschätzte Ankunftszeit (ETA) wird aktualisiert. Auf diese Weise sieht der Nutzer in Echtzeit, wo sich der Fahrer befindet und wie lange es noch dauert.
+
+![Karte mit Live-Positionsmarker und Fahrerposition](img/Winter/mapLiveMarker.png){width=300px}
+
+Fehlerhafte oder fehlende Berechtigungen werden dem Nutzer durch aussagekräftige Fehlermeldungen mitgeteilt. Der Service stellt zudem Debug-Informationen zur Verfügung, die bei der Entwicklung und beim Troubleshooting hilfreich sind.
+
+Die Kombination aus `geolocator` (Positionsbestimmung), `permission_handler` (Berechtigung), `flutter_map` (Kartendarstellung) und `flutter_map_location_marker` (Live-Marker) erzeugt eine nahtlose, benutzerfreundliche Kartenerfahrung, die die Realtime-Daten aus Supabase nutzt und diese visuell darstellt.
 
 ### Suche & Geocoding (nominatim_flutter, Typeahead, Adressaufbereitung)
 
+Für die Suche von Abhol- und Zielort werden die Packages `nominatim_flutter` und `flutter_typeahead` kombiniert eingesetzt. Diese ermöglichen es dem Nutzer, Adressen komfortabel zu suchen und auszuwählen, ohne die gesamte Adresse manuell eintippen zu müssen.
+
+Das Package `flutter_typeahead` stellt ein Such-Eingabefeld bereit, das während der Eingabe automatisch Vorschläge anzeigt. Diese Vorschläge werden durch Nominatim (OpenStreetMap-Geocoding-Service) über `nominatim_flutter` generiert. Während der Benutzer tippt, werden entsprechende Ortsvorschläge geladen und angezeigt. Durch das Anklicken eines Vorschlags wird das Textfeld automatisch gefüllt und die entsprechenden Koordinaten (Latitude/Longitude) werden abgerufen.
+```dart
+TypeAheadField<GeocodingResult>(
+  textFieldConfiguration: TextFieldConfiguration(
+    controller: _addressController,
+    decoration: InputDecoration(
+      hintText: 'Adresse eingeben',
+      border: OutlineInputBorder(),
+    ),
+  ),
+  hideOnEmpty: true,
+  debounceDuration: Duration(milliseconds: 400),
+  suggestionsCallback: (pattern) async {
+    if (pattern.isEmpty) return [];
+    try {
+      final results = await _geocodingHelper.searchAddress(pattern);
+      return results;
+    } catch (e) {
+      return [];
+    }
+  },
+  itemBuilder: (context, suggestion) {
+    return ListTile(
+      title: Text(suggestion.address),
+      subtitle: Text(suggestion.displayName ?? ''),
+    );
+  },
+  onSuggestionSelected: (suggestion) {
+    _addressController.text = suggestion.address;
+    setState(() {
+      _selectedCoordinates = LatLng(suggestion.lat, suggestion.lon);
+    });
+  },
+)
+```
+Im Backend wird ein `GeocodingHelper`-Service eingesetzt, der die Kommunikation mit Nominatim abstrahiert und sowohl Forward-Geocoding (Adresse → Koordinaten) als auch Reverse-Geocoding (Koordinaten → Adresse) unterstützt. Dies ermöglicht es, die aktuelle Position des Nutzers automatisch in eine Adresse zu konvertieren und diese dann im Eingabefeld anzuzeigen.
+
+Die Adresssuche wird mit einem sogenannten Debounce-Mechanismus verzögert (z. B. 400 ms). Dabei wird eine Anfrage erst gesendet, wenn der Nutzer kurz mit der Eingabe pausiert. Dadurch werden unnötig viele Anfragen verhindert und die Bedienbarkeit verbessert.
+
+Nach Auswahl einer Adresse werden die Koordinaten extrahiert und für die nachfolgende Routenberechnung verwendet. Auf diese Weise entsteht ein nahtloser Workflow: Benutzer gibt Adresse ein -> Vorschläge werden angezeigt -> Nutzer wählt Vorschlag -> Koordinaten werden gespeichert -> Route wird berechnet.
+
+![Adresssuche mit Autovervollständigung](img/Winter/locationSearch.png){width=300px}
+
+Die Kombination aus `nominatim_flutter` (Geocoding) und `flutter_typeahead` (Autovervollständigung) erzeugt eine benutzerfreundliche Suchfunktion, die die Eingabe von Abhol- und Zielortsadressen erheblich vereinfacht.
+
 ### Routing & Distanzberechnung (OSRM-Anbindung via http, Route-Linie)
+
+Für die Berechnung von Routen zwischen zwei geografischen Punkten wird der Dienst **OSRM (Open Source Routing Machine)** verwendet. OSRM ist ein hochoptimierter Routing-Engine, der auf OpenStreetMap-Daten basiert und Routen für verschiedene Fortbewegungsarten (Auto, Fahrrad, zu Fuß) berechnet.
+
+Die Kommunikation mit OSRM erfolgt über HTTP-Anfragen. Der `RoutingService` kapselt diese Logik und sendet die Koordinaten von Start- und Zielpunkt an die OSRM-API. Die API gibt daraufhin die optimale Route sowie zusätzliche Informationen wie Distanz und Fahrtdauer zurück.
+
+```dart
+Future<RouteResult> calculateRoute(LatLng start, LatLng end) async {
+  try {
+    final url = '$_osrmBaseUrl/route/v1/driving/'
+        '${start.longitude},${start.latitude};'
+        '${end.longitude},${end.latitude}'
+        '?overview=full&steps=true';
+
+    final response = await http.get(Uri.parse(url)).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        throw Exception('OSRM API timeout');
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final routes = data['routes'] as List;
+      
+      if (routes.isEmpty) {
+        throw Exception('Keine Route gefunden');
+      }
+
+      final route = routes[0];
+      final geometry = route['geometry'] as Map;
+      final coordinates = _decodePolyline(geometry['coordinates']);
+      
+      return RouteResult(
+        coordinates: coordinates,
+        distanceKilometers: (route['distance'] as num) / 1000,
+        durationMinutes: (route['duration'] as num) / 60,
+      );
+    } else {
+      throw Exception('OSRM Fehler: ${response.statusCode}');
+    }
+  } catch (e) {
+    debugPrint('Routenberechnung fehlgeschlagen: $e');
+    rethrow;
+  }
+}
+```
+Die von OSRM zurückgelieferten Koordinaten werden in eine Liste von `LatLng`-Objekten umgewandelt und anschließend als Polyline auf der Karte dargestellt. Das `TaxiMap`-Widget akzeptiert eine Liste von `Polyline`-Objekten, die über ein spezialisiertes `RoutePolylines-Utility` erstellt werden.
+```dart
+static List<Polyline> createMainRoute(List<LatLng> points) {
+  if (points.isEmpty) return [];
+
+  return [
+    // Schatten-Effekt für bessere Sichtbarkeit
+    Polyline(
+      points: points,
+      strokeWidth: 8,
+      color: Colors.black.withOpacity(0.35),
+    ),
+    // Hauptroute in App-Primärfarbe
+    Polyline(
+      points: points,
+      strokeWidth: 4.5,
+      color: AppTheme.primary,
+    ),
+  ];
+}
+```
+Aus den Daten von OSRM werden auch die geschätzte Fahrtdauer (ETA – Estimated Time of Arrival) und die Gesamtdistanz extrahiert. Diese Informationen werden dem Nutzer angezeigt und dienen zudem als Grundlage für die Fahrpreisberechnung. Der Preis wird auf Basis eines konfigurierbaren Tarifs berechnet, z. B. Basisbetrag + Kilometerpreis + Zeitpreis.
+
+```dart
+double estimateFare({
+  required double distanceKm,
+  required double durationMinutes,
+}) {
+  const baseFare = 2.50;
+  const pricePerKm = 0.75;
+  const pricePerMinute = 0.08;
+
+  final distanceCost = distanceKm * pricePerKm;
+  final timeCost = durationMinutes * pricePerMinute;
+  
+  return baseFare + distanceCost + timeCost;
+}
+```
+
+In der Ride-Detail-Ansicht wird die Route kontinuierlich aktualisiert, wenn sich die Fahrposition ändert. Bei jedem Positions-Update wird eine neue Routenberechnung vom Fahrer zum nächsten Zwischenziel (Pickup oder Destination) durchgeführt, und die ETA wird neu berechnet. Dies ermöglicht es dem Nutzer, die verbleibende Fahrtdauer in Echtzeit zu sehen.
+
+![Route auf einer Flutter-Map mit Start- und Zielpunkt](img/Winter/routeFlutterMap.png){width=300px}
+
+Die enge Integration von Standortdaten (Location-Stream), Routenberechnung (OSRM) und Kartendarstellung (flutter_map) erzeugt ein kohärentes System, das dem Nutzer kontinuierlich aktualisierte Informationen über seine Fahrt bereitstellt.
 
 ### Buchungs- und Zahlungsprozess (Booking-Form, Payment-Form, SumUp Sandbox Checkout)
 
+Der Zahlungsfluss startet bereits im Booking-Form: Beim Anlegen der Fahrt wird die Zahlungsmethode (Bar oder Karte) gewählt und gleichzeitig ein Payment-Eintrag in Supabase mit Status `pending` angelegt. Nach Abschluss der Fahrt wird im Payment-Form die eigentliche Zahlung abgeschlossen – entweder per SumUp-Sandbox (Karte) oder durch Fahrerbestätigung (Bar). Die UI richtet sich strikt nach dem Payment-Status.
+
+![Booking-Form mit Zahlungsmethode](img/Winter/bookingForm.png){width=320px}
+![Payment-Form mit Status](img/Winter/paymentForm.png){width=320px}
+
+**Ablauf und Statuslogik**
+- booking_form: Fahrt erstellen, Payment-Datensatz (payment_method, amount, status = pending) anlegen.
+- payment_form: Betrag und Status anzeigen; bei pending Bezahl-CTA aktiv, bei paid deaktiviert/ausgeblendet.
+- Kartenzahlung: SumUp-Checkout (Sandbox) erzeugen; bei Erfolg Status auf paid, bei Fehler/Timeout verbleibt pending mit Fehlermeldung.
+- Barzahlung: Betrag wird extern kassiert; der Fahrer bestätigt in seiner App, die Payment-Zeile wechselt auf paid.
+- UI reagiert live auf Payment-Status (Badges/Farben/CTA).
+
+**Fehler- und Konsistenzhandling**
+- Zeitüberschreitungen/4xx/5xx der SumUp-API lassen den Datensatz auf pending und zeigen eine Nutzerhinweis-Meldung.
+- Keine Doppeleinträge: Payment wird nur einmal bei der Buchung erstellt und anschließend in-place auf paid gesetzt.
+- Realtime-Updates (optional) können den Payment-Status sofort in Listen/Detailansicht spiegeln.
+
+```dart
+// Booking-Form (verkürzt): Zahlungsmethode wählen und Payment anlegen
+Future<void> _submitBooking() async {
+  final method = _selectedMethod; // 'cash' oder 'card'
+  final rideId = await _ridesService.createRide(
+    pickup: _pickup,
+    dropoff: _dropoff,
+    paymentMethod: method,
+  );
+
+  await _paymentsService.createPayment(
+    rideId: rideId,
+    amount: _calculatedFare,
+    method: method,
+    status: 'pending',
+  );
+
+  if (!mounted) return;
+  Navigator.pop(context); // zurück zur Übersicht
+}
+
+// Payment-Form mit SumUp-Sandbox und Status-UI
+class PaymentForm extends StatefulWidget {
+  const PaymentForm({super.key, required this.paymentId});
+  final int paymentId;
+
+  @override
+  State<PaymentForm> createState() => _PaymentFormState();
+}
+
+class _PaymentFormState extends State<PaymentForm> {
+  Payment? _payment;
+  bool _loading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPayment();
+  }
+
+  Future<void> _loadPayment() async {
+    final p = await _paymentsService.getPayment(widget.paymentId);
+    if (!mounted) return;
+    setState(() => _payment = p);
+  }
+
+  Future<void> _payByCard() async {
+    if (_payment == null) return;
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    try {
+      await _sumupService.createCheckout(
+        amount: _payment!.amount,
+        currency: 'EUR',
+        reference: 'ride-${_payment!.rideId}',
+      );
+      await _paymentsService.updateStatus(_payment!.id, 'paid');
+      await _loadPayment();
+    } catch (e) {
+      setState(() => _error = 'Zahlung fehlgeschlagen, bitte erneut versuchen.');
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final payment = _payment;
+    if (payment == null) return const Center(child: CircularProgressIndicator());
+
+    final isPaid = payment.status == 'paid';
+    final isCash = payment.method == 'cash';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Betrag: ${payment.amount.toStringAsFixed(2)} €'),
+        Text('Methode: ${isCash ? 'Bar' : 'Karte'}'),
+        Text('Status: ${payment.status}'),
+        if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
+        const SizedBox(height: 12),
+        if (!isPaid && !isCash)
+          ElevatedButton(
+            onPressed: _loading ? null : _payByCard,
+            child: _loading ? const CircularProgressIndicator() : const Text('Bezahlen'),
+          ),
+        if (!isPaid && isCash)
+          const Text('Warten auf Fahrerbestätigung (Barzahlung).'),
+        if (isPaid)
+          const Text('Bereits bezahlt.', style: TextStyle(color: Colors.green)),
+      ],
+    );
+  }
+}
+```
+
 ### Dokumente & Drucken (PDF-Erstellung, Printing-Flow, Rechnungs-Export)
+
+Nach Abschluss einer Fahrt kann der Kunde eine Rechnung als PDF erzeugen und lokal speichern oder direkt teilen. Die App nutzt dafür die Pakete `pdf` (Dokument generieren) und `printing` (Speichern/Teilen-Dialog). Die Rechnung enthält Fahrtdaten (Datum, Start/Ziel, Distanz, Dauer), Preisdetails sowie Zahlungsart und -status.
+
+![Rechnungs-PDF Vorschau](img/Winter/invoicePreview.png){width=320px}
+![Teilen/Speichern-Dialog](img/Winter/printDialog.png){width=320px}
+
+**Ablauf**
+- Fahrtdaten laden (Ride + Payment) und in ein PDF-Datenmodell mappen.
+- PDF mit `pdf`-Package rendern (Logo/Kopfzeile, Rechnungsnummer, Positionen, Summe, Zahlungsstatus).
+- Über `printing` als Datei speichern oder per Share-Intent versenden.
+
+**Fehler-Handling**
+- Falls Ride/Payment nicht geladen werden kann: Hinweis anzeigen, kein PDF generieren.
+- Bei fehlenden Dateiberechtigungen (Android < 10) Hinweis ausgeben; auf neueren Versionen nur App-intern speichern/teilen.
+
+```dart
+// PDF-Erzeugung (vereinfacht)
+Future<Uint8List> buildInvoicePdf({
+  required Ride ride,
+  required Payment payment,
+}) async {
+  final doc = pw.Document();
+  doc.addPage(
+    pw.Page(
+      build: (ctx) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text('Rechnung', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold)),
+          pw.SizedBox(height: 12),
+          pw.Text('Fahrt-ID: ${ride.id}'),
+          pw.Text('Datum: ${ride.startedAt}'),
+          pw.Text('Von: ${ride.pickupAddress}'),
+          pw.Text('Nach: ${ride.dropoffAddress}'),
+          pw.SizedBox(height: 12),
+          pw.Text('Distanz: ${ride.distanceKm.toStringAsFixed(2)} km'),
+          pw.Text('Dauer: ${ride.durationMin.toStringAsFixed(0)} min'),
+          pw.SizedBox(height: 12),
+          pw.Text('Betrag: ${payment.amount.toStringAsFixed(2)} €'),
+          pw.Text('Zahlungsart: ${payment.method}'),
+          pw.Text('Status: ${payment.status}'),
+        ],
+      ),
+    ),
+  );
+  return doc.save();
+}
+
+// Speichern/Teilen via printing
+Future<void> shareOrSaveInvoice(Ride ride, Payment payment) async {
+  try {
+    final pdfBytes = await buildInvoicePdf(ride: ride, payment: payment);
+    await Printing.sharePdf(bytes: pdfBytes, filename: 'invoice_${ride.id}.pdf');
+    // Alternativ: await Printing.layoutPdf(onLayout: (_) => pdfBytes);
+  } catch (e) {
+    debugPrint('PDF-Export fehlgeschlagen: $e');
+  }
+}
+```
 
 ### Lokale Benachrichtigungen & Realtime Updates (flutter_local_notifications, Supabase Realtime Monitoring)
 
+Die App nutzt `flutter_local_notifications`, um Nutzer bei wichtigen Ereignissen ihrer Fahrt zu informieren: Fahrer hat angenommen, Fahrt startet, Fahrt endet. Die Trigger kommen aus Supabase-Realtime-Events (Tabelle `rides`), die lokal ausgewertet werden. Jede Notification enthält einen Titel, einen kurzen Status-Text und optional eine Payload mit der Ride-ID, sodass beim Tippen direkt der passende Detail-Screen geöffnet werden kann.
+
+![Benachrichtigung Fahrt angenommen](img/Winter/notificationAccepted.png){width=320px}
+![Benachrichtigung Fahrt beendet](img/Winter/notificationFinished.png){width=320px}
+
+**Ablauf**
+- Realtime-Subscription auf `rides` des aktuellen Nutzers (Statusänderungen: `assigned`, `in_progress`, `completed`).
+- Bei relevantem Status ruft der Client den `NotificationService` auf und zeigt eine lokale Notification.
+- Tippt der Nutzer auf die Notification, navigiert die App (über einen globalen NavigatorKey) direkt zur Ride-Detailseite.
+
+**Fehler-Handling & Berechtigungen**
+- Beim Initialisieren: Berechtigung für Notifications einholen (iOS Prompt, Android 13+ `POST_NOTIFICATIONS`).
+- Fällt Realtime aus oder liefert Fehler, wird die UI weiter aktualisiert, aber es gibt keinen Notification-Push; Logging hilft bei Debugging.
+
+```dart
+// NotificationService (auszugsweise)
+class NotificationService {
+  static final _plugin = FlutterLocalNotificationsPlugin();
+
+  static Future<void> init() async {
+    const settingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initSettings = InitializationSettings(android: settingsAndroid);
+    await _plugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: _onSelectNotification,
+    );
+  }
+
+  static Future<void> showRideStatus({
+    required int rideId,
+    required String title,
+    required String body,
+  }) async {
+    const details = NotificationDetails(
+      android: AndroidNotificationDetails(
+        'rides_channel',
+        'Rides',
+        importance: Importance.high,
+        priority: Priority.high,
+      ),
+    );
+    await _plugin.show(rideId, title, body, details, payload: '$rideId');
+  }
+
+  static void _onSelectNotification(NotificationResponse response) {
+    final rideId = int.tryParse(response.payload ?? '');
+    if (rideId != null) {
+      AppNavigator.toRideDetail(rideId); // globaler navigatorKey -> Detail-Screen
+    }
+  }
+}
+
+// Realtime-Callback (vereinfacht)
+void handleRideUpdate(PostgresChangePayload payload) {
+  final status = payload.newRecord['status'] as String?;
+  final rideId = (payload.newRecord['id'] as num?)?.toInt();
+  if (rideId == null || status == null) return;
+
+  switch (status) {
+    case 'assigned':
+      NotificationService.showRideStatus(
+        rideId: rideId,
+        title: 'Fahrer unterwegs',
+        body: 'Dein Fahrer hat die Fahrt angenommen.',
+      );
+      break;
+    case 'in_progress':
+      NotificationService.showRideStatus(
+        rideId: rideId,
+        title: 'Fahrt gestartet',
+        body: 'Deine Fahrt hat begonnen.',
+      );
+      break;
+    case 'completed':
+      NotificationService.showRideStatus(
+        rideId: rideId,
+        title: 'Fahrt beendet',
+        body: 'Danke für die Fahrt! Rechnung ist bereit.',
+      );
+      break;
+    default:
+      break;
+  }
+}
+```
+
 ### Lokalisierung & Formatierung (intl, flutter_localizations, Datums-/Währungsformatierung)
+
+Die App ist auf Deutsch lokalisiert, sodass systemnahe Widgets (z. B. DatePicker) deutschsprachige Texte verwenden. Zentrale Datums- und Währungsformatierungen werden über das `intl`-Package definiert und in der gesamten App wiederverwendet (z. B. ISO-Parsing, Anzeige im EU-Format, Währungsdarstellung in EUR). `flutter_localizations` wird in `MaterialApp` aktiviert, damit Standard-Widgets die gewünschte Locale übernehmen.
+
+![Datums- und Währungsformatierung](img/Winter/localeFormat.png){width=320px}
+![Locale Settings in MaterialApp](img/Winter/localeSettings.png){width=320px}
+
+**Schritte**
+- In `MaterialApp`: `supportedLocales` auf `Locale('de')`, `localizationsDelegates` aktivieren.
+- Zentrale Formatter (Datum/Uhrzeit/Währung) in einer Helper-Klasse bündeln und überall nutzen.
+- Eingehende Strings (z. B. ISO aus Backend) parsen, dann formatiert ausgeben.
+
+**Beispiel-Formatter**
+- Datum kurz: `dd.MM.yyyy`
+- Datum/Zeit: `dd.MM.yyyy HH:mm`
+- Währung: `NumberFormat.simpleCurrency(locale: 'de_AT', name: 'EUR')`
+
+```dart
+// Beispiel: zentrale Formatter
+class Formatters {
+  static final date = DateFormat('dd.MM.yyyy', 'de_DE');
+  static final dateTime = DateFormat('dd.MM.yyyy HH:mm', 'de_DE');
+  static final currency = NumberFormat.simpleCurrency(locale: 'de_DE', name: 'EUR');
+
+  static String formatDate(DateTime dt) => date.format(dt);
+  static String formatDateTime(DateTime dt) => dateTime.format(dt);
+  static String formatCurrency(num value) => currency.format(value);
+}
+
+// MaterialApp-Konfiguration (Ausschnitt)
+return MaterialApp(
+  supportedLocales: const [Locale('de')],
+  localizationsDelegates: const [
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ],
+  // ...
+);
+
+// Nutzung im UI
+Text('Abfahrt: ${Formatters.formatDateTime(ride.startedAt)}');
+Text('Preis: ${Formatters.formatCurrency(ride.price)}');
+```
 
 ### State-Management mit Provider (ChangeNotifier, Consumer, ThemeProvider)
 
+Für globale Zustände wie das App-Theme wird `provider` mit `ChangeNotifier` eingesetzt. Ein `ThemeProvider` hält den aktuellen Modus (Hell/Dunkel), persistiert ihn in `shared_preferences` und benachrichtigt die UI per `notifyListeners()`. Über `Consumer` oder `context.watch()` reagieren Widgets unmittelbar auf Änderungen. So bleibt der Theme-Wechsel konsistent und erfordert kein manuelles Weiterreichen des Zustands durch die Widget-Hierarchie.
+
+![Theme Switch im Profil](img/Winter/profiletheme.png){width=320px}
+
+**Ablauf**
+- App-Start: Theme aus `shared_preferences` lesen, initial setzen.
+- Toggle im UI: Provider aktualisiert State, speichert Auswahl, ruft `notifyListeners()`.
+- `MaterialApp` bezieht `theme`/`darkTheme` aus dem Provider, Widgets rebuilden automatisch.
+
+```dart
+// ThemeProvider mit Persistenz
+class ThemeProvider extends ChangeNotifier {
+  ThemeMode _mode = ThemeMode.system;
+
+  ThemeMode get mode => _mode;
+
+  Future<void> load() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = prefs.getString('theme_mode');
+    _mode = switch (value) {
+      'light' => ThemeMode.light,
+      'dark' => ThemeMode.dark,
+      _ => ThemeMode.system,
+    };
+    notifyListeners();
+  }
+
+  Future<void> setMode(ThemeMode mode) async {
+    _mode = mode;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('theme_mode', switch (mode) {
+      ThemeMode.light => 'light',
+      ThemeMode.dark => 'dark',
+      _ => 'system',
+    });
+    notifyListeners();
+  }
+}
+
+// MaterialApp-Einbindung (Ausschnitt)
+return ChangeNotifierProvider(
+  create: (_) => ThemeProvider()..load(),
+  child: Consumer<ThemeProvider>(
+    builder: (_, theme, __) {
+      return MaterialApp(
+        themeMode: theme.mode,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        // ...
+      );
+    },
+  ),
+);
+
+// Toggle im UI (z. B. Switch)
+Switch(
+  value: context.watch<ThemeProvider>().mode == ThemeMode.dark,
+  onChanged: (isDark) {
+    context.read<ThemeProvider>().setMode(isDark ? ThemeMode.dark : ThemeMode.light);
+  },
+);
+```
+
 ### Utilities & Wiederverwendbare Komponenten (DateFormatter, ValidationHelper, Custom Widgets)
+
+- DateFormatter: zentrale Klasse für Datum/Zeit/Währung, damit Formatierungen konsistent und änderbar bleiben (z. B. Locale-Wechsel).
+- ValidationHelper: kapselt typische Form-Validierungen (E-Mail, Pflichtfeld, Mindestlänge), um Redundanz in Forms zu vermeiden.
+- Custom Widgets: kleine, wiederverwendbare UI-Bausteine wie `PrimaryButton`, `LabeledValue` oder `InfoBadge`, damit Styles und Abstände einheitlich sind.
+
+```dart
+class DateFormatter {
+  static final _date = DateFormat('dd.MM.yyyy', 'de_DE');
+  static final _dateTime = DateFormat('dd.MM.yyyy HH:mm', 'de_DE');
+
+  static String date(DateTime dt) => _date.format(dt);
+  static String dateTime(DateTime dt) => _dateTime.format(dt);
+}
+
+class ValidationHelper {
+  static String? requiredField(String? v, {String message = 'Pflichtfeld'}) =>
+      (v == null || v.trim().isEmpty) ? message : null;
+
+  static String? minLength(String? v, int min, {String? message}) =>
+      (v ?? '').trim().length < min ? (message ?? 'Mindestens $min Zeichen') : null;
+
+  static String? email(String? v, {String message = 'Ungültige E-Mail'}) {
+    final value = (v ?? '').trim();
+    final regex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    return regex.hasMatch(value) ? null : message;
+  }
+}
+```
+
+```dart
+class PrimaryButton extends StatelessWidget {
+  const PrimaryButton({super.key, required this.label, this.onPressed, this.icon});
+  final String label;
+  final VoidCallback? onPressed;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon ?? Icons.arrow_forward),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(44),
+        textStyle: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+}
+
+class LabeledValue extends StatelessWidget {
+  const LabeledValue({super.key, required this.label, required this.value});
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: Theme.of(context).textTheme.labelMedium),
+        const SizedBox(height: 2),
+        Text(value, style: Theme.of(context).textTheme.bodyLarge),
+      ],
+    );
+  }
+}
+```
+Einsatz in der App: 
+- Forms: validator: ValidationHelper.requiredField.
+- Anzeigen: LabeledValue(label: 'Abfahrt', value: DateFormatter.dateTime(ride.startedAt)).
+- CTAs: PrimaryButton(label: 'Buchen', onPressed: _submitBooking).
+
+Damit bleiben Formatierungen, Validierungen und UI-Bausteine zentral gewartet und konsistent über alle Screens hinweg.
+
+Durch die Nutzung zentraler Utilities und wiederverwendbarer Komponenten wird Redundanz im Code reduziert und eine einheitliche Benutzeroberfläche sichergestellt. Änderungen (z. B. am Format oder Stil) können zentral vorgenommen und wirken sich automatisch auf die gesamte App aus.
 
 ### Testing & Qualitätssicherung (Widget-/Integrationstests, manuelle Testszenarien)
 
