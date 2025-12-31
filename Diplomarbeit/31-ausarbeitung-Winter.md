@@ -682,7 +682,7 @@ LocalNotificationService.showSimple('Hi', 'Test-Notification');
 ```
 Die Benachrichtigungen können anschließend an beliebiger Stelle in der Anwendung ausgelöst werden, beispielsweise nach bestimmten Nutzeraktionen oder Systemereignissen. [@geeksforgeekslocalnotification]
 
-![Notification einer Flutter App [@localNotification]](img/Winter/localNotification.png){width=300px}
+![Notification einer Flutter App [@localNotifications]](img/Winter/localNotification.png){width=300px}
 
 #### Berechtigungen und Plattformunterschiede (Android/iOS)
 
