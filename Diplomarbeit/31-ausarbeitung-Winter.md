@@ -1444,7 +1444,7 @@ class _PaymentFormState extends State<PaymentForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Betrag: ${payment.amount.toStringAsFixed(2)} €'),
+        Text('Betrag: ${payment.amount.toStringAsFixed(2)} EUR'),
         Text('Methode: ${isCash ? 'Bar' : 'Karte'}'),
         Text('Status: ${payment.status}'),
         if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
@@ -1502,7 +1502,7 @@ Future<Uint8List> buildInvoicePdf({
           pw.Text('Distanz: ${ride.distanceKm.toStringAsFixed(2)} km'),
           pw.Text('Dauer: ${ride.durationMin.toStringAsFixed(0)} min'),
           pw.SizedBox(height: 12),
-          pw.Text('Betrag: ${payment.amount.toStringAsFixed(2)} €'),
+          pw.Text('Betrag: ${payment.amount.toStringAsFixed(2)} EUR'),
           pw.Text('Zahlungsart: ${payment.method}'),
           pw.Text('Status: ${payment.status}'),
         ],
