@@ -859,7 +859,7 @@ Neben `supabase_flutter` wurden weitere Flutter-Packages eingesetzt, beispielswe
 
 Zum Entwickeln der Anwendung wurde die IDE Android Studio verwendet. Dieses Tool kam bereits im Unterricht zum Einsatz, wodurch bestehende Erfahrung genutzt werden konnte. Ein weiterer Vorteil von Android Studio besteht in der integrierten Möglichkeit, Emulatoren direkt aus der Entwicklungsumgebung heraus zu starten und damit die App komfortabel zu testen.
 
-### Projektsetup & Architektur (Flutter-Projektstruktur, Packages, Schichtenmodell, Service Layer)
+### Projektsetup & Architektur 
 
 Für die Umsetzung der Kunden-App wurde in Android Studio ein neues Flutter-Projekt mit dem Namen `kunden_app` erstellt. Beim Anlegen eines Flutter-Projekts wird automatisch die grundlegende Projekt- und Ordnerstruktur erzeugt, bestehend unter anderem aus dem Ordner `lib` sowie der Datei `pubspec.yaml`. Zusätzlich wird von der IDE eine einfache Demo-Anwendung mit einer `main.dart`-Datei generiert.
 
@@ -953,7 +953,7 @@ Der Service Layer ist ein zentrales Element der Anwendung, da durch die Vielzahl
   Stellt einen globalen `NavigatorKey` bereit, sodass auch Services ohne BuildContext zu benannten Routen navigieren können (z. B. nach Benachrichtigungen).
 
 
-### Datenhaltung mit Supabase (Auth, Tabellen, RLS/Policies, Realtime-Channel)
+### Datenhaltung mit Supabase
 
 Das Zusammenspiel zwischen Supabase und der Kunden-App beginnt bei der Registrierung in der Anwendung. Sobald sich ein neuer Benutzer registriert, werden die Daten an Supabase übermittelt und es wird ein Eintrag in der `auth`-Struktur angelegt. In der App wird anschließend darauf hingewiesen, dass die E-Mail-Adresse noch bestätigt werden muss. Erst nach erfolgreicher Bestätigung wird ein vollständiges Benutzerprofil angelegt, das in der Tabelle `profiles` gespeichert wird. 
 
@@ -1082,7 +1082,7 @@ Future<void> _refreshSingleRide(int rideId) async {
 ```
 ![Ride-Status im Activity Screen](img/Winter/fahrtenlisteLight.png){width=300px}
 
-### UI-Grundgerüst & Navigation (Auth-Gate, Main Screen, BottomNavigationBar, Themings)
+### UI-Grundgerüst & Navigation
 
 Die App nutzt ein Auth-Gate, das auf den Supabase-Auth-Stream hört. Direkt nach dem Start prüft es, ob eine aktive Session vorhanden ist: Nicht eingeloggte Nutzer sehen Login/Registrierung, verifizierte Nutzer gelangen in die Haupt-Shell. Nach erfolgreicher E-Mail-Bestätigung landet der User automatisch im Hauptbereich.
 ```dart
@@ -1156,7 +1156,7 @@ Wesentliche Screens im Überblick:
 
 Durch dieses Navigations- und UI-Grundgerüst entsteht eine klar strukturierte und erweiterbare App, in der Authentifizierung, Kartenfunktionen, Fahrtenverwaltung und Bezahlung logisch miteinander verbunden sind.
 
-### Standort & Karten (Geolocator, Permissions, flutter_map, Location Marker)
+### Standort & Karten 
 
 Die Implementierung der Standort- und Kartenfunktionalität ist ein zentrales Element der Kunden-App. Der `LocationService` kapselt die gesamte Logik für Berechtigungen und Positionsbestimmung. Beim Initialisieren der App wird zunächst `initialize()` aufgerufen, das nacheinander prüft, ob Standortdienste aktiviert sind, die erforderliche Berechtigung anfordert und die initiale Position bestimmt. Der Service arbeitet als Singleton und stellt einen `Stream<LatLng>` bereit, über den die UI fortlaufend Positionsupdates erhält.
 
@@ -1204,7 +1204,7 @@ Fehlerhafte oder fehlende Berechtigungen werden dem Nutzer durch aussagekräftig
 
 Die Kombination aus `geolocator` (Positionsbestimmung), `permission_handler` (Berechtigung), `flutter_map` (Kartendarstellung) und `flutter_map_location_marker` (Live-Marker) erzeugt eine nahtlose, benutzerfreundliche Kartenerfahrung, die die Realtime-Daten aus Supabase nutzt und diese visuell darstellt.
 
-### Suche & Geocoding (nominatim_flutter, Typeahead, Adressaufbereitung)
+### Suche & Geocoding
 
 Für die Suche von Abhol- und Zielort werden die Packages `nominatim_flutter` und `flutter_typeahead` kombiniert eingesetzt. Diese ermöglichen es dem Nutzer, Adressen komfortabel zu suchen und auszuwählen, ohne die gesamte Adresse manuell eintippen zu müssen.
 
@@ -1253,7 +1253,7 @@ Nach Auswahl einer Adresse werden die Koordinaten extrahiert und für die nachfo
 
 Die Kombination aus `nominatim_flutter` (Geocoding) und `flutter_typeahead` (Autovervollständigung) erzeugt eine benutzerfreundliche Suchfunktion, die die Eingabe von Abhol- und Zielortsadressen erheblich vereinfacht.
 
-### Routing & Distanzberechnung (OSRM-Anbindung via http, Route-Linie)
+### Routing & Distanzberechnung
 
 Für die Berechnung von Routen zwischen zwei geografischen Punkten wird der Dienst **OSRM (Open Source Routing Machine)** verwendet. OSRM ist ein hochoptimierter Routing-Engine, der auf OpenStreetMap-Daten basiert und Routen für verschiedene Fortbewegungsarten (Auto, Fahrrad, zu Fuß) berechnet.
 
@@ -1345,7 +1345,7 @@ In der Ride-Detail-Ansicht wird die Route kontinuierlich aktualisiert, wenn sich
 
 Die enge Integration von Standortdaten (Location-Stream), Routenberechnung (OSRM) und Kartendarstellung (flutter_map) erzeugt ein kohärentes System, das dem Nutzer kontinuierlich aktualisierte Informationen über seine Fahrt bereitstellt.
 
-### Buchungs- und Zahlungsprozess (Booking-Form, Payment-Form, SumUp Sandbox Checkout)
+### Buchungs- und Zahlungsprozess
 
 Der Zahlungsfluss startet bereits im Booking-Form: Beim Anlegen der Fahrt wird die Zahlungsmethode (Bar oder Karte) gewählt und gleichzeitig ein Payment-Eintrag in Supabase mit Status `pending` angelegt. Nach Abschluss der Fahrt wird im Payment-Form die eigentliche Zahlung abgeschlossen – entweder per SumUp-Sandbox (Karte) oder durch Fahrerbestätigung (Bar). Die UI richtet sich strikt nach dem Payment-Status.
 
@@ -1465,7 +1465,7 @@ class _PaymentFormState extends State<PaymentForm> {
 }
 ```
 
-### Dokumente & Drucken (PDF-Erstellung, Printing-Flow, Rechnungs-Export)
+### Dokumente & Drucken
 
 Nach Abschluss einer Fahrt kann der Kunde eine Rechnung als PDF erzeugen und lokal speichern oder direkt teilen. Die App nutzt dafür die Pakete `pdf` (Dokument generieren) und `printing` (Speichern/Teilen-Dialog). Die Rechnung enthält Fahrtdaten (Datum, Start/Ziel, Distanz, Dauer), Preisdetails sowie Zahlungsart und -status.
 
@@ -1525,7 +1525,7 @@ Future<void> shareOrSaveInvoice(Ride ride, Payment payment) async {
 }
 ```
 
-### Lokale Benachrichtigungen & Realtime Updates (flutter_local_notifications, Supabase Realtime Monitoring)
+### Lokale Benachrichtigungen & Realtime Updates
 
 Die App nutzt `flutter_local_notifications`, um Nutzer bei wichtigen Ereignissen ihrer Fahrt zu informieren: Fahrer hat angenommen, Fahrt startet, Fahrt endet. Die Trigger kommen aus Supabase-Realtime-Events (Tabelle `rides`), die lokal ausgewertet werden. Jede Notification enthält einen Titel, einen kurzen Status-Text und optional eine Payload mit der Ride-ID, sodass beim Tippen direkt der passende Detail-Screen geöffnet werden kann.
 
@@ -1613,7 +1613,7 @@ void handleRideUpdate(PostgresChangePayload payload) {
 }
 ```
 
-### Lokalisierung & Formatierung (intl, flutter_localizations, Datums-/Währungsformatierung)
+### Lokalisierung & Formatierung
 
 Die App ist auf Deutsch lokalisiert, sodass systemnahe Widgets (z. B. DatePicker) deutschsprachige Texte verwenden. Zentrale Datums- und Währungsformatierungen werden über das `intl`-Package definiert und in der gesamten App wiederverwendet (z. B. ISO-Parsing, Anzeige im EU-Format, Währungsdarstellung in EUR). `flutter_localizations` wird in `MaterialApp` aktiviert, damit Standard-Widgets die gewünschte Locale übernehmen.
 
@@ -1657,7 +1657,7 @@ Text('Abfahrt: ${Formatters.formatDateTime(ride.startedAt)}');
 Text('Preis: ${Formatters.formatCurrency(ride.price)}');
 ```
 
-### State-Management mit Provider (ChangeNotifier, Consumer, ThemeProvider)
+### State-Management mit Provider
 
 Für globale Zustände wie das App-Theme wird `provider` mit `ChangeNotifier` eingesetzt. Ein `ThemeProvider` hält den aktuellen Modus (Hell/Dunkel), persistiert ihn in `shared_preferences` und benachrichtigt die UI per `notifyListeners()`. Über `Consumer` oder `context.watch()` reagieren Widgets unmittelbar auf Änderungen. So bleibt der Theme-Wechsel konsistent und erfordert kein manuelles Weiterreichen des Zustands durch die Widget-Hierarchie.
 
@@ -1722,7 +1722,7 @@ Switch(
 );
 ```
 
-### Utilities & Wiederverwendbare Komponenten (DateFormatter, ValidationHelper, Custom Widgets)
+### Utilities & Wiederverwendbare Komponenten
 
 - DateFormatter: zentrale Klasse für Datum/Zeit/Währung, damit Formatierungen konsistent und änderbar bleiben (z. B. Locale-Wechsel).
 - ValidationHelper: kapselt typische Form-Validierungen (E-Mail, Pflichtfeld, Mindestlänge), um Redundanz in Forms zu vermeiden.
