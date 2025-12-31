@@ -156,9 +156,9 @@ Der `StreamBuilder` ist ein Widget, das seine Benutzeroberfläche automatisch ak
 
 Der `StreamBuilder` „hört“ auf einen Stream und reagiert auf jede Änderung, indem er das entsprechende Widget neu aufbaut. Typischerweise wird innerhalb des Builders zwischen verschiedenen Zuständen unterschieden, zum Beispiel:
 
-- **Warten auf Daten** → Ladeanzeige  
-- **Fehler aufgetreten** → Fehlermeldung  
-- **Daten verfügbar** → Anzeige der Daten  
+- **Warten auf Daten** -> Ladeanzeige  
+- **Fehler aufgetreten** -> Fehlermeldung  
+- **Daten verfügbar** -> Anzeige der Daten  
 
 Das folgende Beispiel zeigt einen einfachen `StreamBuilder`, der jede Sekunde einen Zähler erhöht und den aktuellen Wert darstellt:
 
@@ -1243,7 +1243,7 @@ TypeAheadField<GeocodingResult>(
   },
 )
 ```
-Im Backend wird ein `GeocodingHelper`-Service eingesetzt, der die Kommunikation mit Nominatim abstrahiert und sowohl Forward-Geocoding (Adresse → Koordinaten) als auch Reverse-Geocoding (Koordinaten → Adresse) unterstützt. Dies ermöglicht es, die aktuelle Position des Nutzers automatisch in eine Adresse zu konvertieren und diese dann im Eingabefeld anzuzeigen.
+Im Backend wird ein `GeocodingHelper`-Service eingesetzt, der die Kommunikation mit Nominatim abstrahiert und sowohl Forward-Geocoding (Adresse -> Koordinaten) als auch Reverse-Geocoding (Koordinaten -> Adresse) unterstützt. Dies ermöglicht es, die aktuelle Position des Nutzers automatisch in eine Adresse zu konvertieren und diese dann im Eingabefeld anzuzeigen.
 
 Die Adresssuche wird mit einem sogenannten Debounce-Mechanismus verzögert (z. B. 400 ms). Dabei wird eine Anfrage erst gesendet, wenn der Nutzer kurz mit der Eingabe pausiert. Dadurch werden unnötig viele Anfragen verhindert und die Bedienbarkeit verbessert.
 
