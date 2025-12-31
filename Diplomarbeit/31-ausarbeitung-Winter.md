@@ -123,7 +123,56 @@ Flutter ist ein von Google entwickeltes Framework zur plattformübergreifenden E
 
 Die mit Flutter entwickelten Anwendungen werden als native Apps kompiliert und können somit auf den jeweiligen Zielplattformen ausgeführt werden. Aufgrund dieses Ansatzes wird Flutter häufig als Cross-Plattform-Framework bezeichnet. Flutter wird in Kombination mit der Programmiersprache Dart eingesetzt, welche im vorherigen Kapitel vorgestellt wurde. [@Flutter_Framework]
 
-#### Flutter-Konzept (Widgets, Widget-Tree, Build)
+#### Flutter-Konzept (Enums, StreamBuilder, Widgets, Widget-Tree, Build)
+
+##### Enumerated Types 
+
+Enumerated Types, kurz *Enums*, sind ein spezieller Datentyp, mit dem eine feste, endliche Menge von möglichen Werten definiert werden kann. Enums eignen sich insbesondere dann, wenn ein Zustand nur bestimmte, vorab bekannte Ausprägungen annehmen darf, beispielsweise Statuswerte oder Kategorien.
+
+Das folgende Beispiel zeigt die Definition eines Enums in Dart:
+
+```
+enum OrderStatus {
+  pending,
+  processing,
+  completed,
+  cancelled,
+}
+```
+Ein solches Enum kann anschließend wie ein normaler Typ verwendet werden:
+```dart
+OrderStatus status = OrderStatus.pending;
+
+if (status == OrderStatus.completed) {
+  print('Bestellung abgeschlossen');
+}
+
+```
+Durch die Verwendung von Enums wird der Code besser lesbar und Fehler durch ungültige Zustände werden vermieden. [@flutter_docs]
+
+##### StreamBuilder
+
+Der `StreamBuilder` ist ein Widget, das seine Benutzeroberfläche automatisch aktualisiert, sobald neue Daten aus einem Stream eintreffen. Er eignet sich insbesondere für Anwendungen mit laufenden Datenströmen, etwa Chatnachrichten, Sensorwerte oder Datenbank-Updates.
+
+Der `StreamBuilder` „hört“ auf einen Stream und reagiert auf jede Änderung, indem er das entsprechende Widget neu aufbaut. Typischerweise wird innerhalb des Builders zwischen verschiedenen Zuständen unterschieden, zum Beispiel:
+
+- **Warten auf Daten** → Ladeanzeige  
+- **Fehler aufgetreten** → Fehlermeldung  
+- **Daten verfügbar** → Anzeige der Daten  
+
+Das folgende Beispiel zeigt einen einfachen `StreamBuilder`, der jede Sekunde einen Zähler erhöht und den aktuellen Wert darstellt:
+
+```dart
+StreamBuilder<int>(
+  stream: Stream.periodic(Duration(seconds: 1), (x) => x),
+  initialData: 0,
+  builder: (context, snapshot) {
+    return Text("Wert: ${snapshot.data}");
+  },
+)
+```
+Der aktuelle Zustand sowie die empfangenen Daten werden über ein `AsyncSnapshot`-Objekt bereitgestellt, das im `builder`-Callback ausgewertet werden kann. [@flutter_docs]
+
 
 ##### Widgets
 In Flutter wird die Benutzeroberfläche vollständig aus sogenannten Widgets aufgebaut. Widgets stellen dabei die grundlegenden Bausteine der UI dar und reichen von einfachen Elementen wie `Text`, `Row`, `Column` oder `Container` bis hin zu komplexen, selbst definierten Komponenten.
@@ -387,6 +436,7 @@ Das Schichtenmodell beschreibt die klare Trennung der Anwendung in mehrere logis
 Die Kommunikation zwischen den einzelnen Schichten erfolgt dabei in einer klar definierten Reihenfolge. Die Benutzeroberfläche interagiert ausschließlich mit der Service-Schicht, welche die Geschäftslogik kapselt und bei Bedarf Anfragen an das Backend oder den Datenzugriff weiterleitet, beispielsweise für Datenbankoperationen oder API-Aufrufe.
 
 Durch diese Trennung der Verantwortlichkeiten wird die Wartbarkeit und Erweiterbarkeit der Anwendung deutlich verbessert. Zudem erleichtert das Schichtenmodell die Zusammenarbeit im Team, da einzelne Komponenten unabhängig voneinander entwickelt und angepasst werden können.
+
 ![Schichtenmodell der App-Architektur](img/Winter/Schichtenmodell.png){width=400px}
 
 #### Wiederverwendbare Komponenten (Widgets)
@@ -537,6 +587,121 @@ Für die Kommunikation mit dem Routingdienst kommt in Flutter in der Regel das `
 ![Route auf einer Flutter-Map](img/Winter/routeExample.png){width=300px}
 
 
+### Kartenbezahlung mit der SumUp API in Flutter
+
+Die SumUp API ist eine von SumUp bereitgestellte Schnittstelle (Application Programming Interface), die es ermöglicht, Kartenzahlungen in selbst entwickelten Anwendungen zu integrieren. Über die API können unter anderem Zahlungen mit gängigen Debit- und Kreditkarten, wie beispielsweise Visa oder Mastercard, durchgeführt werden.
+
+Durch die Verwendung der SumUp API kann eine eigene mobile Applikation um eine Kartenbezahlfunktion erweitert werden, ohne selbst ein vollständiges Zahlungssystem implementieren zu müssen. SumUp stellt dabei die notwendige Zahlungsabwicklung sowie die Einhaltung aktueller Sicherheitsstandards im Bereich des bargeldlosen Bezahlens sicher. [@sumup]
+
+#### Sandbox-Umgebung statt Echtzahlungen
+
+Für Entwicklungs- und Testzwecke stellt SumUp eine Sandbox-Umgebung zur Verfügung. In dieser Umgebung können Zahlungen simuliert werden, ohne dass echte Transaktionen durchgeführt werden. Dies ist insbesondere während der Entwicklung wichtig, um Funktionen wie Verbindungsaufbau zur REST-API und Zahlungsabläufe gefahrlos testen zu können.
+
+Ein Sandbox-Konto kann über das SumUp Developer Portal angelegt werden. Es ist vom regulären Händlerkonto getrennt, sodass Testbuchungen keine realen finanziellen Auswirkungen haben. [@sumupApi]
+
+#### Zahlungsabwicklung über die REST-API mit dem http-Package
+
+Die Kommunikation mit der SumUp-Plattform erfolgt über eine REST-API. Zahlungen beziehungsweise Checkouts werden dabei über HTTP-Anfragen erstellt. Ein Checkout kann beispielsweise mittels einer `POST`-Anfrage angelegt werden:
+
+```bash
+curl https://api.sumup.com/v0.1/checkouts \
+ -X POST \
+ -H "Authorization: Bearer $SUMUP_API_KEY" \
+ --json '{
+    "checkout_reference": "",
+    "amount": 0,
+    "currency": "EUR",
+    "merchant_code": "MERCHANTCODE"
+  }'
+```
+In Flutter kann dieselbe Anfrage mithilfe des `http`-Packages umgesetzt werden. Dabei wird zunächst ein Checkout erstellt, die eigentliche Kartenzahlung erfolgt anschließend über den von SumUp bereitgestellten Zahlungsfluss. Ein Beispiel für eine Anfrage in Flutter ist:
+```dart
+final response = await http.post(
+  Uri.parse('$_baseUrl/v0.1/checkouts'),
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer $_privateKey',
+  },
+  body: jsonEncode(requestBody),
+).timeout(
+  const Duration(seconds: 15),
+  onTimeout: () {
+    throw Exception('SumUp API timeout');
+  },
+);
+```
+Über diese Schnittstelle lassen sich unter anderem Beträge, Währung und Referenzkennungen definieren. Die Verarbeitung der Antwort erfolgt anschließend über das zurückgegebene JSON-Objekt. [@sumupApi]
+
+
+### Lokale Benachrichtigungen
+
+Lokale Benachrichtigungen sind Benachrichtigungen, die direkt auf dem Endgerät erzeugt und angezeigt werden, ohne dass dafür ein externer Server benötigt wird. Im Gegensatz zu Push-Benachrichtigungen aus der Cloud werden sie von der App selbst geplant und ausgelöst.
+
+Sie können beispielsweise erscheinen, wenn die App im Vordergrund, Hintergrund oder – je nach Betriebssystem und Berechtigungen – geschlossen ist. Typische Anwendungsfälle sind Erinnerungen, Statusmeldungen oder Hinweise auf abgeschlossene Prozesse. [@geeksforgeekslocalnotification]
+
+#### Grundkonzept von flutter_local_notifications
+
+Zur Umsetzung lokaler Benachrichtigungen in Flutter wird häufig das Package `flutter_local_notifications` verwendet. Nach der Einbindung des Packages muss dieses einmalig initialisiert werden; anschließend übernimmt das Package die plattformspezifische Anzeige der Benachrichtigungen auf dem Endgerät.
+
+In einer eigenen Service-Klasse (z. B. `LocalNotificationService`) kann eine statische Instanz des Plugins angelegt und über die Methode `initialize()` konfiguriert werden. Das folgende Beispiel zeigt eine einfache Implementierung für Android:
+
+```dart
+class LocalNotificationService {
+  static final _plugin = FlutterLocalNotificationsPlugin();
+
+  static Future<void> init() async {
+    const initSettings = InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    );
+    await _plugin.initialize(initSettings);
+  }
+
+  static Future<void> showSimple(String title, String body) async {
+    const androidDetails = AndroidNotificationDetails(
+      'default_channel',
+      'Standard',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    await _plugin.show(
+      0, // ID
+      title,
+      body,
+      const NotificationDetails(android: androidDetails),
+    );
+  }
+}
+```
+```dart
+// z.B. im initState
+LocalNotificationService.init();
+
+// irgendwo in der App
+LocalNotificationService.showSimple('Hi', 'Test-Notification');
+```
+Die Benachrichtigungen können anschließend an beliebiger Stelle in der Anwendung ausgelöst werden, beispielsweise nach bestimmten Nutzeraktionen oder Systemereignissen. [@geeksforgeekslocalnotification]
+
+![Notification einer Flutter App [@localNotification]](img/Winter/localNotification.png){width=300px}
+
+#### Berechtigungen und Plattformunterschiede (Android/iOS)
+
+Für die Darstellung lokaler Benachrichtigungen sind unter Android und iOS unterschiedliche Berechtigungen erforderlich. 
+
+Unter Android müssen Benachrichtigungen explizit vom Benutzer erlaubt werden (seit Android 13 über die Berechtigung `POST_NOTIFICATIONS`). Ohne erteilte Berechtigung dürfen Benachrichtigungen nicht angezeigt werden.
+
+Unter iOS wird der Benutzer beim ersten Initialisieren des Notification-Plugins um Zustimmung gebeten. Dabei kann er einzeln festlegen, ob Benachrichtigungen als Hinweis (Alert), mit Ton oder als Badge am App-Symbol erscheinen dürfen. Ohne diese Zustimmung werden keine Benachrichtigungen dargestellt. [@localNotifications]
+
+
+#### Arten von Benachrichtigungen
+
+Bei lokalen Benachrichtigungen kann grundsätzlich zwischen verschiedenen Auslösemechanismen unterschieden werden.
+
+Zum einen gibt es geplante (zeitgesteuerte) Benachrichtigungen. Dabei wird ein genauer Zeitpunkt definiert, zu dem die Benachrichtigung angezeigt werden soll. Ebenso können wiederkehrende Benachrichtigungen eingerichtet werden, die beispielsweise täglich um 8:00 Uhr oder in regelmäßigen Intervallen ausgelöst werden.
+
+Zum anderen können Benachrichtigungen ereignisgesteuert ausgelöst werden. In diesem Fall erfolgt die Anzeige beispielsweise aufgrund einer Benutzeraktion oder einer Änderung von Daten in der Anwendung. Ob solche Ereignisse auch im Hintergrund verarbeitet werden können, hängt vom Betriebssystem und den vorhandenen Hintergrundberechtigungen ab. In vielen Fällen ist für ereignisbasierte Benachrichtigungen ohne laufende App eine serverseitige Push-Lösung erforderlich. [@localNotifications]
+
+
 ### Supabase
 Supabase ist eine Plattform für Backend-as-a-Service (BaaS) und stellt Entwicklern eine Vielzahl an Diensten wie Authentifizierung, Datenbank, Storage und Realtime-Funktionen zur Verfügung. Die Plattform orientiert sich funktional an Firebase, setzt jedoch im Gegensatz dazu auf eine relationale PostgreSQL-Datenbank.
 
@@ -672,6 +837,7 @@ on todos
 for select
 using ( (select auth.uid()) = user_id );
 ```
+
 Dabei wird geprüft, ob die Benutzer-ID der aktuellen Sitzung (`auth.uid()`) mit der `user_id` der jeweiligen Tabellenzeile übereinstimmt. Nur wenn diese Bedingung erfüllt ist, wird der Datensatz zurückgegeben. Ohne eine entsprechende Policy würde RLS standardmäßig sämtliche Zugriffe blockieren. [@supabase_docs]
 
 #### Datenschutz
@@ -679,2493 +845,336 @@ Die zuvor beschriebenen Mechanismen wie Authentifizierung, Row Level Security (R
 
 Durch die Kombination dieser Sicherheitsmechanismen wird sichergestellt, dass Benutzer nur auf diejenigen Daten zugreifen können, für die sie berechtigt sind. Unbefugtes Auslesen oder Verändern fremder Datensätze wird dadurch unterbunden, was einen wesentlichen Beitrag zur Einhaltung von Datenschutzanforderungen leistet.
 
-
-### REST APIs und HTTP-Kommunikation
-Viele moderne Anwendungen sind auf die Kommunikation mit externen Diensten angewiesen, um beispielsweise Zahlungen zu verarbeiten, E-Mails zu versenden oder Routing-Daten abzurufen. Diese Kommunikation erfolgt in der Regel über REST (Representational State Transfer) APIs unter Verwendung des **HTTP-Protokolls**.
-
-Eine REST API bietet eine standardisierte Schnittstelle, über die ein Client (wie die Flutter-App) Anfragen an einen Server stellen kann. Die Kommunikation erfolgt über HTTP-Methoden wie `GET` (zum Auslesen von Daten), `POST` (zum Erstellen neuer Daten), `PUT` (zum Aktualisieren) und `DELETE` (zum Löschen). Die Antworten werden typischerweise im JSON-Format übermittelt. [@http]
-
-In Flutter können HTTP-Anfragen mit dem Package `http` durchgeführt werden. Ein Beispiel ist die Kommunikation mit der SumUp-API zur Zahlungsverarbeitung: Der Client stellt eine `POST`-Anfrage mit einem `Bearer Token` in den HTTP-Headern und dem Zahlungsdetails im JSON-Body. Der Server antwortet mit einer Bestätigung im JSON-Format, die anschließend ausgewertet wird.
-
-```dart
-final response = await http.post(
-  Uri.parse('https://api.sumup.com/v0.1/checkouts'),
-  headers: {
-    'Authorization': 'Bearer token_here',
-    'Content-Type': 'application/json',
-  },
-  body: jsonEncode({'amount': 100.0, 'currency': 'EUR'}),
-);
-```
-
-Die Implementierung von HTTP-Kommunikation erfordert dabei Sorgfalt bei der Fehlerbehandlung, Timeout-Verwaltung und der sicheren Speicherung von Authentifizierungsdaten wie API-Keys. [@http]
-
-
-### Responsive Design und Dark Mode
-Moderne Anwendungen müssen auf verschiedenen Geräten und unter verschiedenen Bedingungen funktionieren. Dazu zählen unterschiedliche Bildschirmgrößen (Smartphones, Tablets, Laptops) sowie unterschiedliche Anzeigeeinstellungen wie Dark Mode und Light Mode.
-
-**Responsive Design** beschreibt den Ansatz, Benutzeroberflächen so zu gestalten, dass sie sich automatisch an die verfügbare Bildschirmgröße anpassen. In Flutter werden hierfür Widgets wie `MediaQuery` (zur Ermittlung der Bildschirmgröße), `LayoutBuilder` (zur relativen Dimensionierung) und `Flexible`/`Expanded` (zur flexiblen Raumverteilung) verwendet. Dadurch wird ermöglicht, dass eine einzige App-Version auf Smartphones, Tablets und anderen Endgeräten optimal dargestellt wird. [@flutter_docs]
-
-**Dark Mode** ist eine Anzeigeeinstellung, die die Benutzeroberfläche mit dunklen Hintergrundfarben und hellen Texten darstellt. Dies reduziert Blendeffekte bei schwachen Lichtverhältnissen und kann den Stromverbrauch auf OLED-Displays senken. In Flutter wird Dark Mode durch unterschiedliche `ThemeData`-Objekte für Light und Dark Mode realisiert. Ein zentraler Theme-Manager (wie `ThemeProvider` mit `ChangeNotifier`) verwaltet den aktuellen Theme und benachrichtigt die App bei Änderungen. [@flutter_docs] [@provider]
-
-
-### Testing und Qualitätssicherung
-Testen ist ein fundamentaler Bestandteil der Softwareentwicklung und trägt wesentlich zur Qualität und Zuverlässigkeit von Anwendungen bei. In Flutter werden typischerweise drei Testarten unterschieden: **Unit-Tests**, **Integration-Tests** und **Widget-Tests**.
-
-**Unit-Tests** prüfen einzelne Funktionen und Methoden isoliert, ohne Abhängigkeiten zu anderen Komponenten. Sie sind schnell ausführbar und helfen, logische Fehler früh zu erkennen. Typische Beispiele sind Tests von Validierungsfunktionen oder Berechnungslogiken.
-
-**Widget-Tests** (auch UI-Tests genannt) testen die Benutzeroberfläche in isolierter Form, ohne ein echtes Gerät zu benötigen. Sie überprüfen, ob Widgets korrekt rendern und auf Benutzeraktionen reagieren, beispielsweise ob ein Button nach dem Klick eine neue Seite öffnet.
-
-**Integration-Tests** testen das Zusammenspiel mehrerer Komponenten in einem realitätsnahen Szenario, beispielsweise das Durchlaufen eines kompletten Login-Flows vom Eingabefeld bis zur Anmeldung am Backend. Integration-Tests können auf echten Geräten oder Emulatoren durchgeführt werden. [@flutter_docs]
-
-Neben automatisierten Tests ist auch **manuelles Testen** wichtig, besonders für die Überprüfung von Benutzerfreundlichkeit, Performance auf verschiedenen Geräten und Edge Cases, die automatisiert schwer zu testen sind. Die Kombination aller Testformen trägt zu einer zuverlässigen Anwendung bei.
-
-
-### Lokale Benachrichtigungen und Realtime-Updates
-
-In modernen mobilen Anwendungen ist es essenziell, Benutzer zeitnah über wichtige Ereignisse zu informieren. Besonders in einer Fahrtbörsen-App ist die sofortige Benachrichtigung über Fahrtaktualisierungen, Statusänderungen oder Fahrer-Ankünfte entscheidend für die Benutzerfreundlichkeit. Das Package `flutter_local_notifications` ermöglicht die Darstellung von lokalen Benachrichtigungen auf Android- und iOS-Geräten, ohne dass ein zentrales Push-Notification-System (wie Firebase Cloud Messaging) notwendig ist. [@flutter_notifications]
-
-#### Grundkonzept von flutter_local_notifications
-
-Das Package `flutter_local_notifications` stellt eine plattformübergreifende API zur Verfügung, um lokale Benachrichtigungen zu erstellen und anzuzeigen. Diese Benachrichtigungen werden direkt auf dem Gerät generiert und sind nicht von externen Cloud-Diensten abhängig. Sie sind besonders nützlich für App-spezifische Ereignisse wie:
-
-- Benachrichtigungen bei Datenbank-Updates (via Supabase Realtime)  
-- Status-Änderungen (z. B. Fahrt angenommen, Fahrer unterwegs)  
-- Timer und zeitgesteuerte Erinnerungen  
-- Lokale Notifikationen bei Benutzeraktionen  
-
-Das Package bietet Kontrolle über:
-- **Titel und Nachrichtentext** – aussagekräftige Benachrichtigungsinhalte  
-- **Sound und Vibration** – Benachrichtigungsfeedback  
-- **Symbole und große Bilder** – visuelle Gestaltung  
-- **Aktionen und Buttons** – Interaktive Benachrichtigungen  
-
-Durch die Kombination von `flutter_local_notifications` mit Supabase Realtime können Benachrichtigungen automatisch ausgelöst werden, sobald relevante Daten in der Datenbank aktualisiert werden, ohne dass der Benutzer die App manuell aktualisieren muss. [@flutter_local_notifications]
-
-#### Initialisierung und Konfiguration
-
-Die Initialisierung des Notification-Service erfolgt üblicherweise in der `main()` Funktion oder in einem dedizierten Service. Dabei werden plattformspezifische Einstellungen konfiguriert:
-
-```dart
-class NotificationService {
-  static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
-  Future<void> initialize() async {
-    const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    
-    const DarwinInitializationSettings iosInitializationSettings =
-        DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: androidInitializationSettings,
-      iOS: iosInitializationSettings,
-    );
-
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  }
-}
-```
-[@flutter_local_notifications]
-
-#### Benachrichtigungen auslösen
-
-Benachrichtigungen können jederzeit im Anwendungsfluss ausgelöst werden. Ein typischer Anwendungsfall ist die Benachrichtigung bei Statusänderungen:
-
-```dart
-Future<void> showNotification({
-  required String title,
-  required String body,
-  required int id,
-}) async {
-  const AndroidNotificationDetails androidNotificationDetails =
-      AndroidNotificationDetails(
-    'channel_id',
-    'Fahrt-Updates',
-    channelDescription: 'Benachrichtigungen für Fahrt-Status-Änderungen',
-    importance: Importance.max,
-    priority: Priority.high,
-  );
-
-  const NotificationDetails notificationDetails = NotificationDetails(
-    android: androidNotificationDetails,
-  );
-
-  await flutterLocalNotificationsPlugin.show(
-    id,
-    title,
-    body,
-    notificationDetails,
-  );
-}
-```
-[@flutter_local_notifications]
-
 \newpage
 
 ## Praktische Arbeit
 
-### Zielplattformen & Technologie-Auswahl
+### Technologiestack & Auswahl
 
-#### Auswahl des Flutter-Frameworks
+Für die Umsetzung des Projekts, in dem mehrere Anwendungen zusammenarbeiten und miteinander kommunizieren müssen, wurde Supabase als Backend-Plattform gewählt. Wie bereits im Theorieteil beschrieben, bietet Supabase eine Vielzahl an Funktionen, die diese Anforderungen optimal unterstützen, darunter Authentifizierung, Realtime-Funktionalität sowie die Definition von Sicherheitsrichtlinien mittels Policies und Row Level Security (RLS). Dadurch kann ein leistungsfähiges Backend mit vergleichsweise geringem Implementierungsaufwand realisiert werden. Supabase wurde zudem gewählt, weil der fachliche Schwerpunkt des Projekts stärker auf der Entwicklung der mobilen Anwendungen als auf der Implementierung eines komplexen Backends liegen sollte.
 
-Für die Entwicklung der Kundenapplikation wurde das **Flutter-Framework** ausgewählt. Diese Entscheidung basierte auf mehreren Faktoren:
+Für die Entwicklung der Kunden-App kam das Framework Flutter zum Einsatz. Flutter ermöglicht die plattformübergreifende Entwicklung für Android und iOS auf Basis einer gemeinsamen Codebasis, ohne betriebssystemspezifischen Code schreiben zu müssen. Darüber hinaus lagen bereits Vorkenntnisse aus dem Unterricht vor, wodurch eine effiziente Umsetzung der Anwendung möglich war. Die Anbindung an Supabase wird durch das Package `supabase_flutter` zusätzlich deutlich vereinfacht.
 
-**Plattformübergreifende Entwicklung**: Flutter ermöglicht die Entwicklung einer einzigen Codebasis, die sowohl auf **Android als auch auf iOS** ohne wesentliche Anpassungen ausgeführt werden kann. Dies reduziert Entwicklungszeit und Wartungsaufwand erheblich, da nicht zwei separate native Apps programmiert werden müssen.
+Neben `supabase_flutter` wurden weitere Flutter-Packages eingesetzt, beispielsweise `flutter_map` zur Kartendarstellung innerhalb der Anwendung. Eine große Unterstützung im Entwicklungsprozess stellt zudem die Funktion *Hot Reload* dar. Sie ermöglicht es, eine bereits laufende App auf einem Emulator oder einem realen Endgerät innerhalb weniger Sekunden mit geänderter Benutzeroberfläche oder Logik neu zu laden, ohne die Anwendung vollständig neu starten und kompilieren zu müssen. Dies ist jedoch nur möglich, sofern keine Änderungen an der Datei `pubspec.yaml` vorgenommen wurden.
 
-**Vorkenntnisse aus der Schulausbildung**: Das Framework Flutter wurde bereits während der Schulausbildung intensiv behandelt, weshalb die notwendigen Grundkenntnisse vorhanden waren. Dies beschleunigte die Entwicklung. [@flutter_docs]
+Zum Entwickeln der Anwendung wurde die IDE Android Studio verwendet. Dieses Tool kam bereits im Unterricht zum Einsatz, wodurch bestehende Erfahrung genutzt werden konnte. Ein weiterer Vorteil von Android Studio besteht in der integrierten Möglichkeit, Emulatoren direkt aus der Entwicklungsumgebung heraus zu starten und damit die App komfortabel zu testen.
 
-#### Auswahl von Supabase als Backend
+### Projektsetup & Architektur (Flutter-Projektstruktur, Packages, Schichtenmodell, Service Layer)
 
-Für die Backend-Infrastruktur wurde **Supabase** als Backend-as-a-Service (BaaS)-Lösung gewählt. Die Gründe für diese Auswahl sind:
+Für die Umsetzung der Kunden-App wurde in Android Studio ein neues Flutter-Projekt mit dem Namen `kunden_app` erstellt. Beim Anlegen eines Flutter-Projekts wird automatisch die grundlegende Projekt- und Ordnerstruktur erzeugt, bestehend unter anderem aus dem Ordner `lib` sowie der Datei `pubspec.yaml`. Zusätzlich wird von der IDE eine einfache Demo-Anwendung mit einer `main.dart`-Datei generiert.
 
-**Einfache Backend-Implementierung**: Supabase bietet eine vollständig verwaltete PostgreSQL-Datenbank, die ohne umfangreiche Datenbankadministration verwendet werden kann. Die grafische Oberfläche ermöglicht das einfache Erstellen von Tabellen und das Verwalten von Daten.
+![Demo App von Android Studio](img/Winter/appErststart.png){width=300px}
 
-**Integrierte Authentifizierung**: Der Auth-Dienst von Supabase bietet eine produktionsreife Authentifizierungslösung mit Unterstützung für E-Mail/Passwort, Social Login und anderen Authentifizierungsmethoden. Dies erspart die Implementierung komplexer Authentifizierungssysteme von Grund auf.
+Anschließend wurde die Projektstruktur – wie im Theorieteil beschrieben – angepasst. Es wurden folgende Hauptordner angelegt:
 
-**Realtime-Fähigkeiten**: Die Realtime-Funktionalität ermöglicht die automatische Benachrichtigung von Clients bei Datenänderungen, ohne dass manuelle Polling-Mechanismen implementiert werden müssen. Dies ist besonders wichtig für eine Fahrtbörsen-App, bei der Änderungen am Fahrstatus sofort allen relevanten Clients mitgeteilt werden müssen.
+- `config` – Konfigurationsdateien, z. B. `theme.dart`
+- `core`
+  - `providers` – State-Management
+  - `services` – Geschäftslogik und Kommunikation mit dem Backend
+  - `utils` – Hilfsklassen (z. B. `date_formatter`)
+  - `constants.dart` – zentrale Konstanten, z. B. Fahrpreis je Kilometer
+- `models` – Datenmodelle, unter anderem für Tabellen aus Supabase
+- `screens` – alle UI-Seiten wie Login-, Haupt- oder Einstellungsbildschirm
+- `widgets` – wiederverwendbare, selbst definierte Widgets
 
-**Row Level Security (RLS)**: Supabase unterstützt Row Level Security direkt auf Datenbankebene. Dies ermöglicht eine sichere Umsetzung von Zugriffskontrollrichtlinien, bei denen Benutzer nur ihre eigenen Daten abrufen und bearbeiten können.
+![Demo App von Android Studio](img/Winter/erstStartProjekstruktur.png){width=300px}
 
-**Kosteneffizienz für kleine bis mittlere Anwendungen**: Supabase bietet einen großzügigen kostenlosen Tarif, der für die Entwicklung und erste Produktionsdeployments ausreichend ist. Dies reduziert die Einstiegsbarriere für das Projekt. [@supabase_tutorial]
-
-#### Zielplattformen und Anforderungen
-
-Die Anwendung wurde für folgende Zielplattformen entwickelt:
-
-- **Android** (Minimum SDK Level 21, entspricht Android 5.0 und höher)
-- **iOS** (Minimum Deployment Target 11.0)
-
-Diese Mindestversionen wurden gewählt, um eine breite Kompatibilität mit verschiedenen Endgeräten zu gewährleisten, während gleichzeitig ausreichend moderne APIs und Funktionen zur Verfügung stehen. [@flutter_docs]
-
-
-### Einrichtung des Flutter-Projekts
-
-Zu Beginn der praktischen Umsetzung wurde ein neues Flutter-Projekt für die Kunden-Applikation erstellt. Als Entwicklungsumgebung kam **Android Studio** in Kombination mit dem Flutter-Plugin zum Einsatz. Nach der Installation des Flutter-SDKs sowie der Konfiguration der Umgebungsvariablen wurde mit dem folgenden Befehl ein neues Projekt angelegt:
-
-```bash
-flutter create kunden_app
-```
-
-Anschließend wurde das Projekt in Android Studio geöffnet, wodurch automatisch die standardmäßige Flutter-Ordnerstruktur generiert wurde. Zentrale Verzeichnisse sind dabei:
-
-- `lib/` – enthält den eigentlichen Applikationscode  
-- `android/` und `ios/` – plattformspezifische Anpassungen  
-- `assets/` – Bilder und weitere statische Ressourcen  
-- `pubspec.yaml` – Konfiguration von Abhängigkeiten und Assets  
-
-In der Datei `pubspec.yaml` wurden anschließend alle für das Projekt benötigten Pakete eingetragen. Dazu zählen unter anderem:
-
-- Supabase-Anbindung (`supabase_flutter`)
-- State-Management (`provider`)
-- Standortbestimmung, Geokodierung und Kartenanzeige (`geolocator`, `flutter_map`, `latlong2`, `flutter_map_location_marker`, `nominatim_flutter`, `flutter_localization`)
-- Berechtigungsverwaltung (`permission_handler`)
-- PDF-Erstellung und Druckfunktion (`pdf`, `printing`)
-- lokale Datenspeicherung (`shared_preferences`)
-- Suche und Autovervollständigung (`flutter_typeahead`)
-- Kommunikation mit externen Diensten (`http`)
-- Formatierung von Datums (`intl`)
-- lokale Push-Benachrichtigungen (`flutter_local_notifications`)
-
+Anschließend wurden die benötigten Packages als Dependencies in der Datei `pubspec.yaml` eingetragen:
 ```yaml
 dependencies:
   flutter:
     sdk: flutter
-  supabase_flutter: ^2.0.0
-  flutter_map: ^8.2.1
-  latlong2: ^0.9.1
-  permission_handler: ^12.0.1
-  geolocator: ^14.0.2
-  flutter_map_location_marker: ^10.1.0
-  nominatim_flutter: ^0.0.8
-  flutter_typeahead: ^5.2.0
-  http: ^1.2.2
-  printing: ^5.13.4
-  pdf: ^3.11.0
-  intl: ^0.20.2
-  flutter_localization: ^0.3.3
-  provider: ^6.1.1
-  shared_preferences: ^2.2.2
-  flutter_local_notifications: ^19.5.0
+  supabase_flutter: ^2.0.0 #
+  flutter_map: ^8.2.1 #
+  latlong2: ^0.9.1 #
+  permission_handler: ^12.0.1 #
+  geolocator: ^14.0.2 #
+  flutter_map_location_marker: ^10.1.0 #
+  nominatim_flutter: ^0.0.8 #
+  flutter_typeahead: ^5.2.0 #
+  http: ^1.2.2 #
+  printing: ^5.13.4 #
+  pdf: ^3.11.0 #
+  intl: ^0.20.2 #
+  flutter_localization: ^0.3.3 #
+  provider: ^6.1.1 #
+  shared_preferences: ^2.2.2 #
+  flutter_local_notifications: ^19.5.0 #
+  cupertino_icons: ^1.0.8
 ```
+Die wichtigsten Packages werden für folgende Aufgaben verwendet:
 
-Nach der Ausführung von `flutter pub get` wurden sämtliche Abhängigkeiten installiert und in das Projekt eingebunden. Anschließend wurde die Anwendung auf einem Android-Emulator gestartet, um die erfolgreiche Projektinitialisierung sowie die grundlegende Funktionsfähigkeit zu überprüfen.
+- `supabase_flutter`: Verbindung zum Supabase-Backend, z. B. Abrufen gespeicherter Fahrten
+- `flutter_map`: grafische Kartendarstellung
+- `latlong2`: Geokoordinatentypen und Distanzberechnungen
+- `permission_handler`: Abfrage von Standort- und Benachrichtigungsberechtigungen
+- `geolocator`: Zugriff auf GPS und Bestimmung der aktuellen Position
+- `flutter_map_location_marker`: Live-Positionsmarker auf der Karte
+- `nominatim_flutter`: Geocoding und Reverse-Geocoding mit OpenStreetMap
+- `flutter_typeahead`: Eingabefelder mit Vorschlagsliste (Autocomplete)
+- `http`: REST-Aufrufe, z. B. OSRM-Routing oder SumUp-API
+- `printing`: Drucken oder Speichern erzeugter PDF-Dokumente
+- `pdf`: Erzeugung von Rechnungen im PDF-Format
+- `intl`: Formatierung von Datum, Zeit und Währungen
+- `flutter_localizations`: Aktivierung der Flutter-Standardübersetzungen
+- `provider`: State-Management, z. B. für Theme-Wechsel
+- `shared_preferences`: lokale Speicherung von Einstellungen und Login-Informationen
+- `flutter_local_notifications`: lokale Benachrichtigungen (Fahrt zugewiesen/gestartet/beendet)
+- `cupertino_icons`: Icon-Satz im iOS-Stil
 
-![Erstmalig gestartete Flutter-App mit Standard-Counter-Demo](img/Winter/appErststart.png){width=300px}
+Nach dem Eintragen der Abhängigkeiten wurde mittels `pub get` die Installation durchgeführt.
 
-### Strukturierung der App-Architektur
+Die Architektur der App gliedert sich in mehrere Schichten: Benutzeroberfläche (Screens und Widgets), Serviceschicht (`core/services`), Datenmodelle (`models`) sowie Konfigurations- und Konstantendateien (`config`, `core/constants`). Dabei übernehmen:
 
-Um eine klare Trennung zwischen Benutzeroberfläche, Geschäftslogik und Datenzugriff sicherzustellen, wurde die Anwendung bereits zu Beginn in mehrere logisch abgegrenzte Schichten gegliedert. Hierzu wurde im Verzeichnis `lib/` eine strukturierte Ordnerhierarchie angelegt:
+- die **UI-Schicht** die Darstellung und Interaktion mit der Benutzeroberfläche,
+- die **Serviceschicht** die Geschäftslogik sowie die Kommunikation mit dem Backend,
+- die **Daten- und Config-Schicht** das Mapping der Supabase-Daten in Models sowie zentrale Vorgaben wie Themes, Keys und Konstanten.
 
-- `config/` – zentrale Konfigurationen und Theme-Einstellungen (Light-/Dark-Mode)  
-- `core/`  
-  - `constants/` – globale Konstanten, beispielsweise Farben, Abstände und API-URLs (nur in der Entwicklung)  
-  - `services/` – unter anderem Supabase-Service, Location-Service und Routing-Service  
-  - `utils/` – Hilfsklassen, beispielsweise für Formatierungen, Validierungen oder Geocoding  
-- `models/` – Datenmodelle, etwa `Ride` oder `UserProfile`  
-- `providers/` – State-Management-Komponenten auf Basis von `ChangeNotifier`  
-- `screens/` – Benutzeroberflächen für einzelne Funktionsbereiche (z. B. Login, Startseite, Kartenansicht, Profil)  
-- `widgets/` – wiederverwendbare UI-Komponenten wie Buttons, Formularfelder oder Karten-Widgets  
+Durch die klare Trennung der Schichten wird die Wartbarkeit, Testbarkeit und Erweiterbarkeit deutlich verbessert.
 
-![Projektordnerstruktur der Kunden-App](img/Winter/projektstruktur.png){width=300px}
+Der Service Layer ist ein zentrales Element der Anwendung, da durch die Vielzahl eingesetzter Packages eine saubere Trennung der Logik notwendig ist. In diesem Projekt wurden folgende Service-Klassen implementiert:
 
-Die Umsetzung orientiert sich an einem **Schichtenmodell**. Die UI-Schicht (Screens und Widgets) kommuniziert nicht direkt mit Supabase oder gerätespezifischen Funktionen wie der Standortbestimmung. Stattdessen erfolgt der Zugriff ausschließlich über Services und Provider. Dadurch wird die Benutzeroberfläche weitgehend von Geschäftslogik entkoppelt, was die Wartbarkeit, Testbarkeit und Erweiterbarkeit der Anwendung wesentlich verbessert.
+- `location_service.dart`  
+  Kapselt Standortlogik (Berechtigungen prüfen mit `permission_handler`, aktuelle Position über `geolocator` ermitteln) und stellt koordinatenbasierte Hilfsfunktionen bereit.
 
-### Implementierung der Datenmodelle
+- `notification_service.dart`  
+  Initialisiert `flutter_local_notifications` und ermöglicht das Planen und Anzeigen lokaler Benachrichtigungen, z. B. bei Fahrtzuweisungen oder bei Fahrtbeginn/-ende.
 
-Die Datenmodelle bilden jene Entitäten ab, die sowohl in Supabase als auch in der mobilen Anwendung oft und aktiv verwendet werden. Im Fall der Kunden App ist `Ride`, welche Informationen zu einer Fahrt (Start- und Zieladresse, Preis, Status, Zeitstempel) speichert sehr wichtig.
+- `routing_service.dart`  
+  Kommuniziert per `http` mit dem Routing-Backend (OSRM), berechnet Routen und Entfernungen und liefert Daten für die Kartenanzeige.
 
-Die Modelle wurden als Dart-Klassen umgesetzt und mit geeigneten Konstruktoren sowie `fromJson`- und `toJson`-Methoden ausgestattet. Dadurch wird die Konvertierung zwischen den in Supabase gespeicherten JSON-Strukturen und den in der App verwendeten Dart-Objekten erheblich vereinfacht.
+- `sumup_service.dart`  
+  Bindet die SumUp-REST-API an, erstellt Checkouts und verwaltet den Zahlungsfluss (Sandbox), inklusive Fehler- und Timeout-Handling.
 
+- `supabase_service.dart`  
+  Enthält den Supabase-Client, übernimmt Authentifizierung, CRUD-Operationen auf Tabellen sowie gegebenenfalls Realtime-Subscriptions.
+
+- `app_navigator.dart`  
+  Stellt einen globalen `NavigatorKey` bereit, sodass auch Services ohne BuildContext zu benannten Routen navigieren können (z. B. nach Benachrichtigungen).
+
+
+### Datenhaltung mit Supabase (Auth, Tabellen, RLS/Policies, Realtime-Channel)
+
+Das Zusammenspiel zwischen Supabase und der Kunden-App beginnt bei der Registrierung in der Anwendung. Sobald sich ein neuer Benutzer registriert, werden die Daten an Supabase übermittelt und es wird ein Eintrag in der `auth`-Struktur angelegt. In der App wird anschließend darauf hingewiesen, dass die E-Mail-Adresse noch bestätigt werden muss. Erst nach erfolgreicher Bestätigung wird ein vollständiges Benutzerprofil angelegt, das in der Tabelle `profiles` gespeichert wird. 
+
+Die Anmeldung (Login) erfolgt ebenfalls über den Auth-Dienst von Supabase mittels E-Mail-Adresse und Passwort. Bei fehlerhaften Zugangsdaten, etwa einem falschen Passwort, schlägt der Login-Vorgang fehl und Supabase liefert eine entsprechende Fehlermeldung zurück.
+
+![profiles Tabelle](img/Winter/profilesTabelle.png){width=300px}
+![Registrierung der Kunden-App](img/Winter/registrierungScreen.png){width=300px}
+![Login der Kunden-App](img/Winter/loginScreen.png){width=300px}
+
+Neben der Tabelle `profiles` und der Authentifizierung sind für die Kunden-App insbesondere die Tabellen `rides`, `driver_locations` und `payments` relevant:
+
+- `rides`: enthält die vom Benutzer erstellten Fahrten und erlaubt das Anzeigen und Verfolgen der eigenen Fahrten.
+- `driver_locations`: speichert die aktuellen Positionen der Fahrer und wird für die Echtzeitverfolgung verwendet (Anfahrt des Fahrers, Restdauer bis zum Ziel).
+- `payments`: dokumentiert Zahlungen, sowohl Kartenzahlungen über SumUp als auch Barzahlungen.
+
+![rides Tabelle](img/Winter/ridesTabelle.png){width=300px}
+![driver_locations Tabelle](img/Winter/driverLocationsTabelle.png){width=300px}
+![payments Tabelle](img/Winter/paymentsTabelle.png){width=300px}
+
+Um Zugriffsfehler durch Row Level Security (RLS) zu vermeiden, mussten für diese Tabellen mehrere Policies definiert werden. Die wichtigsten davon sind:
+
+- **Policies für `payments`**  
+  Wenn in der App eine Fahrt erstellt wird, wird im Vorfeld bereits ein Eintrag in der Tabelle `payments` angelegt. Der Benutzer benötigt daher das Recht, eigene Payment-Einträge anzulegen (`INSERT`), zu lesen (`SELECT`) und zu aktualisieren (`UPDATE`). Die folgende Policy erlaubt beispielsweise das Einfügen von Payment-Datensätzen für eigene Fahrten:
+
+  ![Policy payments INSERT als User](img/Winter/policyPaymentsInsert.png){width=300px}
+
+- **Policies für `rides`**  
+  Analog dazu muss der Benutzer Fahrten in der Tabelle `rides` anlegen können, sowie ausschließlich seine eigenen Fahrten lesen und aktualisieren dürfen. Auch hier gibt es entsprechende Policies für `INSERT`, `SELECT` und `UPDATE`:
+
+  ![Policy rides INSERT als User](img/Winter/policyRidesInsert.png){width=300px}
+
+- **Policies für `driver_locations`**  
+  Für die Echtzeitverfolgung darf ein Benutzer nur Standortdaten des Fahrers sehen, der der aktuellen Fahrt zugeordnet ist. Eine Policy auf `driver_locations` stellt sicher, dass nur Datensätze des zugeordneten Fahrers abgerufen werden können:
+
+  ![Policy driver_locations SELECT als User](img/Winter/policyDriverLocationsSelect.png){width=300px}
+
+Um Benutzeroberflächen in Echtzeit an Datenbankänderungen anzupassen, wird in Supabase die Realtime-Funktion verwendet. Dazu muss Realtime für die jeweilige Tabelle in Supabase aktiviert und in der Flutter-App eine Realtime-Subscription eingerichtet werden. In der Kunden-App kommt dies bei der Tabelle `rides` zum Einsatz, um den Fahrtenstatus live zu aktualisieren und Benachrichtigungen zu versenden.
+
+Das Szenario ist wie folgt: Ein Benutzer erstellt eine Fahrt, deren Status zunächst auf `requested` gesetzt ist. Diese Fahrt wird im Screen der App angezeigt. Sobald der Status in der Datenbank z. B. auf `assigned` geändert wird, aktualisiert sich die UI automatisch und der neue Status wird angezeigt.
+
+Die folgende Realtime-Subscription zeigt, wie Änderungen an Fahrten des aktuellen Benutzers abonniert und in der UI verarbeitet werden:
 ```dart
-class Ride {
-  final String id;
-  final String userId;
-  final DateTime createdAt;
-  final String startAddress;
-  final String destinationAddress;
-  final double price;
-  final String status; // z. B. 'requested', 'accepted', 'finished'
+// Realtime-Subscription nur für die Rides des aktuellen Kunden
+RealtimeChannel subscribeToRides(
+  String customerId,
+  void Function(PostgresChangePayload) callback,
+) {
+  final channel = client.channel('public:rides:customer:$customerId');
 
-  Ride({
-    required this.id,
-    required this.userId,
-    required this.createdAt,
-    required this.startAddress,
-    required this.destinationAddress,
-    required this.price,
-    required this.status,
-  });
-
-  factory Ride.fromJson(Map<String, dynamic> json) {
-    return Ride(
-      id: json['id'] as String,
-      userId: json['user_id'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      startAddress: json['start_address'] as String,
-      destinationAddress: json['destination_address'] as String,
-      price: (json['price'] as num).toDouble(),
-      status: json['status'] as String,
+  for (final event in [
+    PostgresChangeEvent.insert,
+    PostgresChangeEvent.update,
+    PostgresChangeEvent.delete,
+  ]) {
+    channel.onPostgresChanges(
+      event: event,
+      schema: 'public',
+      table: 'rides',
+      filter: PostgresChangeFilter(
+        type: PostgresChangeFilterType.eq,
+        column: 'customer_id',
+        value: customerId,
+      ),
+      callback: callback, // wird im Screen ausgewertet
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'user_id': userId,
-      'created_at': createdAt.toIso8601String(),
-      'start_address': startAddress,
-      'destination_address': destinationAddress,
-      'price': price,
-      'status': status,
-    };
-  }
+  channel.subscribe();
+  return channel;
 }
-```
-
-![UML-Diagramm der zentralen Datenmodelle](img/Winter/datenmodellUml.png){width=400px}
-
-Durch den Einsatz solcher Modellklassen werden Typfehler reduziert, die Verständlichkeit des Codes erhöht und eine einheitliche Datenbasis für Widgets, Provider und Services geschaffen.
-### Navigation und Routing der Anwendung
-
-Die Navigation zwischen den verschiedenen Ansichten der Anwendung wurde mithilfe benannter Routen und eines zentralen Routers realisiert. Zu den zentralen Seiten gehören:
-
-- Login- und Registrierungsseite  
-- Startseite mit Kartenansicht  
-- Bildschirm zur Fahrtanfrage  
-- Übersicht über vergangene Fahrten  
-- Profil- und Einstellungsbereich  
-
-In der Datei `main.dart` wurde eine zentrale `MaterialApp` mit einer definierten `onGenerateRoute`-Funktion erstellt, über welche sämtliche Routen an einer Stelle verwaltet werden.
-
-```dart
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Taxi Kunden-App',
-      initialRoute: '/splash',
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/splash':
-            return MaterialPageRoute(builder: (_) => const SplashScreen());
-          case '/login':
-            return MaterialPageRoute(builder: (_) => const LoginScreen());
-          case '/home':
-            return MaterialPageRoute(builder: (_) => const HomeScreen());
-          case '/rideDetails':
-            final ride = settings.arguments as Ride;
-            return MaterialPageRoute(
-              builder: (_) => RideDetailsScreen(ride: ride),
-            );
-          default:
-            return MaterialPageRoute(builder: (_) => const LoginScreen());
-        }
-      },
-    );
-  }
+// Subscription einrichten und UI aktualisieren
+@override
+void initState() {
+  super.initState();
+  _loadRides();              // Initiales Laden
+  _setupRealtimeSubscription(); // Realtime starten
 }
-```
 
-![Navigationsfluss der Anwendung](img/Winter/navigationsdiagramm.png){width=400px}
+void _setupRealtimeSubscription() {
+  final userId = _supabaseService.currentUser?.id;
+  if (userId == null) return;
 
-![Login-Screen der Kunden-App](img/Winter/loginScreen.png){width=300px}
-
-![Startseite mit Kartenansicht](img/Winter/startseiteKarte.png){width=300px}
-
-Ein zentrales Element stellt das sogenannte **Auth-Gate** dar: Ist ein Benutzer nicht angemeldet, wird er automatisch auf die Login-Seite weitergeleitet. Erst nach erfolgreicher Authentifizierung erhält er Zugriff auf die Hauptbereiche der Anwendung, wie beispielsweise die Kartenansicht oder die Übersicht vergangener Fahrten.
-
-### State-Management mit Provider
-
-Für die Verwaltung des Anwendungszustands wird das Paket `provider` eingesetzt. Der zentrale Zustand, der bei dieser Kunden-App mit dem `provider` verwaltet wird, ist die Anwendungseinstellung Dark-/Light-Mode über den `ThemeProvider`.
-
-Der `ThemeProvider` wird als `ChangeNotifier` implementiert und in der `main.dart` registriert, sodass er in der gesamten Anwendung kontextweit zur Verfügung steht. Im Gegensatz zu einem klassischen `MultiProvider`-Ansatz wird der ThemeProvider bereits vor dem Start der App initialisiert, da seine Einstellungen (z. B. der gewählte Theme-Modus) lokal persistiert sein können.
-
-```dart
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize Supabase
-  await Supabase.initialize(
-    url: AppConstants.supabaseUrl,
-    anonKey: AppConstants.supabaseAnonKey,
+  _subscription = _supabaseService.subscribeToRides(
+    userId,
+    _handleRealtimeUpdate,
   );
-
-  // Initialize Theme Provider with persisted settings
-  final themeProvider = ThemeProvider();
-  await themeProvider.initialize();
-
-  // Initialize Notification Service
-  await NotificationService().initialize();
-
-  runApp(TaxiApp(themeProvider: themeProvider));
 }
 
-class TaxiApp extends StatelessWidget {
-  final ThemeProvider themeProvider;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: themeProvider,
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
-          return MaterialApp(
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeProvider.materialThemeMode,
-            home: const AuthGate(),
-          );
-        },
-      ),
-    );
-  }
-}
-```
-
-Der ThemeProvider wird mit `ChangeNotifierProvider.value()` registriert. Diese Registrierungsmethode wird verwendet, da die Provider-Instanz bereits initialisiert ist, bevor die App startet. Über den `Consumer<ThemeProvider>` können alle abhängigen Widgets automatisch auf Theme-Änderungen reagieren und werden neu aufgebaut, wenn sich `themeProvider.materialThemeMode` ändert.
-
-![Datenfluss zwischen Providern und UI-Komponenten](img/Winter/providerDatenfluss.png){width=400px}
-
-### Gestaltung der Benutzeroberfläche (UI)
-
-Die Benutzeroberfläche wurde so gestaltet, dass sie sich optisch an moderne Mobilitätsanwendungen anlehnt und gleichzeitig eine hohe Übersichtlichkeit gewährleistet. Farbwerte, Schriftarten und Abstände werden zentral in der Datei `config/theme.dart` verwaltet. Dadurch können Anpassungen am Erscheinungsbild konsistent und an einer einzigen Stelle vorgenommen werden.
-
-Zentrale Designentscheidungen waren:
-
-- eine klare Trennung zwischen primären und sekundären Aktionen (z. B. ein hervorgehobener Button „Fahrt bestellen“)  
-- gut lesbare Schriftgrößen  
-- ausreichend große Touch-Ziele für interaktive Elemente  
-- eine einheitliche Verwendung von Abständen und Kantenradien  
-
-### Wiederverwendbare Widgets in der Kunden-App
-
-Wichtige UI-Komponenten sind in `lib/widgets/` gekapselt und werden mehrfach eingesetzt:
-
-- `CustomInput` / `PasswordInput` – einheitliche Textfelder mit Prefix/Suffix, Validatoren und Passwort-Toggle (widgets/common/custom_input.dart)  
-- `GlassCard` / `SectionCard` – strukturierte Karten mit Glassmorphism-Optik (widgets/common/glass_card.dart)  
-- `AddressSearchField` – TypeAhead-Adresssuche mit Geocoding-Vorschlägen (widgets/forms/address_search_field.dart)  
-- `BookingForm` – komplettes Buchungsformular inkl. Zahlungsmethoden-Chips und Standortwahl (widgets/forms/booking_form.dart)
-
-```dart
-class CustomInput extends StatelessWidget {
-  const CustomInput({
-    super.key,
-    required this.controller,
-    required this.label,
-    this.hint,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.keyboardType,
-    this.textInputAction,
-    this.obscureText = false,
-    this.enabled = true,
-    this.maxLines = 1,
-    this.validator,
-    this.onChanged,
-    this.onFieldSubmitted,
-    this.focusNode,
-    this.autofillHints,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      focusNode: focusNode,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      obscureText: obscureText,
-      enabled: enabled,
-      maxLines: maxLines,
-      validator: validator,
-      onChanged: onChanged,
-      onFieldSubmitted: onFieldSubmitted,
-      autofillHints: autofillHints,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-        suffixIcon: suffixIcon,
-      ),
-    );
-  }
-}
-```
-
-#### Responsive Design
-
-Die App nutzt responsive Verhaltensweisen vor allem über `MediaQuery` und flexible Layout-Widgets:
-
-- **MediaQuery für dynamische Abstände/Größen**: z. B. das Overlay in der Account-Seite passt seinen Abstand an Tastatur-Insets und Bildschirmhöhe an:
-  ```dart
-  final viewInsets = MediaQuery.of(context).viewInsets;
-
-  return GlassCard(
-    margin: EdgeInsets.only(
-      left: 16,
-      right: 16,
-      bottom: 16 + viewInsets.bottom,
-      top: MediaQuery.of(context).size.height * 0.3,
-    ),
-    child: Form(...),
-  );
-  ```
-
-#### Dark Mode Implementierung
-
-Die App unterstützt Light-, Dark- und System-Mode. Ein zentraler `ThemeProvider` (mit `AppThemeMode { light, dark, system }`) verwaltet den aktuellen Modus, lädt ihn aus `shared_preferences` und bietet die passenden Flutter-`ThemeMode`-Werte an.
-
-~~~{caption="ThemeProvider (persistenter Theme-Mode)" .dart}
-class ThemeProvider extends ChangeNotifier {
-  static const String _themeKey = 'app_theme_mode';
-  AppThemeMode _themeMode = AppThemeMode.system;
-  late SharedPreferences _prefs;
-
-  AppThemeMode get themeMode => _themeMode;
-
-  ThemeMode get materialThemeMode {
-    switch (_themeMode) {
-      case AppThemeMode.light:
-        return ThemeMode.light;
-      case AppThemeMode.dark:
-        return ThemeMode.dark;
-      case AppThemeMode.system:
-        return ThemeMode.system;
-    }
-  }
-
-  Future<void> initialize() async {
-    _prefs = await SharedPreferences.getInstance();
-    final savedTheme = _prefs.getString(_themeKey);
-    if (savedTheme != null) {
-      _themeMode = AppThemeMode.values.firstWhere(
-        (mode) => mode.name == savedTheme,
-        orElse: () => AppThemeMode.system,
-      );
-    }
-    notifyListeners();
-  }
-
-  Future<void> setThemeMode(AppThemeMode mode) async {
-    if (_themeMode == mode) return;
-    _themeMode = mode;
-    await _prefs.setString(_themeKey, mode.name);
-    notifyListeners();
-  }
-}
-~~~
-
-Die konkreten Theme-Definitionen liegen in `config/theme.dart` als `AppTheme.lightTheme` und `AppTheme.darkTheme` (auf Basis von `ColorScheme.fromSeed`, inkl. Buttons, Inputs, SnackBars etc.).
-
-~~~{caption="Registrierung und Nutzung in main.dart" .dart}
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Supabase.initialize(url: AppConstants.supabaseUrl, anonKey: AppConstants.supabaseAnonKey);
-
-  final themeProvider = ThemeProvider();
-  await themeProvider.initialize();          // lädt gespeicherten Modus
-
-  await NotificationService().initialize();
-
-  runApp(TaxiApp(themeProvider: themeProvider));
-}
-
-class TaxiApp extends StatelessWidget {
-  final ThemeProvider themeProvider;
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: themeProvider,
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, _) {
-          return MaterialApp(
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeProvider.materialThemeMode,
-            home: const AuthGate(),
-          );
-        },
-      ),
-    );
-  }
-}
-~~~
-
-Die Auswahl (Hell/Dunkel/System) wird persistent gespeichert (`shared_preferences`), sodass der Modus nach App-Neustart erhalten bleibt.
-
-![Startseite im Light-Mode](img/Winter/startseiteKarte.png){width=300px}
-![Startseite im Dark-Mode](img/Winter/startseiteDark.png){width=300px}
-![Fahrtenliste im Light-Mode](img/Winter/fahrtenlisteLight.png){width=300px}
-![Fahrtenliste im Dark-Mode](img/Winter/fahrtenlisteDark.png){width=300px}
-![Einstellungsseite im Light-Mode](img/Winter/einstellungenLight.png){width=300px}
-![Einstellungsseite im Dark-Mode](img/Winter/einstellungenDark.png){width=300px}
-
-### Implementierung der Authentifizierung
-
-Die Authentifizierung erfolgt über `supabase_flutter` mit E-Mail/Passwort. Zentrale Aufrufe liegen im `SupabaseService`, die UI-Logik in den Auth-Screens (`login_page.dart`, `registration_page.dart`). Ein eigener `AuthProvider` wird nicht verwendet; der `AuthGate` in `main.dart` lauscht direkt auf `Supabase.instance.client.auth.onAuthStateChange`.
-
-```dart
-class SupabaseService {
-  SupabaseClient get client => Supabase.instance.client;
-
-  Future<AuthResponse> signIn({
-    required String email,
-    required String password,
-  }) async {
-    return await client.auth.signInWithPassword(
-      email: email.trim(),
-      password: password.trim(),
-    );
-  }
-
-  Future<AuthResponse> signUp({
-    required String email,
-    required String password,
-    Map<String, dynamic>? data,
-  }) async {
-    return await client.auth.signUp(
-      email: email.trim(),
-      password: password.trim(),
-      data: data,
-    );
-  }
-
-  Future<void> signOut() async => client.auth.signOut();
-}
-```
-
-```dart
-class _LoginPageState extends State<LoginPage> {
-  final _supabaseService = SupabaseService();
-  // ...
-
-  Future<void> _handleLogin() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() { _isLoading = true; _errorMessage = null; });
-
-    try {
-      final response = await _supabaseService.signIn(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      if (response.user != null && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Erfolgreich angemeldet!')),
-        );
-        Navigator.of(context).pushNamedAndRemoveUntil('/main', (route) => false);
-      } else {
-        _setError('Anmeldung fehlgeschlagen. Bitte erneut versuchen.');
-      }
-    } on AuthException catch (e) {
-      _setError(_mapErrorMessage(e.message));
-    } catch (_) {
-      _setError('Ein unerwarteter Fehler ist aufgetreten.');
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-}
-```
-
-Der `AuthGate` in `main.dart` wechselt abhängig vom Auth-Stream zwischen Splash, Login und Main Screen:
-
-```dart
-return StreamBuilder<AuthState>(
-  stream: Supabase.instance.client.auth.onAuthStateChange,
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return const SplashScreen();
-    }
-    final session = snapshot.data?.session;
-    if (session != null) {
-      NotificationService().startRideMonitoring(session.user?.id ?? '');
-      return const MainScreen();
-    }
-    NotificationService().stopRideMonitoring();
-    return const LoginPage();
-  },
-);
-```
-
-![Login-Formular der Kunden-App](img/Winter/loginFormular.png){width=300px}
-
-![Registrierungs-Formular](img/Winter/registrierungFormular.png){width=300px}
-
-Nach einer erfolgreichen Anmeldung speichert der `AuthProvider` die aktuelle Sitzung und informiert alle abhängigen Widgets über den geänderten Authentifizierungsstatus. Nicht authentifizierte Benutzer werden automatisch auf die Login-Seite weitergeleitet. Zusätzlich wird mithilfe von `shared_preferences` ein Flag gespeichert, sodass der Login-Status beim nächsten Start der Anwendung wiederhergestellt werden kann (vgl. Abschnitt 4.2.9).
-
-### Anbindung an die Supabase-Datenbank
-
-Die Supabase-Datenbank bildet das Backend der Kundenanwendung. Zentrale Tabellen sind:
-
-- `rides` – Fahrtanfragen mit Status, Zeitstempel und Fahrtdetails  
-- `profiles` – Benutzerprofildaten  
-- `addresses` – gespeicherte Adressen des Kunden  
-- `payments` – Zahlungsinformationen pro Fahrt  
-
-Der Zugriff erfolgt über `SupabaseService`, eine zentrale Service-Schicht, die den Supabase-Client kapselt. Alle Datenbankoperationen laufen über diese Service.
-
-```dart
-class SupabaseService {
-  SupabaseClient get client => Supabase.instance.client;
-  User? get currentUser => client.auth.currentUser;
-
-  // Fahrt anlegen (via RPC-Funktion)
-  Future<Map<String, dynamic>> requestRide({
-    required int pickupAddressId,
-    required int dropoffAddressId,
-    required DateTime scheduledAt,
-    required VehicleType vehicleType,
-    required double estimatedPrice,
-    String? notes,
-  }) async {
-    return await client.rpc('request_ride', params: {
-      'p_pickup_address_id': pickupAddressId,
-      'p_dropoff_address_id': dropoffAddressId,
-      'p_scheduled_at': scheduledAt.toUtc().toIso8601String(),
-      'p_vehicle_type': vehicleType.name,
-      'p_estimated_price': estimatedPrice,
-      'p_notes': notes,
-    });
-  }
-
-  // Fahrten auslesen (gefiltert nach Benutzer)
-  Future<List<Ride>> getRides({
-    String? customerId,
-    RideStatus? status,
-    int? limit,
-    bool ascending = false,
-  }) async {
-    final uid = customerId ?? currentUser?.id;
-    if (uid == null) throw Exception('Not authenticated');
-
-    final response = await client
-        .from('rides')
-        .select('*, pickup:pickup_address_id(*), dropoff:dropoff_address_id(*), payments(*)')
-        .eq('customer_id', uid);
-
-    var rides = (response as List<dynamic>)
-        .map((json) => Map<String, dynamic>.from(json))
-        .toList();
-
-    // Filter & Sortierung in Dart
-    if (status != null) {
-      rides = rides.where((ride) => ride['status'] == status.name).toList();
-    }
-    
-    rides.sort((a, b) {
-      final dateA = DateTime.parse(a['requested_at']);
-      final dateB = DateTime.parse(b['requested_at']);
-      return ascending ? dateA.compareTo(dateB) : dateB.compareTo(dateA);
-    });
-
-    return rides.map<Ride>((json) => Ride.fromJson(json)).toList();
-  }
-
-  // Fahrt stornieren
-  Future<void> cancelRide(int rideId) async {
-    await client
-        .from('rides')
-        .update({'status': RideStatus.canceled.name})
-        .eq('id', rideId);
-  }
-}
-```
-
-![Supabase Tabellenschema](img/Winter/supabaseTablesScheme.png){width=300px}
-
-Sicherheitsrelevante Aspekte wie Row Level Security und Datenbank-Policies werden im Theorieteil „Authentifizierung & Sicherheit (RLS/Policies)" ausführlich behandelt.
-
-
-### Speicherung lokaler Daten (shared_preferences)
-
-Neben den in Supabase gespeicherten Daten werden bestimmte Informationen lokal auf dem Endgerät gesichert. Dies dient der Verbesserung der Benutzerfreundlichkeit und ermöglicht es, Benutzereinstellungen persistent zu speichern. Zu den lokal gespeicherten Daten zählen insbesondere:
-
-- der aktuelle Theme-Modus (Hell/Dunkel/System)  
-- Benutzerpräferenzen für Zahlungsmethoden  
-- zuletzt verwendete Adressen  
-
-Hierfür wird das Paket `shared_preferences` eingesetzt, mit dem Schlüssel-Wert-Paare dauerhaft am Gerät gespeichert werden können.
-
-```dart
-class ThemeProvider extends ChangeNotifier {
-  static const String _themeKey = 'app_theme_mode';
-  AppThemeMode _themeMode = AppThemeMode.system;
-  late SharedPreferences _prefs;
-
-  Future<void> initialize() async {
-    _prefs = await SharedPreferences.getInstance();
-    final savedTheme = _prefs.getString(_themeKey);
-
-    if (savedTheme != null) {
-      _themeMode = AppThemeMode.values.firstWhere(
-        (mode) => mode.name == savedTheme,
-        orElse: () => AppThemeMode.system,
-      );
-    }
-    notifyListeners();
-  }
-
-  Future<void> setThemeMode(AppThemeMode mode) async {
-    if (_themeMode == mode) return;
-    _themeMode = mode;
-    await _prefs.setString(_themeKey, mode.name);
-    notifyListeners();
-  }
-}
-```
-
-![Settings Page mit Dark-Mode Switcher](img/Winter/einstellungenLight.png){width=300px}
-
-Beim Start der Anwendung werden diese Werte wieder ausgelesen und in den entsprechenden Providern hinterlegt. Dadurch bleibt beispielsweise der gewählte Theme-Modus auch nach einem Neustart der App aktiv, ohne dass der Benutzer die Einstellung erneut vornehmen muss.
-
-
-
-### Standortabfrage und Berechtigungen
-
-Da die Kundenanwendung Fahrten auf Basis der aktuellen Benutzerposition anbietet, ist der Zugriff auf den Gerätestandort erforderlich. Dieser Zugriff setzt entsprechende Betriebssystemberechtigungen voraus, die mithilfe des Pakets `permission_handler` abgefragt und verwaltet werden.
-
-Die eigentliche Standortbestimmung erfolgt über das Paket `geolocator`. Der `LocationService` bietet zwei Betriebsmodi:
-
-1. **Einmalige Standortabfrage** (`getCurrentPosition`): für einmalige Positionsbestimmung beim Buchen  
-2. **Kontinuierliche Updates** (`startLocationUpdates`): für Echtzeit-Tracking während einer Fahrt
-
-Vor jeder Standortoperation wird geprüft, ob:
-- die Standortdienste aktiviert sind  
-- die erforderliche Berechtigung vorliegt  
-- bei dauerhaft verweigerter Berechtigung der Nutzer in die Systemeinstellungen geleitet wird
-
-```dart
-class LocationService {
-  Stream<LatLng> get locationStream => _locationController.stream;
-  
-  Future<bool> initialize() async {
-    _isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!_isLocationServiceEnabled) return false;
-    
-    final permissionGranted = await requestLocationPermission();
-    if (!permissionGranted) return false;
-    
-    await getCurrentPosition();
-    return true;
-  }
-
-  Future<bool> requestLocationPermission() async {
-    var status = await Permission.location.status;
-    
-    if (status.isDenied) {
-      status = await Permission.location.request();
-    }
-    
-    if (status.isPermanentlyDenied) {
-      await openAppSettings();
-      return false;
-    }
-    
-    return status.isGranted;
-  }
-
-  Future<LatLng?> getCurrentPosition() async {
-    if (!isLocationAvailable) {
-      throw LocationServiceException('Location permission not granted');
-    }
-    
-    final position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    
-    return LatLng(position.latitude, position.longitude);
-  }
-
-  void startLocationUpdates({
-    LocationAccuracy accuracy = LocationAccuracy.high,
-    int distanceFilter = 10,
-  }) {
-    final locationSettings = LocationSettings(
-      accuracy: accuracy,
-      distanceFilter: distanceFilter,
-    );
-    
-    Geolocator.getPositionStream(locationSettings: locationSettings).listen(
-      (Position position) {
-        final latLng = LatLng(position.latitude, position.longitude);
-        _locationController.add(latLng);
-      },
-    );
-  }
-}
-```
-
-![Dialog bei verweigerter Berechtigung](img/Winter/noPermissionDialogue.png){width=300px}
-
-Fehlende Berechtigungen werden dem Benutzer verständlich erklärt, um Missverständnisse zu vermeiden und gleichzeitig die Sicherheit sowie Transparenz im Umgang mit sensiblen Standortdaten zu gewährleisten.
-
-### Kartenanzeige und Markerfunktion
-
-Für die Darstellung der Karte sowie der relevanten Positionen wird das Paket `flutter_map` in Kombination mit **OpenStreetMap** eingesetzt. Die Karte bildet den zentralen Bestandteil der Startseite und zeigt sowohl den aktuellen Standort des Benutzers (mit blauem Marker und Genauigkeitskreis) als auch Start-/Zielpunkte und Routenlinien.
-
-Das `TaxiMap`-Widget unterstützt:
-- **Theme-aware Kartenkacheln** (helles/dunkles Design)  
-- **Aktuelle Benutzerposition** mit `CurrentLocationLayer` und automatischem Folgen  
-- **Benutzerdefinierte Marker** für Start/Ziel  
-- **Route-Polylines** mit Schatten-Effekt  
-
-```dart
-class TaxiMap extends StatefulWidget {
-  final LatLng? center;
-  final double? zoom;
-  final List<Marker> markers;
-  final List<Polyline> routePolylines;
-  final bool showCurrentLocation;
-  final bool followCurrentLocation;
-  final VoidCallback? onMapReady;
-  final void Function(LatLng)? onTap;
-
-  @override
-  State<TaxiMap> createState() => _TaxiMapState();
-}
-
-class _TaxiMapState extends State<TaxiMap> {
-  late MapController _mapController;
-  final LocationService _locationService = LocationService();
-
-  @override
-  Widget build(BuildContext context) {
-    // Theme-aware Kartenkacheln
-    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final mapTileUrl = AppConstants.getMapTileUrl(isDarkMode);
-
-    return FlutterMap(
-      mapController: _mapController,
-      options: MapOptions(
-        initialCenter: widget.center ?? const LatLng(47.2, 11.4),
-        initialZoom: widget.zoom ?? 14,
-        onMapReady: widget.onMapReady,
-        onTap: (tapPosition, point) => widget.onTap?.call(point),
-      ),
-      children: [
-        // Kartenkacheln (theme-aware)
-        TileLayer(
-          urlTemplate: mapTileUrl,
-          userAgentPackageName: AppConstants.mapUserAgent,
-          maxZoom: 19,
-        ),
-
-        // Routenlinien (hinter Markern)
-        if (widget.routePolylines.isNotEmpty)
-          PolylineLayer(polylines: widget.routePolylines),
-
-        // Aktuelle Benutzerposition mit blauem Marker
-        if (widget.showCurrentLocation && _locationService.isLocationAvailable)
-          CurrentLocationLayer(
-            alignPositionOnUpdate: widget.followCurrentLocation
-                ? AlignOnUpdate.always
-                : AlignOnUpdate.never,
-            style: LocationMarkerStyle(
-              marker: DefaultLocationMarker(
-                color: AppTheme.primary,
-                child: const Icon(
-                  Icons.person_pin_circle,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-              accuracyCircleColor: AppTheme.primary.withOpacity(0.12),
-            ),
-          ),
-
-        // Benutzerdefinierte Marker (Start/Ziel)
-        if (widget.markers.isNotEmpty)
-          MarkerLayer(markers: widget.markers),
-      ],
-    );
-  }
-}
-```
-
-![Map mit aktuellen Standort](img/Winter/mapWithLocation.png){width=300px}
-
-Die Position des Benutzers wird über `CurrentLocationLayer` in Echtzeit aktualisiert, sodass in der Kartenansicht stets eine aktuelle Standortdarstellung gewährleistet ist. Zusätzlich passen sich die Kartenkacheln automatisch an Light/Dark Mode an.
-
-### Routenberechnung und Darstellung
-
-Um dem Benutzer nicht nur die Position, sondern auch die Route zwischen Start- und Zielpunkt anzuzeigen, wird ein externer Routingdienst (**OSRM – Open Source Routing Machine**) verwendet. Die Kommunikation erfolgt über HTTP-Anfragen, die im `RoutingService` gekapselt sind.
-
-Der Service berechnet neben der reinen Route auch:
-- **Fahrtdauer** (in Sekunden)  
-- **Fahrtentfernung** (in Metern)  
-- **ETA (Estimated Time of Arrival)**  
-- **Geschätzte Fahrtkosten** basierend auf Entfernung und Dauer  
-
-Die vom Routingdienst zurückgelieferte Route besteht aus einer Folge von Koordinatenpunkten. Diese werden in der App zu einer **Polyline mit Schatten-Effekt** verarbeitet und anschließend in der Karte visualisiert.
-
-```dart
-class RoutingService {
-  /// Berechnet Route zwischen zwei Punkten
-  Future<RouteResult> calculateRoute(
-    LatLng from,
-    LatLng to, {
-    RouteProfile profile = RouteProfile.driving,
-  }) async {
-    final url = _buildRouteUrl(from, to, profile);
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode != 200) {
-      throw RoutingException('Routing server error');
-    }
-
-    final data = json.decode(response.body) as Map<String, dynamic>;
-    if (data['code'] != 'Ok' || (data['routes'] as List).isEmpty) {
-      throw RoutingException('No routes found');
-    }
-
-    return RouteResult.fromJson(data['routes'].first);
-  }
-
-  /// Berechnet ETA (Fahrtdauer + Entfernung)
-  Future<EtaResult> calculateEta(LatLng from, LatLng to) async {
-    final route = await calculateRoute(from, to);
-    return EtaResult(
-      durationSeconds: route.durationSeconds,
-      distanceMeters: route.distanceMeters,
-      estimatedArrival: DateTime.now().add(
-        Duration(seconds: route.durationSeconds),
-      ),
-    );
-  }
-
-  /// Geschätzte Fahrtkosten basierend auf Route
-  double estimateFare(double distanceKm) {
-    if (distanceKm <= 10) {
-      return 20.0;
-    }
-    final extraKm = distanceKm - 10;
-    return 20.0 + (extraKm * 2.10);
-  }
-}
-```
-
-```dart
-// In TaxiMap:
-if (widget.routePolylines.isNotEmpty)
-  PolylineLayer(polylines: widget.routePolylines),
-
-// Route-Polylinen mit Schatten werden in RoutePolylines erstellt:
-class RoutePolylines {
-  static List<Polyline> createMainRoute(List<LatLng> points) {
-    return [
-      // Schatten (dicker, dunkler)
-      Polyline(
-        points: points,
-        strokeWidth: 8,
-        color: Colors.black.withOpacity(0.35),
-      ),
-      // Hauptroute
-      Polyline(
-        points: points,
-        strokeWidth: 4.5,
-        color: AppTheme.primary,
-      ),
-    ];
-  }
-}
-```
-
-![Map mit eingezeichneter Route](img/Winter/mapWithRoute.png){width=300px}
-
-Die Routenberechnung ermöglicht es dem Benutzer, bereits vor Fahrtantritt die voraussichtliche Strecke, Fahrtdauer und geschätzte Kosten zu sehen. Dies erleichtert die Entscheidungsfindung und unterstützt eine bessere Kommunikation mit dem Fahrer.
-
-### Formularerstellung und Validierung
-
-Für die Eingabe von Benutzerdaten (z. B. E-Mail, Passwort) sowie Fahrtdaten (Start-/Zieladresse, geplante Zeit, Fahrzeugtyp, Notizen) kommen mehrere Formulare zum Einsatz. Die Validierung erfolgt über zentrale `ValidationHelper`-Methoden, und die UI nutzt wiederverwendbare Komponenten wie `CustomInput` und `AddressSearchField`.
-
-Das `BookingForm`-Widget etwa kombiniert:
-- **Adresssuche** (`AddressSearchField`) mit TypeAhead-Autovervollständigung  
-- **Zahlungsmethoden-Chips** (Bar/Karte)  
-- **Zeitpicker** für geplante Fahrten  
-- **Fahrzeugtyp-Auswahl**  
-- **Notizen-Feld** für zusätzliche Informationen  
-
-Validierungen erfolgen über standardisierte Funktionen:
-
-```dart
-class ValidationHelper {
-  static String? validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'E-Mail ist erforderlich';
-    }
-    if (!value.contains('@') || !value.contains('.')) {
-      return 'Ungültige E-Mail-Adresse';
-    }
-    return null;
-  }
-
-  static String? validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Passwort ist erforderlich';
-    }
-    if (value.length < 6) {
-      return 'Mindestens 6 Zeichen erforderlich';
-    }
-    return null;
-  }
-
-  static String? validateStrongPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Passwort ist erforderlich';
-    }
-    if (value.length < 8) return 'Mindestens 8 Zeichen';
-    if (!value.contains(RegExp(r'[A-Z]'))) return 'Ein Großbuchstabe erforderlich';
-    if (!value.contains(RegExp(r'[0-9]'))) return 'Eine Zahl erforderlich';
-    return null;
-  }
-}
-```
-
-```dart
-class BookingForm extends StatefulWidget {
-  final void Function(BookingData) onSubmit;
-  final LatLng? initialPickup;
-
-  @override
-  State<BookingForm> createState() => _BookingFormState();
-}
-
-class _BookingFormState extends State<BookingForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _pickupController = TextEditingController();
-  final _dropoffController = TextEditingController();
-  
-  LatLng? _pickupCoordinates;
-  LatLng? _dropoffCoordinates;
-  PaymentMethod _paymentMethod = PaymentMethod.cash;
-  VehicleType _vehicleType = VehicleType.sedan;
-
-  void _handleSubmit() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      
-      if (_pickupCoordinates == null || _dropoffCoordinates == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Bitte wählen Sie Start- und Zieladresse')),
-        );
-        return;
-      }
-
-      widget.onSubmit(BookingData(
-        pickup: _pickupCoordinates!,
-        dropoff: _dropoffCoordinates!,
-        paymentMethod: _paymentMethod,
-        vehicleType: _vehicleType,
-      ));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          // Adresssuche mit TypeAhead
-          AddressSearchField(
-            controller: _pickupController,
-            label: 'Startadresse',
-            onSelected: (suggestion) {
-              setState(() => _pickupCoordinates = suggestion.coordinates);
-            },
-          ),
-          const SizedBox(height: 16),
-          AddressSearchField(
-            controller: _dropoffController,
-            label: 'Zieladresse',
-            onSelected: (suggestion) {
-              setState(() => _dropoffCoordinates = suggestion.coordinates);
-            },
-          ),
-          const SizedBox(height: 24),
-
-          // Zahlungsmethoden
-          Text('Zahlungsart', style: AppTheme.titleMedium(context)),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 12,
-            children: [
-              ChoiceChip(
-                selected: _paymentMethod == PaymentMethod.cash,
-                label: const Text('Bar'),
-                onSelected: (selected) {
-                  if (selected) setState(() => _paymentMethod = PaymentMethod.cash);
-                },
-              ),
-              ChoiceChip(
-                selected: _paymentMethod == PaymentMethod.card,
-                label: const Text('Karte'),
-                onSelected: (selected) {
-                  if (selected) setState(() => _paymentMethod = PaymentMethod.card);
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 24),
-
-          FilledButton(
-            onPressed: _handleSubmit,
-            child: const Text('Fahrt anfragen'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-```
-
-![Fahrtanfrage-Formular](img/Winter/fahrtanfrageFormular.png){width=300px}
-
-Fehlerhafte Eingaben werden direkt unter den jeweiligen Feldern angezeigt. Die AddressSearchField bietet Echtzeitvorschläge, wodurch die Bedienung intuitiv wird und Tippfehler bei Adressen minimiert werden.
-
-### Fehlerbehandlung und Nutzerfeedback
-
-Eine stabile Anwendung muss Fehler abfangen und dem Benutzer verständliches Feedback geben. In diesem Projekt werden Fehler an mehreren Stellen behandelt, unter anderem bei:
-
-- Netzwerkfehlern (z. B. fehlende Internetverbindung)  
-- fehlenden Berechtigungen (z. B. Standortzugriff)  
-- fehlerhaften Eingaben in Formularen  
-- Problemen beim Zugriff auf Supabase (z. B. Authentifizierungsfehler)  
-
-Zur Darstellung von Fehlern werden mehrere Mechanismen eingesetzt:
-
-- **Schnelle Rückmeldungen**: SnackBars für kurze Bestätigungen und Fehlermeldungen
-- **Error-States**: Vollbild-Fehlerwidgets mit Retry-Optionen für kritische Fehler
-- **Inline-Fehler**: Fehlerboxen direkt im Formular (z. B. LoginPage)
-- **Dialoge**: Modal-Dialoge für wichtige Benachrichtigungen
-
-Zentrale Fehlermeldungen sind in `AppConstants` als Strings gekapselt, sodass Fehler über die gesamte Anwendung hinweg einheitlich dargestellt werden.
-
-```dart
-static const String genericErrorMessage = 'Ein unerwarteter Fehler ist aufgetreten.';
-static const String networkErrorMessage = 'Netzwerkfehler. Bitte prüfen Sie Ihre Internetverbindung.';
-static const String locationErrorMessage = 'Standortberechtigung erforderlich.';
-static const String authErrorMessage = 'Anmeldung erforderlich.';
-```
-
-![Fehlermeldung wenn eine Fahrt erst 30 Min vor Abholzeit gebucht wurde.](img/Winter/errorPickupTime.png){width=300px}
-
-#### Error-States und Error-Handling Patterns
-
-**SnackBars für kurze Bestätigungen:**
-
-```dart
-ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(
-    content: Text(message),
-    backgroundColor: isError ? AppTheme.error : AppTheme.success,
-    duration: const Duration(seconds: 3),
-  ),
-);
-```
-
-**ErrorState Widget für kritische Fehler:**
-
-```dart
-class ErrorState extends StatelessWidget {
-  const ErrorState({
-    required this.message,
-    this.onRetry,
-    this.padding = const EdgeInsets.all(24),
-  });
-
-  final String message;
-  final VoidCallback? onRetry;
-  final EdgeInsets padding;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: padding,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.error_outline, color: AppTheme.error, size: 48),
-            const SizedBox(height: 16),
-            Text(
-              'Fehler aufgetreten',
-              style: AppTheme.titleMedium(context).copyWith(color: AppTheme.error),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              message,
-              style: AppTheme.bodySmall(context),
-              textAlign: TextAlign.center,
-            ),
-            if (onRetry != null) ...[
-              const SizedBox(height: 16),
-              OutlinedButton.icon(
-                onPressed: onRetry,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Erneut versuchen'),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-```
-
-**Fehlermappung in der LoginPage:**
-
-Die LoginPage zeigt Fehler in einer Fehlerbox direkt im Formular an und mappt Supabase-Fehlermeldungen zu benutzerfreundlichen Texten:
-
-```dart
-void _setError(String message) {
+void _handleRealtimeUpdate(PostgresChangePayload payload) {
   if (!mounted) return;
-  
-  final mappedMessage = _mapErrorMessage(message);
-  
-  setState(() {
-    _isLoading = false;
-    _errorMessage = mappedMessage;
-  });
-}
 
-String _mapErrorMessage(String message) {
-  if (message.contains('invalid') || message.contains('Invalid') || message.contains('credentials')) {
-    return 'Falsches Passwort oder E-Mail-Adresse';
-  }
-  if (message.contains('not confirmed') || message.contains('not verified')) {
-    return 'E-Mail-Adresse wurde noch nicht bestätigt';
-  }
-  if (message.contains('user') || message.contains('not found')) {
-    return 'Kein Konto mit dieser E-Mail-Adresse vorhanden';
-  }
-  return message;
-}
-```
+  switch (payload.eventType) {
+    case PostgresChangeEvent.delete:
+      final id = (payload.oldRecord['id'] as num?)?.toInt();
+      if (id != null) {
+        setState(() => _rides.removeWhere((ride) => ride.id == id));
+      }
+      break;
 
-#### Edge Cases und spezielle Fehlerszenarien
-
-**Null-Sicherheit**: Durch die Verwendung von Null Safety in Dart werden viele Fehler bereits zur Compile-Zeit erkannt. Dennoch werden kritische Abfragen mit null-checks durchgeführt:
-
-```dart
-// Sicherer Zugriff auf optionale Werte
-final userName = user?.profile?.name ?? 'Gast';
-final coordinates = currentLocation?.latitude;
-```
-
-**Ungültige oder fehlende Standortdaten**: Falls die Standortbestimmung fehlschlägt oder einen Timeout hat, wird dem Benutzer eine verständliche Meldung angezeigt:
-
-```dart
-try {
-  position = await Geolocator.getCurrentPosition();
-} on TimeoutException {
-  _setError('Standortbestimmung timed out. Bitte versuchen Sie es erneut.');
-} on LocationServiceException catch (e) {
-  _setError('Standortbestimmung nicht möglich: ${e.message}');
-} catch (e) {
-  _setError('Ein unerwarteter Fehler ist aufgetreten.');
-}
-```
-
-**Netzwerkfehler und Timeouts**: Alle HTTP-Anfragen und asynchronen Operationen implementieren Timeout-Logik:
-
-```dart
-try {
-  final route = await calculateRoute(from, to);
-  return route;
-} on TimeoutException {
-  throw RoutingException('Routing request timed out');
-} catch (e) {
-  if (e is RoutingException) rethrow;
-  throw RoutingException('Failed to calculate route: $e');
-}
-```
-
-**Authentifizierungsabläufe**: Falls die Session während der Nutzung abläuft, wird der Benutzer automatisch zur Login-Seite weitergeleitet. Dies wird durch den `AuthGate` in `main.dart` verwaltet, der mit einem `StreamBuilder` auf Auth-State-Changes lauscht.
-
-**Validierung von Eingabeformularen**: Alle Eingabefelder werden vor dem Absenden validiert. Falls Validierungen fehlschlagen, werden spezifische Fehlermeldungen unter dem jeweiligen Feld angezeigt (mittels `validator`-Callback in TextFormField).
-
-**Überprüfung von Datenbankoperationen**: Nach Datenbankoperationen wird der Erfolg überprüft. Bei Fehlern werden entsprechende Benachrichtigungen angezeigt:
-
-```dart
-try {
-  await _supabaseService.requestRide(rideData);
-  _showSuccess('Fahrtanfrage gesendet!');
-} on PostgrestException catch (e) {
-  _setError(_supabaseService.getErrorMessage(e));
-} catch (e) {
-  _setError('Ein unerwarteter Fehler ist aufgetreten.');
-}
-```
-
-Fehler werden im Debug-Modus zusätzlich über `debugPrint()` protokolliert, um während der Entwicklung Probleme schneller identifizieren und beheben zu können.
-
-### Erstellen und Drucken von PDF-Dokumenten
-
-PDF-Dokumentationen werden bei Fahrten verwendet, um Rechnungen zu exportieren. Diese werden mithilfe der `pdf`-Bibliothek dynamisch erzeugt und können anschließend über das `printing`-Package geteilt oder gedruckt werden. Die Implementierung ist österreich-konform gemäß Paragraph 11 UStG (Personenbeförderung).
-
-**Zwei Implementierungen:**
-
-1. **InvoiceWidget** - Die UI-Ansicht der Rechnung im Detail-Screen
-2. **PDF-Export** - Die PDF-Generierung für Download/Print
-
-#### Rechnung anzeigen (InvoiceWidget)
-
-Das `InvoiceWidget` zeigt die detaillierte Rechnung direkt im UI:
-
-~~~{caption="InvoiceWidget für Rechnungsanzeige" .dart}
-class InvoiceWidget extends StatelessWidget {
-  const InvoiceWidget({required this.ride, required this.onExport});
-
-  final Ride ride;
-  final VoidCallback onExport;
-
-  String _generateInvoiceNumber() {
-    final year = DateTime.now().year;
-    final id = ride.id.toString().padLeft(5, '0');
-    return '$year-$id';
-  }
-
-  double _calculateNet(double gross) {
-    return gross / (1 + AppConstants.taxRate); // 20% AT MwSt
-  }
-
-  double _calculateTax(double gross) {
-    return gross - _calculateNet(gross);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final grossAmount = ride.finalPrice ?? ride.estimatedPrice ?? 0.0;
-    final netAmount = _calculateNet(grossAmount);
-    final taxAmount = _calculateTax(grossAmount);
-    final invoiceNumber = _generateInvoiceNumber();
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colorScheme.outlineVariant, width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Firmen-Header
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppTheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  AppConstants.companyName.toUpperCase(),
-                  style: AppTheme.titleMedium(context).copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primary,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  'UID: ${AppConstants.companyUid}',
-                  style: AppTheme.bodySmall(context),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Rechnungsnummer
-          Text(
-            'Rechnung Nr. ${invoiceNumber}',
-            style: AppTheme.labelMedium(context).copyWith(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 12),
-
-          // Fahrtdetails
-          Text(
-            'FAHRTDETAILS',
-            style: AppTheme.labelMedium(context).copyWith(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: colorScheme.outlineVariant),
-            ),
-            child: Column(
-              children: [
-                _InfoRow('Fahrt-ID', '#${ride.id}'),
-                _InfoRow('Von', ride.pickup.displayAddress),
-                _InfoRow('Nach', ride.dropoff.displayAddress),
-                _InfoRow('Fahrzeugtyp', ride.vehicleType.label),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Preisberechnung
-          Text(
-            'PREISBERECHNUNG',
-            style: AppTheme.labelMedium(context).copyWith(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: colorScheme.outlineVariant),
-            ),
-            child: Column(
-              children: [
-                _InvoiceRow(label: 'Grundpreis', value: DateFormatter.formatMoney(ride.estimatedPrice ?? 0)),
-                if (ride.surchargeAmount != null && ride.surchargeAmount! > 0)
-                  _InvoiceRow(
-                    label: 'Zuschlag',
-                    value: DateFormatter.formatMoney(ride.surchargeAmount!),
-                  ),
-                const Divider(),
-                _InvoiceRow(
-                  label: 'Nettobetrag',
-                  value: DateFormatter.formatMoney(netAmount),
-                ),
-                _InvoiceRow(
-                  label: 'MwSt. 20% (AT)',
-                  value: DateFormatter.formatMoney(taxAmount),
-                ),
-                const SizedBox(height: 8),
-                _InvoiceRow(
-                  label: 'GESAMTBETRAG',
-                  value: DateFormatter.formatMoney(grossAmount),
-                  isBold: true,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Legal Notice
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              'Gemäß Paragraph 11 UStG  Personenbeförderung  ${AppConstants.companyUid}',
-              style: AppTheme.bodySmall(context).copyWith(
-                fontSize: 10,
-                color: colorScheme.onSurface.withOpacity(0.6),
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(height: 16),
-
-          // Export Button
-          FilledButton.icon(
-            onPressed: onExport,
-            icon: const Icon(Icons.picture_as_pdf),
-            label: const Text('Rechnung als PDF herunterladen'),
-          ),
-        ],
-      ),
-    );
+    case PostgresChangeEvent.insert:
+    case PostgresChangeEvent.update:
+      _refreshSingleRide(payload.newRecord['id'] as int);
+      break;
+    default:
+      break;
   }
 }
-~~~
 
-#### PDF-Export mit `_createInvoicePdf()`
-
-Die PDF-Generierung erfolgt in `ride_detail_page.dart` mit vollständiger Österreich-Konformität:
-
-~~~{caption="PDF-Generierung für Rechnungsexport" .dart}
-Future<void> _exportReceiptPdf() async {
-  if (_ride == null) return;
-
+Future<void> _refreshSingleRide(int rideId) async {
   try {
-    final doc = await _createInvoicePdf(_ride!);
-
-    // PDF-Layout öffnen (Print/Share Dialog)
-    await Printing.layoutPdf(
-      onLayout: (format) async => await doc.save(),
-      name: 'Rechnung_${_ride!.id}.pdf',
-    );
+    final updatedRide = await _supabaseService.getRideById(rideId);
+    if (mounted) {
+      setState(() {
+        final index = _rides.indexWhere((ride) => ride.id == rideId);
+        if (index >= 0) {
+          _rides[index] = updatedRide; // UI sofort aktualisieren
+        } else {
+          _rides.insert(0, updatedRide); // neue Fahrt oben einfügen
+        }
+      });
+    }
   } catch (e) {
-    _showError('PDF-Export fehlgeschlagen: $e');
-  }
-}
-
-Future<pw.Document> _createInvoicePdf(Ride ride) async {
-  final doc = pw.Document();
-
-  // Österreich Unternehmensdaten
-  const companyName = AppConstants.companyName;
-  const companyAddress = AppConstants.companyAddress;
-  const companyUid = AppConstants.companyUid;
-  const companyPhone = AppConstants.companyPhone;
-  const taxRate = AppConstants.taxRate;
-
-  // Rechnungsnummer (YYYY-XXXXX format)
-  final invoiceNumber = '${DateTime.now().year}-${ride.id.toString().padLeft(5, '0')}';
-
-  // Netto/Brutto Berechnung
-  final grossAmount = ride.finalPrice ?? ride.estimatedPrice ?? 0.0;
-  final netAmount = grossAmount / (1 + taxRate);
-  final taxAmount = grossAmount - netAmount;
-
-  doc.addPage(
-    pw.Page(
-      build: (context) => pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          // Firmen-Header
-          pw.Container(
-            padding: const pw.EdgeInsets.only(bottom: 20),
-            decoration: pw.BoxDecoration(
-              border: pw.Border(bottom: pw.BorderSide(width: 2)),
-            ),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Text(
-                  companyName,
-                  style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold),
-                ),
-                pw.SizedBox(height: 4),
-                pw.Text(companyAddress, style: const pw.TextStyle(fontSize: 10)),
-                pw.Text('Tel: $companyPhone', style: const pw.TextStyle(fontSize: 10)),
-                pw.Text(
-                  'UID: $companyUid',
-                  style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-
-          // Rechnungs-Header
-          pw.Row(
-            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-            children: [
-              pw.Text(
-                'RECHNUNG',
-                style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
-              ),
-              pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.end,
-                children: [
-                  pw.Text('Rechnungsnr.: $invoiceNumber'),
-                  pw.Text('Datum: ${DateFormatter.formatDate(DateTime.now())}'),
-                ],
-              ),
-            ],
-          ),
-          pw.SizedBox(height: 20),
-
-          // Fahrtdetails
-          pw.Text('Fahrtdetails', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-          pw.SizedBox(height: 8),
-          _pdfRow('Fahrt-ID', '#${ride.id}'),
-          _pdfRow('Abholung', ride.pickup.displayAddress),
-          _pdfRow('Ziel', ride.dropoff.displayAddress),
-          _pdfRow('Fahrzeug', ride.vehicleType.label),
-          if (ride.startTime != null)
-            _pdfRow('Start', DateFormatter.formatDateTime(ride.startTime)),
-          if (ride.endTime != null)
-            _pdfRow('Ende', DateFormatter.formatDateTime(ride.endTime)),
-          pw.SizedBox(height: 20),
-
-          // Preisaufschlüsselung
-          pw.Container(
-            padding: const pw.EdgeInsets.all(12),
-            decoration: pw.BoxDecoration(
-              border: pw.Border.all(width: 1),
-              borderRadius: const pw.BorderRadius.all(pw.Radius.circular(4)),
-            ),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                if (ride.estimatedPrice != null)
-                  _pdfRow('Grundpreis', DateFormatter.formatMoney(ride.estimatedPrice)),
-                if (ride.surchargeAmount != null && ride.surchargeAmount! > 0)
-                  _pdfRow('Zuschlag', DateFormatter.formatMoney(ride.surchargeAmount)),
-                pw.Divider(),
-                pw.SizedBox(height: 8),
-                _pdfRow('Nettobetrag', DateFormatter.formatMoney(netAmount)),
-                _pdfRow('MwSt. 20% (AT)', DateFormatter.formatMoney(taxAmount)),
-                pw.SizedBox(height: 8),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text('GESAMTBETRAG', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
-                    pw.Text(
-                      DateFormatter.formatMoney(grossAmount),
-                      style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          pw.SizedBox(height: 20),
-
-          // Legal Notice
-          pw.Container(
-            padding: const pw.EdgeInsets.all(8),
-            decoration: pw.BoxDecoration(
-              border: pw.Border(
-                top: pw.BorderSide(width: 1),
-                bottom: pw.BorderSide(width: 1),
-              ),
-            ),
-            child: pw.Text(
-              'Gemäß Paragraph 11 UStG  Personenbeförderung  ATU12345678',
-              style: pw.TextStyle(fontSize: 8, fontStyle: pw.FontStyle.italic),
-              textAlign: pw.TextAlign.center,
-            ),
-          ),
-          pw.SizedBox(height: 16),
-
-          // Notizen wenn vorhanden
-          if (ride.notes?.isNotEmpty == true) ...[
-            pw.Text('Notizen', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-            pw.SizedBox(height: 4),
-            pw.Text(ride.notes!, style: const pw.TextStyle(fontSize: 9)),
-          ],
-
-          pw.Spacer(),
-
-          // Footer
-          pw.Divider(),
-          pw.Text(
-            'Vielen Dank für Ihre Nutzung unseres Services!',
-            style: const pw.TextStyle(fontSize: 9),
-            textAlign: pw.TextAlign.center,
-          ),
-        ],
-      ),
-    ),
-  );
-
-  return doc;
-}
-
-pw.Widget _pdfRow(String label, String? value) {
-  return pw.Padding(
-    padding: const pw.EdgeInsets.only(bottom: 4),
-    child: pw.Row(
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.SizedBox(
-          width: 120,
-          child: pw.Text(label, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-        ),
-        pw.Expanded(child: pw.Text(value ?? '-')),
-      ],
-    ),
-  );
-}
-~~~
-
-![PDF-Rechnung](img/Winter/rechnungPdf.png){width=300px}
-
-Auf diese Weise können Benutzer Fahrtbelege mit vollständiger Preisaufschlüsselung und österreich-konformer Rechnungslegung (inklusive Mehrwertsteuer) exportieren und als PDF herunterladen oder drucken.
-
-
-
-### Zahlungssystem mit SumUp Sandbox Integration
-
-Die Anwendung implementiert ein professionelles Zahlungssystem mit Unterstützung für mehrere Zahlungsmethoden: **Barzahlung**, **Kartenzahlung via SumUp Sandbox API**, **Rechnungen** und **PayPal**.
-
-#### Zahlungsarchitektur
-
-Das Zahlungssystem folgt einem strukturierten Ablauf mit drei Phasen:
-
-**Phase 1 – Booking**: Bei der Fahrtbuchung wird die bevorzugte Zahlungsmethode lokal in `SharedPreferences` gespeichert und beim nächsten Buchen wieder vorgeschlagen.
-
-**Phase 2 – Ride Execution**: Nach Fahrtabschluss wird automatisch ein Zahlungseintrag in der Supabase-Datenbank (`payments`-Tabelle) erstellt mit der gewählten Zahlungsart und dem Betrag (Status: `pending` oder direkt `paid` bei Barzahlung).
-
-**Phase 3 – Completion**: Nach Fahrtabschluss wird das `PaymentForm` Widget angezeigt. Hier kann der Benutzer die Zahlungsart wählen und bei Kartenzahlung den Checkout durchführen, bei Barzahlung wird der Fahrer als bestätigt markiert, oder eine Rechnung wird ausgestellt.
-
-#### SumUp Checkout API
-
-Für Kartenzahlungen wird die **SumUp REST API** (Checkouts Endpoint) verwendet. Dies ermöglicht die sichere Verarbeitung von Kartendaten. Der SumUp-Service wurde als Singleton-Klasse implementiert:
-
-```dart
-class SumUpService {
-  static final SumUpService _instance = SumUpService._internal();
-  factory SumUpService() => _instance;
-  SumUpService._internal();
-
-  final String _baseUrl = AppConstants.sumupApiUrl;
-  final String _privateKey = AppConstants.sumupPrivateKey;
-  final String _merchantCode = AppConstants.sumupMerchantCode;
-
-  Future<SumUpPaymentResult> processCardPayment({
-    required double amount,
-    required String currency,
-    required String customerEmail,
-    required String description,
-  }) async {
-    try {
-      debugPrint('SumUp: Starting card payment for EUR$amount');
-
-      // Prepare request body for Checkouts API
-      final checkoutRef = 'checkout_${DateTime.now().millisecondsSinceEpoch}';
-      final Map<String, dynamic> requestBody = {
-        'checkout_reference': checkoutRef,
-        'amount': amount,
-        'currency': currency,
-        'description': description,
-        'merchant_code': _merchantCode,
-      };
-
-      debugPrint('SumUp Request: $requestBody');
-
-      // Make API request
-      final response = await http.post(
-        Uri.parse('$_baseUrl/v0.1/checkouts'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_privateKey',
-        },
-        body: jsonEncode(requestBody),
-      ).timeout(
-        const Duration(seconds: 15),
-        onTimeout: () {
-          throw Exception('SumUp API timeout');
-        },
-      );
-
-      debugPrint('SumUp Response Status: ${response.statusCode}');
-      debugPrint('SumUp Response Body: ${response.body}');
-
-      // Parse response
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-
-      if (response.statusCode == 201 || response.statusCode == 200) {
-        final transactionId = responseData['id']?.toString() ?? 'txn_unknown';
-        final checkoutStatus = responseData['status']?.toString() ?? 'PENDING';
-
-        debugPrint('SumUp Checkout Created: $transactionId (Status: $checkoutStatus)');
-        
-        // DEMO MODE: Simulate immediate payment success für Diplomarbeit
-        // In production: User würde zur Zahlungsseite weitergeleitet oder SDK genutzt
-        debugPrint('DEMO MODE: Simulating successful payment for thesis');
-
-        return SumUpPaymentResult(
-          success: true,
-          transactionId: transactionId,
-          status: 'PAID',
-          message: 'Zahlung erfolgreich verarbeitet',
-        );
-      } else {
-        final errorMessage = responseData['message']?.toString() ?? 
-            responseData['error_message']?.toString() ?? 
-            'Zahlungsfehler';
-
-        debugPrint('SumUp Payment Failed: $errorMessage');
-
-        return SumUpPaymentResult(
-          success: false,
-          transactionId: null,
-          status: 'FAILED',
-          message: errorMessage,
-        );
-      }
-    } catch (e) {
-      debugPrint('SumUp Exception: $e');
-      return SumUpPaymentResult(
-        success: false,
-        transactionId: null,
-        status: 'ERROR',
-        message: 'Netzwerkfehler: $e',
-      );
-    }
+    debugPrint('Failed to refresh ride $rideId: $e'); // Fehler bei Einzel-Update ignorieren
   }
 }
 ```
+![Ride-Status im Activity Screen](img/Winter/fahrtenlisteLight.png){width=300px}
 
-Die API-Anmeldedaten (Private Key, Merchant Code) werden zentral in `lib/core/constants.dart` gespeichert:
+### UI-Grundgerüst & Navigation (Auth-Gate, Main Screen, BottomNavigationBar, Themings)
 
+Die App nutzt ein Auth-Gate, das auf den Supabase-Auth-Stream hört. Direkt nach dem Start prüft es, ob eine aktive Session vorhanden ist: Nicht eingeloggte Nutzer sehen Login/Registrierung, verifizierte Nutzer gelangen in die Haupt-Shell. Nach erfolgreicher E-Mail-Bestätigung landet der User automatisch im Hauptbereich.
 ```dart
-static const bool sumupSandboxMode = true;
-static const String sumupPublicKey = 'SUMUPPUBLICKEY';
-static const String sumupPrivateKey = 'SUMUPPRIVATEKEY';
-static const String sumupMerchantCode = 'MERCHANTCODE';
-static const String sumupApiUrl = 'https://api.sumup.com';
-```
-
-Der Sandbox-Modus ermöglicht vollständiges Testen ohne echte Transaktionen. Im DEMO-Modus wird jede Zahlung sofort als erfolgreich simuliert.
-
-#### PaymentForm Widget
-
-Das `PaymentForm` Widget verwaltet alle Zahlungsmethoden und wird nach Fahrtabschluss angezeigt:
-
-```dart
-class PaymentForm extends StatefulWidget {
-  const PaymentForm({super.key, required this.ride, required this.onSaved});
-
-  final Ride ride;
-  final VoidCallback onSaved;
-
-  @override
-  State<PaymentForm> createState() => _PaymentFormState();
-}
-
-class _PaymentFormState extends State<PaymentForm> {
-  final _formKey = GlobalKey<FormState>();
-  final _amountController = TextEditingController();
-  final _supabaseService = SupabaseService();
-
-  PaymentMethod _method = PaymentMethod.cash;
-  PaymentStatus _status = PaymentStatus.pending;
-  bool _isLoading = false;
-  bool _showSuccess = false;
-  String? _transactionId;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeForm();
-  }
-
-  void _initializeForm() {
-    final existingPayment = widget.ride.payments.isNotEmpty 
-        ? widget.ride.payments.first 
-        : null;
-
-    if (existingPayment != null) {
-      // Load existing payment data
-      _method = existingPayment.method;
-      _status = existingPayment.status;
-      _amountController.text = existingPayment.amount.toStringAsFixed(2);
-    } else {
-      // Initialize with ride cost
-      final defaultAmount = widget.ride.finalPrice ?? widget.ride.estimatedPrice ?? 0.0;
-      _amountController.text = defaultAmount.toStringAsFixed(2);
-
-      // Load preferred payment method from SharedPreferences
-      _loadPreferredPaymentMethod();
-
-      // Bar = direkt bezahlt, Karte/Rechnung = pending
-      _status = _method == PaymentMethod.cash
-          ? PaymentStatus.paid
-          : PaymentStatus.pending;
-    }
-  }
-
-  Future<void> _loadPreferredPaymentMethod() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final preferred = prefs.getString('preferred_payment_method');
-      
-      if (preferred != null) {
-        final method = PaymentMethod.fromString(preferred);
-        if (method != null) {
-          setState(() => _method = method);
-        }
-      }
-    } catch (e) {
-      debugPrint('Error loading preferred payment method: $e');
-    }
-  }
-
-  Future<void> _processCardPayment(double amount) async {
-    debugPrint('Processing card payment via SumUp: EUR$amount');
-
-    // Show processing dialog
-    if (mounted) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const _PaymentProcessingDialog(),
-      );
-    }
-
-    try {
-      final sumUpService = SumUpService();
-      
-      final result = await sumUpService.processCardPayment(
-        amount: amount,
-        currency: 'EUR',
-        customerEmail: 'customer@example.com',
-        description: 'Fahrt #${widget.ride.id}',
-      );
-
-      if (result.success) {
-        _transactionId = result.transactionId;
-        _status = PaymentStatus.paid;
-        debugPrint('SumUp payment successful: $_transactionId');
-
-        if (mounted) {
-          Navigator.pop(context); // Close processing dialog
-        }
-      } else {
-        throw Exception('SumUp Zahlung fehlgeschlagen: ${result.message}');
-      }
-    } catch (e) {
-      if (mounted) {
-        Navigator.pop(context); // Close processing dialog
-      }
-      _status = PaymentStatus.failed;
-      debugPrint('Card payment error: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> _processInvoicePayment(double amount) async {
-    debugPrint('Processing invoice: EUR$amount');
-
-    // Rechnungen bleiben pending bis Admin bestätigt
-    _status = PaymentStatus.pending;
-    _transactionId = 'inv_${DateTime.now().millisecondsSinceEpoch}';
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Rechnung erstellt. Sie erhalten diese per E-Mail.'),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    }
-  }
-}
-```
-
-#### Zahlungsstatus in Supabase
-
-Nach erfolgreicher Verarbeitung wird der Zahlungsstatus in der Datenbank aktualisiert:
-
-```dart
-try {
-  await _supabaseService.createOrUpdatePayment(
-    rideId: widget.ride.id,
-    method: _method,
-    status: _status,
-    amount: amount,
-    paymentId: _existingPayment?.id,
-  );
-
-  debugPrint('Payment saved successfully to database');
-
-  if (mounted) {
-    setState(() => _showSuccess = true);
-    widget.onSaved();
-  }
-} catch (e) {
-  _showError('Zahlungsfehler: ${_supabaseService.getErrorMessage(e)}');
-}
-```
-
-Die `payments`-Tabelle enthält:
-- `id` – eindeutige Zahlungs-ID
-- `ride_id` – zugehörige Fahrt
-- `method` – Zahlungsart (cash/card/invoice/paypal)
-- `status` – Status (pending/paid/failed/refunded)
-- `amount` – Betrag in EUR
-- `created_at` / `updated_at` – Zeitstempel
-
-#### Benutzeroberflächen-Integration
-
-Das PaymentForm zeigt unterschiedliche UI-Zustände:
-
-**Pending State (Karte):**
-
-### Lokale Benachrichtigungen und Echtzeit-Monitoring
-
-Die Anwendung implementiert ein automatisches Notification-System zur Benachrichtigung des Kunden über Fahrt-Status-Änderungen. Dies geschieht durch die Kombination von Supabase Realtime (Datenbankänderungen) und `flutter_local_notifications` (lokale Benachrichtigungen).
-
-#### NotificationService Implementierung
-
-Ein zentraler `NotificationService` wurde als Singleton implementiert, um alle Benachrichtigungsfunktionen zu kapseln. Der Service kombiniert **Supabase Realtime** für Fahrt-Updates mit **flutter_local_notifications** für lokale Sounds und Vibrationen (kein Firebase erforderlich):
-
-```dart
-class NotificationService {
-  static final NotificationService _instance = NotificationService._internal();
-  factory NotificationService() => _instance;
-  NotificationService._internal();
-
-  final FlutterLocalNotificationsPlugin _localNotifications =
-      FlutterLocalNotificationsPlugin();
-
+class AuthGate extends StatelessWidget {
   final _supabase = Supabase.instance.client;
 
-  bool _initialized = false;
-  RealtimeChannel? _rideSubscription;
-
-  /// Initialisiere Local Notifications (für Sounds/Vibration)
-  Future<bool> initialize() async {
-    if (_initialized) return true;
-
-    try {
-      // Android 13+ Runtime Permission
-      if (Platform.isAndroid) {
-        final android = _localNotifications
-            .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-        await android?.requestNotificationsPermission();
-        debugPrint('NOTIFICATION: Android permission requested');
-      }
-
-      // Android Settings
-      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-
-      // iOS Settings
-      const iosSettings = DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
-
-      const initSettings = InitializationSettings(
-        android: androidSettings,
-        iOS: iosSettings,
-      );
-
-      final initialized = await _localNotifications.initialize(
-        initSettings,
-        onDidReceiveNotificationResponse: _onNotificationTapped,
-      );
-
-      _initialized = initialized ?? false;
-      debugPrint('NOTIFICATION: Service initialized: $_initialized');
-      return _initialized;
-    } catch (e) {
-      debugPrint('Failed to initialize notifications: $e');
-      return false;
-    }
-  }
-
-  /// Starte Ride-Monitoring mit Supabase Realtime
-  void startRideMonitoring(String userId) {
-    debugPrint('NOTIFICATION SERVICE: Starting ride monitoring for user: $userId');
-    
-    // Cleanup alte Subscription
-    _rideSubscription?.unsubscribe();
-
-    // Neue Subscription für Ride-Updates
-    _rideSubscription = _supabase
-        .channel('ride_updates_$userId')
-        .onPostgresChanges(
-          event: PostgresChangeEvent.update,
-          schema: 'public',
-          table: 'rides',
-          filter: PostgresChangeFilter(
-            type: PostgresChangeFilterType.eq,
-            column: 'customer_id',
-            value: userId,
-          ),
-          callback: (payload) => _handleRideUpdate(payload),
-        )
-        .subscribe();
-
-    debugPrint('NOTIFICATION SERVICE: Listening for updates on channel: ride_updates_$userId');
-  }
-
-  /// Handle Ride Updates von Supabase Realtime
-  void _handleRideUpdate(PostgresChangePayload payload) {
-    debugPrint('NOTIFICATION: Ride update received!');
-    
-    final oldRecord = payload.oldRecord;
-    final newRecord = payload.newRecord;
-
-    if (oldRecord == null || newRecord == null) {
-      debugPrint('NOTIFICATION: Missing record data');
-      return;
-    }
-
-    final oldStatus = oldRecord['status'] as String?;
-    final newStatus = newRecord['status'] as String?;
-
-    debugPrint('NOTIFICATION: Status changed from $oldStatus to $newStatus');
-
-    // Status hat sich geändert -> Notification zeigen!
-    if (oldStatus != newStatus) {
-      debugPrint('NOTIFICATION: Showing notification for status: $newStatus');
-      _showRideStatusNotification(newStatus);
-    }
-  }
-
-  /// Zeige Notification bei Status-Änderung
-  Future<void> _showRideStatusNotification(String? status) async {
-    debugPrint('NOTIFICATION: Preparing notification for status: $status');
-    
-    String title = 'Fahrt-Update';
-    String body = '';
-
-    switch (status?.toLowerCase()) {
-      case 'assigned':
-        title = 'Fahrer zugewiesen!';
-        body = 'Ein Fahrer wurde Ihrer Fahrt zugewiesen';
-        break;
-      case 'in_progress':
-      case 'inprogress':
-      case 'unterwegs':
-        title = 'Fahrt gestartet!';
-        body = 'Die Fahrt hat gestartet';
-        break;
-      case 'completed':
-        title = 'Fahrt abgeschlossen';
-        body = 'Ihre Fahrt wurde erfolgreich abgeschlossen';
-        break;
-      default:
-        debugPrint('NOTIFICATION: Unknown status, skipping: $status');
-        return;
-    }
-
-    debugPrint('NOTIFICATION: Showing - Title: $title, Body: $body');
-    await showNotification(
-      title: title,
-      body: body,
-      payload: 'ride_update',
-    );
-  }
-
-  /// Zeige allgemeine Notification mit Sound und Vibration
-  Future<void> showNotification({
-    required String title,
-    required String body,
-    String? payload,
-  }) async {
-    const androidDetails = AndroidNotificationDetails(
-      'taxi_app_channel',
-      'Fahrt-Updates',
-      channelDescription: 'Benachrichtigungen über Ihre Fahrten',
-      importance: Importance.high,
-      priority: Priority.high,
-      showWhen: true,
-      enableVibration: true,
-      playSound: true,
-    );
-
-    const iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
-    await _localNotifications.show(
-      DateTime.now().millisecond,
-      title,
-      body,
-      details,
-      payload: payload,
-    );
-  }
-
-  /// Callback wenn User auf Notification tippt
-  void _onNotificationTapped(NotificationResponse response) {
-    debugPrint('Notification tapped: ${response.payload}');
-    final payload = response.payload;
-
-    if (payload == 'ride_update') {
-      AppNavigator.navigateTo('/main');
-    }
-  }
-
-  /// Stoppe Monitoring
-  void stopRideMonitoring() {
-    _rideSubscription?.unsubscribe();
-    _rideSubscription = null;
-  }
-}
-```
-
-#### Integration in den Anwendungsfluss
-
-Der NotificationService wird in der `main.dart` beim App-Start initialisiert:
-
-```dart
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Supabase
-  await Supabase.initialize(
-    url: AppConstants.supabaseUrl,
-    anonKey: AppConstants.supabaseAnonKey,
-  );
-
-  // Initialize Notification Service
-  await NotificationService().initialize();
-
-  runApp(TaxiApp(themeProvider: themeProvider));
-}
-```
-
-Nach einer erfolgreichen Authentifizierung wird das Fahrt-Monitoring automatisch gestartet. Dies geschieht in der `AuthGate`:
-
-```
-class _AuthGateState extends State<AuthGate> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<AuthState>(
-      stream: Supabase.instance.client.auth.onAuthStateChange,
+      stream: _supabase.auth.onAuthStateChange,
       builder: (context, snapshot) {
-        final session = snapshot.data?.session;
-
-        if (session != null) {
-          // Starte Monitoring für diese Benutzer-Session
-          final userId = session.user?.id;
-          if (userId != null) {
-            NotificationService().startRideMonitoring(userId);
-          }
-          return const MainScreen();
-        }
-
-        // User ist nicht angemeldet - stoppe Monitoring
-        NotificationService().stopRideMonitoring();
-        return const LoginPage();
+        final session = snapshot.data?.session ?? _supabase.auth.currentSession;
+        if (session == null) return const LoginPage();
+        return const MainShell(); // BottomNavigationBar-Shell
       },
     );
   }
 }
 ```
 
-#### Supabase Realtime Integration
+![Login und Registrierung](img/Winter/loginundregistrierung.png){width=300px}
 
-Die Benachrichtigungen werden über **Supabase Realtime** ausgelöst, wenn sich der Fahrt-Status ändert:
-
-- **old_status != new_status** -> Notification wird angezeigt
-- **Nur UPDATE-Events** werden monitored (INSERT/DELETE werden ignoriert)
-- **Kanäle**: `ride_updates_${userId}` für benutzer-spezifisches Monitoring
-- **Filter**: `customer_id = ${userId}` auf Datenbank-Ebene
-
-#### Benutzerfreundlichkeit
-
-Die Benachrichtigungen werden mit benutzerfreundlichen Emojis und Meldungen dargestellt:
-
-- **Fahrer zugewiesen**: "Ein Fahrer wurde Ihrer Fahrt zugewiesen"
-- **Fahrt gestartet**: "Die Fahrt hat gestartet"
-- **Fahrt abgeschlossen**: "Ihre Fahrt wurde erfolgreich abgeschlossen"
-
-Tipp auf eine Notification navigiert automatisch zur Activity-Seite (`/main`), um die Fahrtdetails zu sehen. Sound und Vibration sind für beide Plattformen aktiviert.
-
-### Testen und Debugging der Anwendung
-
-Zur Qualitätssicherung wurden verschiedene Testformen durchgeführt. Das Testen ist ein essenzieller Bestandteil der Softwareentwicklung und trägt wesentlich zur Zuverlässigkeit und Qualität der Anwendung bei. [@flutter_docs]
-
-#### Manuelle Tests
-
-**Funktionales Testen**: Die wichtigsten Funktionen der Anwendung wurden manuell auf verschiedenen Emulatoren und realen Endgeräten getestet, um sicherzustellen, dass sie wie erwartet funktionieren:
-
-- Tests der Authentifizierung (Registrierung, Login, Logout, Passwort zurücksetzen)  
-- Tests der Standortfunktionen (mit und ohne Berechtigung, GPS an/aus)  
-- Tests der Backend-Anbindung (Erstellen, Laden und Aktualisieren von Fahrten)  
-- Tests der Kartendarstellung und Navigation  
-- Tests der PDF-Erstellung und Druckfunktion  
-- Tests des Zahlungssystems mit verschiedenen Szenarien (erfolgreiche Zahlung, Fehlerfall, Timeout)  
-- Tests der Benachrichtigungsfunktion bei Fahrt-Status-Änderungen
-
-**Gerätespezifische Tests**: Die App wurde auf verschiedenen Android-Versionen (API 21+) und Bildschirmgrößen getestet, um Kompatibilität und Responsive Design sicherzustellen.
-
-#### Strukturiertes Debugging mit `debugPrint()`
-
-Statt umfassender Unit-Tests wurde während der Entwicklung ein strukturiertes Debugging-System mit `debugPrint()` implementiert. Dies ermöglichte schnelle Fehleridentifikation und Nachverfolgung des Programmablaufs:
-
-**Beispiele aus der Implementierung:**
-
+Die Hauptnavigation ist als `BottomNavigationBar` (bzw. `NavigationBar`) umgesetzt und hält den aktuellen Tab-Index im State, sodass beim Wechsel kein erneutes Laden der Tabs nötig ist. Typische Tabs sind „Fahrten/Activity“ (Liste eigener Fahrten mit Realtime-Status), „Buchen/Karte“ (Routing, Adresssuche, Fahrer-Tracking) und „Profil/Settings“ (Theme-Umschaltung, Logout).
 ```dart
-// LocationService
-debugPrint('LocationService: Requesting location permission');
-debugPrint('Location obtained: ${position.latitude}, ${position.longitude}');
+class MainShell extends StatefulWidget {
+  const MainShell({super.key});
 
-// RoutingService
-debugPrint('Calculating route from $from to $to');
-debugPrint('Route calculated: ${route.distanceKilometers} km, ${route.durationMinutes} min');
+  @override
+  State<MainShell> createState() => _MainShellState();
+}
 
-// SumUpService
-debugPrint('SumUp: Starting card payment for EUR$amount');
-debugPrint('SumUp Checkout Created: $transactionId');
-debugPrint('DEMO MODE: Simulating successful payment for thesis');
+class _MainShellState extends State<MainShell> {
+  int _index = 0;
+  final _pages = [const ActivityPage(), const BookingPage(), const ProfilePage()];
 
-// NotificationService
-debugPrint('NOTIFICATION SERVICE: Starting ride monitoring for user: $userId');
-debugPrint('NOTIFICATION: Ride update received!');
-debugPrint('NOTIFICATION: Showing notification for status: $newStatus');
-
-// PaymentForm
-debugPrint('Saving payment to database: status=$_status, amount=$amount');
-debugPrint('Payment saved successfully to database');
-```
-
-Diese strukturierte Fehlerbehandlung mit Emojis und aussagekräftigen Meldungen half bei der schnellen Lokalisierung von Problemen während der Entwicklung.
-
-#### Automatisierte Tests
-
-Ein grundlegender Widget-Test wurde als Platzhalter implementiert:
-
-```dart
-void main() {
-  testWidgets('App renders splash screen', (WidgetTester tester) async {
-    // Placeholder test - app requires Supabase initialization and auth
-    // In a real test, you would mock Supabase and test individual widgets
-    expect(true, true);
-  });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_index],
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _index,
+        onDestinationSelected: (i) => setState(() => _index = i),
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.list_alt), label: 'Fahrten'),
+          NavigationDestination(icon: Icon(Icons.map), label: 'Buchen'),
+          NavigationDestination(icon: Icon(Icons.person), label: 'Profil'),
+        ],
+      ),
+    );
+  }
 }
 ```
 
-**Hinweis**: Für vollständige Unit- und Integration-Tests wären folgende Schritte nötig:
-- Mock-Implementierungen von Supabase, LocationService, RoutingService
-- Fixture-Daten für Test-Szenarien
-- Tests für jeden Service separat
-- Integration-Tests für komplexe Workflows (z.B. Login -> Booking -> Payment)
+![BottomNavigationBar Haupt-Shell](img/Winter/bottomnav.png){width=300px}
 
-Dies wurde auf Grund des Umfangs der Diplomarbeit priorisiert, sodass der Fokus auf der Implementierung der Kernfunktionalität lag.
+Für Detailseiten (z. B. Ride-Detail, Zahlung, Einstellungen) werden benannte Routen genutzt. Über einen globalen `navigatorKey` (`AppNavigator`) können auch Services wie Notifications ohne BuildContext in bestimmte Screens navigieren (z. B. direkt in eine Fahrt nach einer Status-Notification).
 
-#### Debugging-Techniken
+![Ride-Detail mit Status und Route](img/Winter/ridedetail.png){width=300px}
 
-Während der Entwicklung wurden die Debugging-Funktionalitäten von Flutter intensiv genutzt:
+Die Theme-Verwaltung wird zentral in `config/theme.dart` gepflegt. Ein `ThemeProvider` (Provider/ChangeNotifier) schaltet zwischen Light/Dark und speichert die Auswahl in `shared_preferences`, sodass das gewählte Theme appweit und dauerhaft gilt.
 
-- **Hot Reload und Hot Restart**: Ermöglichten schnelles Testen von Codeänderungen ohne vollständigen App-Neustart
-- **Breakpoints in Android Studio/VS Code**: Zur Analyse des Programmablaufs und Überprüfung von Variablenwerten während der Entwicklung
-- **DevTools**: Zur Analyse der Widget-Hierarchie und Performance-Profiling
-- **Strukturiertes `debugPrint()`**: Mit Emojis und aussagekräftigen Meldungen zur Verfolgung des Programmablaufs in allen Services
+![Profil/Settings mit Theme-Switch](img/Winter/profiletheme.png){width=300px}
 
-**Behobene Fehler während der Entwicklung:**
+Wesentliche Screens im Überblick:
+- Login/Registrierung: E-Mail/Passwort, Fehlerrückmeldung direkt aus Supabase
+- Activity-Liste: Fahrtenübersicht mit Realtime-Updates des Status
+- Ride-Detail: Status, Route, Zahlungsinfos, ggf. Stornieren
+- Profil/Settings: Theme-Switch, Logout
 
-- Fehlerhafte Navigation bei abgelaufener Session (AuthGate StreamBuilder-Logik)
-- Unvollständige Validierungen in Formularen (ValidationHelper-Integration)
-- Falsche Behandlung von `null`-Werten in optionalen Feldern (Ride-Model)
-- Race Conditions bei parallelen asynchronen Operationen (LocationService mit Streams)
-- Fehlerhafte Realtime-Subscriptions bei mehrfachem Aufrufen (NotificationService Cleanup)
-- Timeout-Probleme bei Location-Requests (AppConstants.locationTimeout)
+![Navigations-Flussdiagramm](img/Winter/navigationsdiagramm.png){width=300px}
 
-Durch kontinuierliches Debugging während der Implementierung konnte verhindert werden, dass sich Fehler über längere Zeit im Code ansammeln.
+Durch dieses Navigations- und UI-Grundgerüst entsteht eine klar strukturierte und erweiterbare App, in der Authentifizierung, Kartenfunktionen, Fahrtenverwaltung und Bezahlung logisch miteinander verbunden sind.
 
-### Datenschutz und DSGVO-Conformance
 
-Die Kundenapplikation verarbeitet sensible personenbezogene Daten wie E-Mail-Adressen, Standortdaten und Fahrtinformationen. Eine korrekte Behandlung dieser Daten ist nicht nur ethisch notwendig, sondern auch gesetzlich vorgeschrieben. [@DSGVO]
+### Standort & Karten (Geolocator, Permissions, flutter_map, Location Marker)
 
-#### Datenverschlüsselung
+### Suche & Geocoding (nominatim_flutter, Typeahead, Adressaufbereitung)
 
-**Transport-Layer Security (TLS/HTTPS)**: Alle Kommunikation zwischen App und Backend erfolgt über verschlüsselte HTTPS-Verbindungen. Dies gilt insbesondere für:
+### Routing & Distanzberechnung (OSRM-Anbindung via http, Route-Linie)
 
-- Authentifizierungsdaten (Passwörter, Session-Tokens)
-- Standortdaten während der Übertragung
-- Zahlungsdaten bei der Kommunikation mit SumUp
+### Buchungs- und Zahlungsprozess (Booking-Form, Payment-Form, SumUp Sandbox Checkout)
 
-**Datenbank-Verschlüsselung**: Supabase verschlüsselt Daten standardmäßig on-disk. Zusätzlich können sensitive Felder (wie Passwort-Hashes) durch spezielle Datenbankfunktionen geschützt werden.
+### Dokumente & Drucken (PDF-Erstellung, Printing-Flow, Rechnungs-Export)
 
-#### Datenspeicherung
+### Lokale Benachrichtigungen & Realtime Updates (flutter_local_notifications, Supabase Realtime Monitoring)
 
-**Lokale Speicherung**: Sensible Daten wie Authentifizierungs-Token werden lokal mit `shared_preferences` gespeichert. Diese sollten in Produktionsumgebungen mit zusätzlicher Verschlüsselung (z.B. `flutter_secure_storage`) geschützt werden.
+### Lokalisierung & Formatierung (intl, flutter_localizations, Datums-/Währungsformatierung)
 
-**Session-Management**: Session-Tokens haben eine begrenzte Gültigkeitsdauer und werden regelmäßig refreshed. Abgelaufene Sessions werden automatisch invalidiert.
+### State-Management mit Provider (ChangeNotifier, Consumer, ThemeProvider)
 
-#### Zugriffskontrolle mit Row Level Security (RLS)
+### Utilities & Wiederverwendbare Komponenten (DateFormatter, ValidationHelper, Custom Widgets)
 
-Wie im Kapitel „Authentifizierung & Sicherheit" beschrieben, wird RLS verwendet, um sicherzustellen, dass Benutzer nur auf ihre eigenen Daten zugreifen können:
+### Testing & Qualitätssicherung (Widget-/Integrationstests, manuelle Testszenarien)
 
-```sql
--- Benutzer können nur ihre eigenen Fahrten sehen
-create policy "users_can_view_own_rides"
-on rides
-for select
-using (user_id = auth.uid());
-
--- Benutzer können nur ihre eigenen Profilinformationen ändern
-create policy "users_can_update_own_profile"
-on profiles
-for update
-using (id = auth.uid());
-```
-
-#### Datensicherung und Löschung
-
-**Automatische Backups**: Supabase führt automatische Backups durch, die bei Datenverlust wiederhergestellt werden können.
-
-**Recht auf Löschung**: Benutzer können ihr Konto löschen, woraufhin alle zugehörigen Daten (Profile, Fahrthistorie) entfernt werden können. Dies erfolgt durch Datenbank-Trigger:
-
-```sql
--- Automatische Löschung zugehöriger Daten
-create function delete_user_data()
-returns trigger as $$
-begin
-  delete from rides where user_id = old.id;
-  delete from profiles where id = old.id;
-  return old;
-end;
-$$ language plpgsql;
-
-create trigger on_auth_user_deleted
-after delete on auth.users
-for each row
-execute function delete_user_data();
-```
-
-#### Benutzereinwilligung und Transparenz
-
-- **Datenschutz-Erklärung**: Die App enthält eine Datenschutzerklärung, die erläutert, welche Daten erfasst werden und wie diese verwendet werden
-- **Explizite Genehmigungen**: Für sensitive Funktionen wie Standortzugriff werden explizite Berechtigungen abgefragt
-- **Transparente Datennutzung**: Benutzer wissen zu jeder Zeit, wann und warum ihre Daten verwendet werden
-
-#### Compliance-Überprüfung
-
-Die Implementierung wurde überprüft auf:
-
-- Einhaltung der DSGVO-Anforderungen
-- Korrekte Implementierung von Authentifizierung und Autorisierung
-- Sichere Behandlung von Standortdaten
-- Sichere Zahlungsverarbeitung
+### Deployment & Build-Pipeline (App Bundles/APKs, Icons, Signierung)
