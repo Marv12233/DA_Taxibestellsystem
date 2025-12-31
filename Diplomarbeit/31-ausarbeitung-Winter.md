@@ -578,7 +578,7 @@ Es ermöglicht die kontinuierliche Aktualisierung der Benutzerposition sowie die
 Mithilfe des Packages `nominatim_flutter` können Geocoding-Funktionen in Flutter integriert werden. Unter Geocoding versteht man die Umwandlung zwischen Adressen und geografischen Koordinaten. Beim Reverse Geocoding werden Koordinaten in eine lesbare Adresse umgewandelt, beispielsweise von Breiten- und Längengrad zu einem Ortsnamen wie „Wien“. Umgekehrt können auch Adressen oder Postleitzahlen in Koordinaten übersetzt werden.
 
 In Verbindung mit dem Package `flutter_typeahead` lassen sich Suchfelder mit automatischen Vorschlägen realisieren. Während der Eingabe werden bereits passende Ortsvorschläge angezeigt, etwa bei der Eingabe von „Leo“ der Vorschlag „Leoben“. Diese Kombination ermöglicht eine komfortable und benutzerfreundliche Ortssuche, wie sie auch in großen Kartendiensten eingesetzt wird. [@nominatim_flutter, @flutter_typeahead]
-![Ortssuche mit Autovervollständigung mittels nominatim_flutter und flutter_typeahead](img/Winter/locationSearch.png){width=300px}
+![Ortssuche mit Autovervollständigung mittels nominatim_flutter und flutter_typeahead](img/Winter/locationSearchMine.png){width=300px}
 
 #### Routing / Route-Line (OSRM + http)
 Wenn zwei geografische Punkte auf einer Karte gegeben sind, besteht häufig die Anforderung, eine dazugehörige Route – beispielsweise für die Autofahrt – zu berechnen. Hierfür kann der Routingdienst **OSRM (Open Source Routing Machine)** verwendet werden. OSRM stellt eine API bereit, über die Routen zwischen Koordinatenpunkten berechnet und als Geodaten zurückgegeben werden.
@@ -1617,7 +1617,6 @@ void handleRideUpdate(PostgresChangePayload payload) {
 Die App ist auf Deutsch lokalisiert, sodass systemnahe Widgets (z. B. DatePicker) deutschsprachige Texte verwenden. Zentrale Datums- und Währungsformatierungen werden über das `intl`-Package definiert und in der gesamten App wiederverwendet (z. B. ISO-Parsing, Anzeige im EU-Format, Währungsdarstellung in EUR). `flutter_localizations` wird in `MaterialApp` aktiviert, damit Standard-Widgets die gewünschte Locale übernehmen.
 
 ![Datums- und Währungsformatierung](img/Winter/localeFormat.png){width=320px}
-![Locale Settings in MaterialApp](img/Winter/localeSettings.png){width=320px}
 
 **Schritte**
 - In `MaterialApp`: `supportedLocales` auf `Locale('de')`, `localizationsDelegates` aktivieren.
@@ -1661,7 +1660,7 @@ Text('Preis: ${Formatters.formatCurrency(ride.price)}');
 
 Für globale Zustände wie das App-Theme wird `provider` mit `ChangeNotifier` eingesetzt. Ein `ThemeProvider` hält den aktuellen Modus (Hell/Dunkel), persistiert ihn in `shared_preferences` und benachrichtigt die UI per `notifyListeners()`. Über `Consumer` oder `context.watch()` reagieren Widgets unmittelbar auf Änderungen. So bleibt der Theme-Wechsel konsistent und erfordert kein manuelles Weiterreichen des Zustands durch die Widget-Hierarchie.
 
-![Theme Switch im Profil](img/Winter/profiletheme.png){width=320px}
+![Theme Switch im Profil](img/Winter/profilethemeblack.png){width=320px}
 
 **Ablauf**
 - App-Start: Theme aus `shared_preferences` lesen, initial setzen.
