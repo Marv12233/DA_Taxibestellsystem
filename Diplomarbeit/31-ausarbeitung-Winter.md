@@ -1350,7 +1350,8 @@ Die enge Integration von Standortdaten (Location-Stream), Routenberechnung (OSRM
 Der Zahlungsfluss startet bereits im Booking-Form: Beim Anlegen der Fahrt wird die Zahlungsmethode (Bar oder Karte) gewählt und gleichzeitig ein Payment-Eintrag in Supabase mit Status `pending` angelegt. Nach Abschluss der Fahrt wird im Payment-Form die eigentliche Zahlung abgeschlossen – entweder per SumUp-Sandbox (Karte) oder durch Fahrerbestätigung (Bar). Die UI richtet sich strikt nach dem Payment-Status.
 
 ![Booking-Form mit Zahlungsmethode](img/Winter/bookingForm.png){width=320px}
-![Payment-Form mit Status](img/Winter/paymentForm.png){width=320px}
+![Payment-Form Karte mit Status](img/Winter/paymentForm.png){width=320px}
+![Payment-Form Bar mit Status](img/Winter/paymentFormBar.png){width=320px}
 
 **Ablauf und Statuslogik**
 - booking_form: Fahrt erstellen, Payment-Datensatz (payment_method, amount, status = pending) anlegen.
