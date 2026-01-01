@@ -356,49 +356,57 @@ function ThemeText() {
 Hier sieht man wie ``useContext`` den Zugriff auf globale Werte ohne Props weiterzugeben erlaubt.
 
 ### Styling mit Tailwind CSS
+Tailwind CSS ist ein utility-first CSS-Framework bei dem das Styling hauptsächlich über kurze Utility-Klassen direkt im HTML erfolgt. Es werden vordefinierte Klassen kombiniert, wodurch sich Oberflächen schneller entwickeln und prototypisch umsetzen lassen. Tailwind unterstützt responsives Design standardmäßig über integrierte Klassen und bietet eine detailierte Kontrolle über das Design. [@geeksforgeeks-tailwind]
 
-#### Utility-First-Konzept  
+#### Utility-First-Konzept
+Tailwind CSS verfolgt einen Ansatz, bei dem das Styling über viele kleine, klar benannte Klassen direkt im HTML bzw. JSX erfolgt. Jede dieser Klassen steht für eine konkrete Gestaltungseigenschaft wie Abstand, Farbe, Schrift oder Layout. Anstatt für jede Oberfläche eigene CSS-Regeln und neue Klassennamen zu erstellen, werden vorhandene Klassen kombiniert. Das beschleunigt die Umsetzung von Designs, vereinfacht Anpassungen und reduziert den Aufwand für die Pflege großer Stylesheets.
+[@tailwindcss-blog]
 #### Responsive Design & Breakpoints  
-#### Komponenten-Styling im Adminpanel  
+Damit eine Oberfläche auf Handy, Tablet und Desktop gut funktioniert, muss sie sich an verschiedene Bildschirmgrößen anpassen. Tailwind unterstützt das, indem es feste Breakpoints anbietet, ab denen sich das Styling ändern kann. Eine Regel kann für kleine Bildschirme gelten und ab einer bestimmten Breite automatisch angepasst werden. So lässt sich responsive Verhalten umsetzen, ohne jedes Mal eigene Media Queries schreiben zu müssen.
+[@tailwindcss-blog] 
 
+```html
+<button class="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700">
+  Klick mich
+</button>
+```
+Kurz erklärt: Die Klassen setzen Abstand (px-4 py-2), abgerundete Ecken (rounded-md), Hintergrund- und Textfarbe (bg-blue-600 text-white) und einen Hover-Effekt (hover:bg-blue-700).
+
+![Darstellung eines einfachen Buttons ohne die Verwendung von tailwind](img/Maksic/DA_html_button.png){width=30%}
+![Darstellung eines einfachen Buttons Buttons mit der Verwendung von tailwind](img/Maksic/DA_tailwindcss_button.png){width=30%}
 ### Frontend-Architektur
-
 #### Projekt-/Ordnerstruktur (Next.js)  
+Next.js verwendet eine Projekt- und Ordnerstruktur, um Routing, Layouts, Datenverarbeitung und Konfiguration einer Webanwendung logisch zu trennen. In der modernen App-Router-Architektur bildet der Ordner app/ den zentralen Einstiegspunkt der Anwendung. Innerhalb dieses Verzeichnisses werden Seiten, Layouts und Routen hierarchisch anhand der Ordnerstruktur definiert. [@nextjs-docs]
+
+Jeder Unterordner im app/-Verzeichnis repräsentiert eine Route, während spezielle Dateien wie `page.tsx`, `layout.tsx`, `loading.tsx` oder `error.tsx` das Verhalten und die Darstellung dieser Route steuern. Dadurch entsteht ein dateibasiertes Routing, bei dem die URL-Struktur direkt aus der Ordnerstruktur abgeleitet wird. Gemeinsame Layouts können über mehrere Routen hinweg wiederverwendet werden, indem sie höher in der Ordnerhierarchie platziert werden. [@nextjs-docs]
+
+Neben dem app/-Verzeichnis enthält ein Next.js-Projekt weitere zentrale Dateien wie public/ für statische Assets (z. B. Bilder oder Icons), next.config.js zur Konfiguration des Frameworks sowie optionale Dateien wie tsconfig.json oder package.json zur Steuerung von TypeScript- und Projektabhängigkeiten. Diese strukturierte Aufteilung erleichtert die Wartung, Skalierbarkeit und Erweiterbarkeit von Next.js-Anwendungen. [@nextjs-docs]
+
 #### Schichtenmodell im Frontend (Pages, Components, Services)  
-#### Wiederverwendbare UI-Komponenten  
+Das Schichtenmodell im Frontend dient dazu, eine Webanwendung logisch zu strukturieren und Verantwortlichkeiten klar zu trennen. Ziel ist es, den Code übersichtlich, wartbar und gut erweiterbar zu halten. [@nextjs-docs]
 
-### State-Management
+Pages bilden die oberste Schicht und repräsentieren einzelne Seiten bzw. Routen der Anwendung. Sie sind für die Seitendarstellung verantwortlich und koordinieren die benötigten Daten sowie Komponenten. Pages enthalten in der Regel wenig Logik und dienen hauptsächlich als Einstiegspunkt für eine Ansicht. [@nextjs-docs]
 
-#### Begriff „State“ im React-Kontext  
-#### Lokaler State mit Hooks  
-#### Globaler State mit Context API  
-#### Datenfluss und UI-Updates  
+Components stellen wiederverwendbare UI-Bausteine dar, aus denen Pages zusammengesetzt werden. Sie kapseln Darstellung und ggf. lokalen Zustand und können mehrfach innerhalb verschiedener Pages eingesetzt werden. [@nextjs-docs]
 
-### Routing & Navigation in Next.js
+Services bilden die logische Schicht für Datenverarbeitung und externe Kommunikation. Sie übernehmen Aufgaben wie das Abrufen von Daten über APIs, das Verarbeiten von Geschäftslogik oder den Zugriff auf externe Systeme. [@nextjs-docs]
 
-#### File-based Routing (Pages / App Router)  
-#### Geschützte Routen (Protected Routes)  
-#### Navigationskonzept (Navbar, Seitenaufbau im Adminpanel)  
+### Supabase
+Supabase ist eine Open-Source-Plattform, die als Backend-as-a-Service (BaaS) konzipiert ist. Ziel ist es, wiederkehrende Backend-Funktionalitäten bereitzustellen ohne sich damit stark befassen zu müssen.  [@supabase-docs]
 
-### Supabase-Integration im Web
+#### Datenbank und Datenzugriff
+Die Datenverwaltung in Supabase basiert auf einer relationalen PostgreSQL-Datenbank. Tabellen, Beziehungen und Abfragen werden dabei wie in herkömmlichen SQL-Systemen definiert.
+Ein wesentlicher Vorteil von Supabase ist, dass aus dem Datenbankschema automatisch APIs für den Datenzugriff erstellt werden. Dadurch können Anwendungen Daten lesen, erstellen, ändern oder löschen, ohne dass ein eigenes Backend programmiert werden muss.
+Der Zugriff kann sowohl direkt aus dem Frontend als auch serverseitig erfolgen, was eine flexible Nutzung in unterschiedlichen Anwendungsszenarien ermöglicht. [@supabase-docs]
 
-#### Supabase Überblick (Auth, Database, Realtime)  
-#### Authentifizierung im Web (supabase-js)  
-#### Datenzugriff (CRUD im Adminpanel)  
-#### Realtime-Updates (z. B. Fahrten in Echtzeit)  
+#### Authentifizierung und Sicherheit
+Supabase stellt ein integriertes System zur Benutzerverwaltung und Authentifizierung bereit. Dieses unterstützt unter anderem klassische Anmeldungen mit E-Mail und Passwort sowie moderne Verfahren wie Magic Links oder externe Login-Anbieter.
+Ein zentraler Bestandteil des Sicherheitskonzepts ist die sogenannte Row Level Security (RLS). Mit ihr lassen sich Zugriffsregeln direkt in der Datenbank definieren, sodass Benutzer nur jene Datensätze sehen oder verändern dürfen, für die sie berechtigt sind.
+Durch diese serverseitig durchgesetzten Regeln wird sichergestellt, dass sensible Daten geschützt bleiben, unabhängig davon, von welchem Client aus auf die Daten zugegriffen wird. [@supabase-docs]
 
-### Authentifizierung & Sicherheit
+#### Row Level Security (RLS)
+Row Level Security (RLS) ist ein zentrales Sicherheitskonzept von Supabase, das direkt auf den Möglichkeiten von PostgreSQL basiert. Es erlaubt, Zugriffsregeln auf einzelne Datenzeilen festzulegen, anstatt nur auf ganze Tabellen. Dadurch kann sehr genau definiert werden, welche Benutzer welche Datensätze lesen, verändern oder löschen dürfen.
 
-#### Session-Handling im Browser  
-#### Rollen & Berechtigungen (Admin, Fahrer, Kunde)  
-#### Row Level Security (RLS) & Policies  
-#### Datenschutz und Umgang mit personenbezogenen Daten  
-
-### Deployment & Servermanagement
-
-#### Entwicklungs- vs. Produktionsumgebung  
-#### Deployment der Adminoberfläche (z. B. Vercel / eigener Server)  
-#### Umgang mit Umgebungsvariablen (Environment Variables)  
-#### Grundlegendes Monitoring & Logging  
+Die Zugriffsregeln werden dabei serverseitig in der Datenbank umgesetzt. Das bedeutet, dass Sicherheitsbeschränkungen unabhängig vom verwendeten Client gelten und nicht durch manipulierten Frontend-Code umgangen werden können. Typische Anwendungsfälle sind beispielsweise, dass Benutzer nur ihre eigenen Daten sehen oder nur Datensätze bearbeiten dürfen, die sie selbst erstellt haben.
 
 ## Praktische Arbeit
