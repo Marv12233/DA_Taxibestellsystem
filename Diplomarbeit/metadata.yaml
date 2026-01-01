@@ -85,4 +85,7 @@ da-appendix:
 # - abschnitt: API-Spezifikation
 #   pdf-file: Anhang/platzhalter
 
+
+header-includes:
+- \lstset{mathescape=false}
 ---
