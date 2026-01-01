@@ -40,7 +40,7 @@ class Dog extends Animal
   Dog(String name) : super(name, 'woof');
 
   @override
-  void makeNoise() => print('$name makes $noise');
+  void makeNoise() => print('\$name makes \$noise');
 }
 
 void main()
@@ -95,7 +95,7 @@ Future<void> main() async {
   // wartet auf das Ergebnis der asynchronen Methode
   String name = await ladeBenutzername();
 
-  print('Benutzer: $name');
+  print('Benutzer: \$name');
   print('Ende');
 }
 ```
@@ -166,7 +166,7 @@ StreamBuilder<int>(
   stream: Stream.periodic(Duration(seconds: 1), (x) => x),
   initialData: 0,
   builder: (context, snapshot) {
-    return Text("Wert: ${snapshot.data}");
+    return Text("Wert: \${snapshot.data}");
   },
 )
 ```
@@ -326,7 +326,7 @@ Column(
     // normales TextField (keine Form-Features wie validator/onSaved)
     TextField(
       decoration: const InputDecoration(labelText: "Irgendein TextField"),
-      onChanged: (v) => debugPrint("TextField changed: $v"),
+      onChanged: (v) => debugPrint("TextField changed: \$v"),
     ),
 
     // Form gruppiert mehrere FormFields
@@ -336,7 +336,7 @@ Column(
         children: [
           TextFormField(
             decoration: const InputDecoration(labelText: "Name"),
-            onChanged: (v) => debugPrint("onChanged: $v"),
+            onChanged: (v) => debugPrint("onChanged: \$v"),
             validator: (v) => (v == null || v.trim().isEmpty)
                 ? "Bitte Name eingeben" // Fehlermeldung wird unter dem Feld angezeigt
                 : null, // null = passt
@@ -350,7 +350,7 @@ Column(
                   // validate() triggert alle validatoren in der Form
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save(); // ruft onSaved auf
-                    debugPrint("Gespeichert: $_name");
+                    debugPrint("Gespeichert: \$_name");
                   }
                 },
                 child: const Text("Submit"),
@@ -603,7 +603,7 @@ Die Kommunikation mit der SumUp-Plattform erfolgt über eine REST-API. Zahlungen
 ```{caption="Beispiel für eine POST-Anfrage zum Erstellen eines Checkouts über die SumUp-API" .bash}
 curl https://api.sumup.com/v0.1/checkouts \
  -X POST \
- -H "Authorization: Bearer $SUMUP_API_KEY" \
+ -H "Authorization: Bearer \$SUMUP_API_KEY" \
  --json '{
     "checkout_reference": "",
     "amount": 0,
@@ -614,10 +614,10 @@ curl https://api.sumup.com/v0.1/checkouts \
 In Flutter kann dieselbe Anfrage mithilfe des `http`-Packages umgesetzt werden. Dabei wird zunächst ein Checkout erstellt, die eigentliche Kartenzahlung erfolgt anschließend über den von SumUp bereitgestellten Zahlungsfluss. Ein Beispiel für eine Anfrage in Flutter ist:
 ```{caption="Beispiel für einen HTTP-POST-Request mit Timeout zur SumUp-API in Dart" .dart}
 final response = await http.post(
-  Uri.parse('$_baseUrl/v0.1/checkouts'),
+  Uri.parse('\$_baseUrl/v0.1/checkouts'),
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer $_privateKey',
+    'Authorization': 'Bearer \$_privateKey',
   },
   body: jsonEncode(requestBody),
 ).timeout(
@@ -775,7 +775,7 @@ final channel = supabase.channel('public:orders')
     schema: 'public',
     table: 'orders',
     callback: (payload) {
-      debugPrint('Event: ${payload.eventType}, data: ${payload.newRecord}');
+      debugPrint('Event: \${payload.eventType}, data: \${payload.newRecord}');
     },
   )
   ..subscribe();
@@ -788,7 +788,7 @@ void handleOrderChange(PostgresChangePayload payload) {
   // alte Daten bei Delete/Update
   final oldData = payload.oldRecord;
 
-  debugPrint('Event: ${payload.eventType}, data: $newData');
+  debugPrint('Event: \${payload.eventType}, data: \$newData');
 
   // hier könnte z. B. die UI aktualisiert werden
   // (setState, Provider-Update usw.)
@@ -998,7 +998,7 @@ RealtimeChannel subscribeToRides(
   String customerId,
   void Function(PostgresChangePayload) callback,
 ) {
-  final channel = client.channel('public:rides:customer:$customerId');
+  final channel = client.channel('public:rides:customer:\$customerId');
 
   for (final event in [
     PostgresChangeEvent.insert,
@@ -1073,7 +1073,7 @@ Future<void> _refreshSingleRide(int rideId) async {
       });
     }
   } catch (e) {
-    debugPrint('Failed to refresh ride $rideId: $e'); // Fehler bei Einzel-Update ignorieren
+    debugPrint('Failed to refresh ride \$rideId: \$e'); // Fehler bei Einzel-Update ignorieren
   }
 }
 ```
@@ -1259,9 +1259,9 @@ Die Kommunikation mit OSRM erfolgt über HTTP-Anfragen. Der `RoutingService` kap
 ```{caption="Routenberechnung mit der OSRM-API inklusive Distanz, Dauer und Polyline-Koordinaten" .dart}
 Future<RouteResult> calculateRoute(LatLng start, LatLng end) async {
   try {
-    final url = '$_osrmBaseUrl/route/v1/driving/'
-        '${start.longitude},${start.latitude};'
-        '${end.longitude},${end.latitude}'
+    final url = '\$_osrmBaseUrl/route/v1/driving/'
+        '\${start.longitude},\${start.latitude};'
+        '\${end.longitude},\${end.latitude}'
         '?overview=full&steps=true';
 
     final response = await http.get(Uri.parse(url)).timeout(
@@ -1289,10 +1289,10 @@ Future<RouteResult> calculateRoute(LatLng start, LatLng end) async {
         durationMinutes: (route['duration'] as num) / 60,
       );
     } else {
-      throw Exception('OSRM Fehler: ${response.statusCode}');
+      throw Exception('OSRM Fehler: \${response.statusCode}');
     }
   } catch (e) {
-    debugPrint('Routenberechnung fehlgeschlagen: $e');
+    debugPrint('Routenberechnung fehlgeschlagen: \$e');
     rethrow;
   }
 }
@@ -1420,7 +1420,7 @@ class _PaymentFormState extends State<PaymentForm> {
       await _sumupService.createCheckout(
         amount: _payment!.amount,
         currency: 'EUR',
-        reference: 'ride-${_payment!.rideId}',
+        reference: 'ride-\${_payment!.rideId}',
       );
       await _paymentsService.updateStatus(_payment!.id, 'paid');
       await _loadPayment();
@@ -1442,9 +1442,9 @@ class _PaymentFormState extends State<PaymentForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Betrag: ${payment.amount.toStringAsFixed(2)} EUR'),
-        Text('Methode: ${isCash ? 'Bar' : 'Karte'}'),
-        Text('Status: ${payment.status}'),
+        Text('Betrag: \${payment.amount.toStringAsFixed(2)} EUR'),
+        Text('Methode: \${isCash ? 'Bar' : 'Karte'}'),
+        Text('Status: \${payment.status}'),
         if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
         const SizedBox(height: 12),
         if (!isPaid && !isCash)
@@ -1492,17 +1492,17 @@ Future<Uint8List> buildInvoicePdf({
         children: [
           pw.Text('Rechnung', style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold)),
           pw.SizedBox(height: 12),
-          pw.Text('Fahrt-ID: ${ride.id}'),
-          pw.Text('Datum: ${ride.startedAt}'),
-          pw.Text('Von: ${ride.pickupAddress}'),
-          pw.Text('Nach: ${ride.dropoffAddress}'),
+          pw.Text('Fahrt-ID: \${ride.id}'),
+          pw.Text('Datum: \${ride.startedAt}'),
+          pw.Text('Von: \${ride.pickupAddress}'),
+          pw.Text('Nach: \${ride.dropoffAddress}'),
           pw.SizedBox(height: 12),
-          pw.Text('Distanz: ${ride.distanceKm.toStringAsFixed(2)} km'),
-          pw.Text('Dauer: ${ride.durationMin.toStringAsFixed(0)} min'),
+          pw.Text('Distanz: \${ride.distanceKm.toStringAsFixed(2)} km'),
+          pw.Text('Dauer: \${ride.durationMin.toStringAsFixed(0)} min'),
           pw.SizedBox(height: 12),
-          pw.Text('Betrag: ${payment.amount.toStringAsFixed(2)} EUR'),
-          pw.Text('Zahlungsart: ${payment.method}'),
-          pw.Text('Status: ${payment.status}'),
+          pw.Text('Betrag: \${payment.amount.toStringAsFixed(2)} EUR'),
+          pw.Text('Zahlungsart: \${payment.method}'),
+          pw.Text('Status: \${payment.status}'),
         ],
       ),
     ),
@@ -1514,10 +1514,10 @@ Future<Uint8List> buildInvoicePdf({
 Future<void> shareOrSaveInvoice(Ride ride, Payment payment) async {
   try {
     final pdfBytes = await buildInvoicePdf(ride: ride, payment: payment);
-    await Printing.sharePdf(bytes: pdfBytes, filename: 'invoice_${ride.id}.pdf');
+    await Printing.sharePdf(bytes: pdfBytes, filename: 'invoice_\${ride.id}.pdf');
     // Alternativ: await Printing.layoutPdf(onLayout: (_) => pdfBytes);
   } catch (e) {
-    debugPrint('PDF-Export fehlgeschlagen: $e');
+    debugPrint('PDF-Export fehlgeschlagen: \$e');
   }
 }
 ```
@@ -1565,7 +1565,7 @@ class NotificationService {
         priority: Priority.high,
       ),
     );
-    await _plugin.show(rideId, title, body, details, payload: '$rideId');
+    await _plugin.show(rideId, title, body, details, payload: '\$rideId');
   }
 
   static void _onSelectNotification(NotificationResponse response) {
@@ -1650,8 +1650,8 @@ return MaterialApp(
 );
 
 // Nutzung im UI
-Text('Abfahrt: ${Formatters.formatDateTime(ride.startedAt)}');
-Text('Preis: ${Formatters.formatCurrency(ride.price)}');
+Text('Abfahrt: \${Formatters.formatDateTime(ride.startedAt)}');
+Text('Preis: \${Formatters.formatCurrency(ride.price)}');
 ```
 
 ### State-Management mit Provider
@@ -1739,11 +1739,11 @@ class ValidationHelper {
       (v == null || v.trim().isEmpty) ? message : null;
 
   static String? minLength(String? v, int min, {String? message}) =>
-      (v ?? '').trim().length < min ? (message ?? 'Mindestens $min Zeichen') : null;
+      (v ?? '').trim().length < min ? (message ?? 'Mindestens \$min Zeichen') : null;
 
   static String? email(String? v, {String message = 'Ungültige E-Mail'}) {
     final value = (v ?? '').trim();
-    final regex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    final regex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+\$');
     return regex.hasMatch(value) ? null : message;
   }
 }
