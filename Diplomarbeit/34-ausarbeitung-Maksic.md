@@ -410,3 +410,71 @@ Row Level Security (RLS) ist ein zentrales Sicherheitskonzept von Supabase, das 
 Die Zugriffsregeln werden dabei serverseitig in der Datenbank umgesetzt. Das bedeutet, dass Sicherheitsbeschränkungen unabhängig vom verwendeten Client gelten und nicht durch manipulierten Frontend-Code umgangen werden können. Typische Anwendungsfälle sind beispielsweise, dass Benutzer nur ihre eigenen Daten sehen oder nur Datensätze bearbeiten dürfen, die sie selbst erstellt haben.
 
 ## Praktische Arbeit
+
+### Technologiestack & Auswahl
+
+### Projektsetup & Architektur (Next.js)
+
+#### Projekt-/Ordnerstruktur
+#### Architekturüberblick
+#### Trennung von UI, Logik und Datenzugriff
+
+### Datenhaltung mit Supabase
+
+#### Datenbankstruktur
+#### Authentifizierung
+#### Rollen- und Berechtigungskonzept
+#### Row Level Security (RLS)
+
+### Authentifizierung & Benutzerverwaltung
+
+#### Login- und Session-Handling
+#### Rollenbasierter Zugriff
+#### Geschützte Routen
+
+### UI-Grundgerüst & Navigation
+
+#### Layouts und Seitenstruktur
+#### Routing mit Next.js
+#### Navigationskonzept
+
+### Zentrale Anwendungsfunktionen
+
+#### Kern-Workflow der Anwendung
+#### Statuslogik und Datenänderungen
+#### Realtime-Funktionalität (Supabase)
+
+### Schichtenmodell im Frontend
+
+#### Pages
+#### Components
+#### Services
+
+### Wiederverwendbare UI-Komponenten
+
+#### Aufbau und Zweck
+#### Vorteile für Wartbarkeit und Erweiterbarkeit
+
+### State-Management & Datenfluss
+
+#### Lokaler State
+#### Globaler State
+#### Kommunikation zwischen Komponenten
+
+### Utilities & Hilfsklassen
+
+#### Validierung
+#### Formatierung
+#### Zentrale Konstanten
+
+### Testing & Qualitätssicherung
+
+#### Manuelle Testszenarien
+#### Fehlerbehandlung
+#### Validierung von Benutzeraktionen
+
+### Deployment & Build-Prozess
+
+#### Build-Erstellung
+#### Umgebungsvariablen
+#### Deployment-Strategie
