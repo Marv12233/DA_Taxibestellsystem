@@ -261,7 +261,7 @@ TypeScript bietet Konfigurationsoptionen, um die Strenge der Typprüfung zu steu
 // TypeScript-Beispiel mit Typannotationen
 
 function greet(name: string, date: Date): void {
-    console.log(`Hallo ${name}, heute ist ${date.toDateString()}`);
+    console.log(`Hallo \${name}, heute ist \${date.toDateString()}`);
 }
 
 // Korrekte Verwendung
