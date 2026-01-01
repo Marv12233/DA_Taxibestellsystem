@@ -21,7 +21,7 @@ Wie auch in anderen Programmiersprachen wie Java oder C++ besitzt eine Variable 
 
 ##### OOP – Objektorientierte Programmierung
 Dart ist, wie bereits zuvor erwähnt, eine objektorientierte Programmiersprache und unterstützt Konzepte wie Klassen, Objekte und Vererbung. Das folgende Codebeispiel zeigt die Verwendung von Klassen, Vererbung und Konstruktoren.
-```dart
+```{caption="Beispiel für Vererbung und Methodenüberschreibung in Dart" .dart}
 class Animal
 {
   String name;
@@ -56,7 +56,7 @@ Dieses Codebeispiel zeigt die Definition einer Basisklasse sowie einer davon abg
 #### Null Safety
 Dart verwendet ein sogenanntes *Sound Null Safety*-Konzept. Dadurch wird bereits zur Compile-Zeit sichergestellt, dass Variablen keine unerwarteten `null`-Werte annehmen. Wird beispielsweise einer Methode ein `null`-Wert übergeben, obwohl ein nicht-nullbarer Datentyp erwartet wird, führt dies zu einem Compile-Fehler.
 Standardmäßig sind Variablen in Dart nicht nullfähig (*non-nullable*). Soll eine Variable dennoch den Wert `null` annehmen dürfen, muss sie explizit als nullfähig (*nullable*) deklariert werden. Dies erfolgt durch das Anhängen eines Fragezeichens (`?`) an den Datentyp. Eine solche Variable kann entweder einen konkreten Wert oder `null` enthalten. Das folgende Codebeispiel demonstriert diese Unterschiede. [@NullSafety-DartDocs]
-```dart
+```{caption="Beispiel für Null-Safety mit non-nullable und nullable Variablen in Dart" .dart}
 void main()
 {
   // 1) Non-nullable, nicht initialisiert
@@ -82,7 +82,7 @@ Asynchronität wird in Dart eingesetzt, um zeitaufwändige Operationen auszufüh
 
 Ein `Future` repräsentiert einen Wert, der erst zu einem späteren Zeitpunkt verfügbar ist. Funktionen, die mit dem Schlüsselwort `async` deklariert werden, liefern immer ein `Future` zurück. Mit `await` kann auf das Ergebnis eines `Future` gewartet werden, ohne den Programmablauf zu blockieren. Die Verwendung von `await` ist ausschließlich innerhalb von `async`-Funktionen erlaubt. Das folgende Codebeispiel zeigt eine einfache asynchrone Operation. [@GeeksForGeeks-async]
 
-```dart
+```{caption="Beispiel für async/await mit Future in Dart" .dart}
 Future<String> ladeBenutzername() async {
   // Simulation eines Datenbankzugriffs
   await Future.delayed(Duration(seconds: 2));
@@ -106,7 +106,7 @@ In Dart werden Packages verwendet, um externe Bibliotheken und Werkzeuge in ein 
 
 Der grundlegende Aufbau einer `pubspec.yaml`-Datei ist im folgenden Beispiel dargestellt. [@Packages-DartDocs]
 
-```yaml
+```{caption="Beispiel für pubspec.yaml mit App-Name und Dependency-Angabe" .yaml}
 name: demo # Name der App
 
 dependencies:
@@ -131,7 +131,7 @@ Enumerated Types, kurz *Enums*, sind ein spezieller Datentyp, mit dem eine feste
 
 Das folgende Beispiel zeigt die Definition eines Enums in Dart:
 
-```
+```{caption="Beispiel für ein enum zur Definition von Bestellstatus in Dart" .dart}
 enum OrderStatus {
   pending,
   processing,
@@ -140,13 +140,12 @@ enum OrderStatus {
 }
 ```
 Ein solches Enum kann anschließend wie ein normaler Typ verwendet werden:
-```dart
+```{caption="Beispiel für die Verwendung eines enum-Werts in einer Bedingung" .dart}
 OrderStatus status = OrderStatus.pending;
 
 if (status == OrderStatus.completed) {
   print('Bestellung abgeschlossen');
 }
-
 ```
 Durch die Verwendung von Enums wird der Code besser lesbar und Fehler durch ungültige Zustände werden vermieden. [@flutter_docs]
 
@@ -162,7 +161,7 @@ Der `StreamBuilder` „hört“ auf einen Stream und reagiert auf jede Änderung
 
 Das folgende Beispiel zeigt einen einfachen `StreamBuilder`, der jede Sekunde einen Zähler erhöht und den aktuellen Wert darstellt:
 
-```dart
+```{caption="Beispiel für einen StreamBuilder, der regelmäßig aktualisierte Werte aus einem Stream anzeigt" .dart}
 StreamBuilder<int>(
   stream: Stream.periodic(Duration(seconds: 1), (x) => x),
   initialData: 0,
@@ -182,7 +181,7 @@ Ein zentrales Konzept von Flutter ist die Möglichkeit, eigene Widgets zu erstel
 Grundsätzlich wird zwischen zwei Arten von Widgets unterschieden: `StatelessWidget` und `StatefulWidget`. Ein `StatelessWidget` beschreibt eine Benutzeroberfläche, die sich nach dem Aufbau (*build*) nicht mehr verändert. Es eignet sich für statische Inhalte, deren Darstellung unabhängig vom internen Zustand ist. Ein `StatefulWidget` hingegen besitzt einen veränderbaren Zustand (*State*), wodurch sich die Benutzeroberfläche dynamisch an Benutzerinteraktionen oder interne Änderungen anpassen kann. Die folgenden Codebeispiele zeigen den Unterschied zwischen diesen beiden Widget-Typen. [@flutter_docs]
 
 Stateless Widget:
-```dart
+```{caption="Beispiel für ein benutzerdefiniertes StatelessWidget zur Anzeige von User-Infos" .dart}
 class UserInfoTile extends StatelessWidget {
   final String username;
   final IconData icon;
@@ -219,14 +218,14 @@ class UserInfoTile extends StatelessWidget {
 }
 ```
 Das dargestellte `StatelessWidget` eignet sich beispielsweise für eine Profil- oder Listenansicht, bei der ausschließlich statische Informationen angezeigt werden.
-```dart
+```{caption="Beispiel für die Verwendung des benutzerdefinierten Widgets UserInfoTile" .dart}
 UserInfoTile(
   username: 'Marvin Winter',
   icon: Icons.person,
 )
 ```
 StatefullWidget:
-```dart
+```{caption="Beispiel für ein StatefulWidget mit internem Favoriten-Status (Toggle per IconButton)" .dart}
 class UserInfoTile extends StatefulWidget {
   final String username;
   final IconData icon;
@@ -277,7 +276,7 @@ class _UserInfoTileState extends State<UserInfoTile> {
 }
 ```
 Das gezeigte `StatefulWidget` ermöglicht es dem Benutzer, einen Status (z. B. Favorit) direkt zu verändern. Die Benutzeroberfläche wird dabei dynamisch an den aktuellen Zustand angepasst.
-```dart
+```{caption="Beispiel für die Verwendung des StatefulWidget UserInfoTile mit Favoriten-Funktion" .dart}
 UserInfoTile(
   username: 'Marvin Winter',
   icon: Icons.person,
@@ -302,7 +301,7 @@ In Flutter wird das gesamte Layout einer Benutzeroberfläche mithilfe von Widget
 
 Ein einfaches Beispiel für ein Layout ist die Zentrierung eines Textelements mithilfe eines `Center`-Widgets. [@flutter_docs]
 
-```dart
+```{caption="Einfaches Beispiel für ein zentriertes Text-Widget in Flutter" .dart}
 const Center(
   child: Text('Hello World'),
 );
@@ -318,7 +317,7 @@ Zur Verwaltung mehrerer Eingabefelder kann das `Form`-Widget eingesetzt werden. 
 
 Die Validierung von Formulareingaben erfolgt feldweise über Validator-Funktionen. Gibt ein Validator `null` zurück, gilt die Eingabe als gültig. Andernfalls wird eine entsprechende Fehlermeldung unter dem jeweiligen Eingabefeld angezeigt. Das folgende Codebeispiel zeigt ein einfaches Formular mit Validierung und Speicherung der Eingabedaten. [@flutter_docs]
 
-```dart
+```{caption="Beispiel für ein Formular mit Form, GlobalKey, Validierung und Reset" .dart}
 final _formKey = GlobalKey<FormState>(); // GlobalKey wird hier erstellt
 String _name = "";
 
@@ -376,7 +375,7 @@ In Flutter können PDF-Dokumente mithilfe externer Packages erstellt und verarbe
 
 Das folgende Codebeispiel zeigt die Erstellung eines einfachen PDF-Dokuments mit einer zentrierten Textausgabe.
 
-```dart
+```{caption="Beispiel zum Erstellen eines einfachen PDF-Dokuments mit einer zentrierten „Hello World“-Seite" .dart}
 final pdf = pw.Document();
 
 pdf.addPage(
@@ -394,12 +393,11 @@ pdf.addPage(
 
 Für das Drucken oder Teilen von PDF-Dokumenten kommt das Package `printing` zum Einsatz. Dieses ermöglicht es, die plattformspezifische Druckumgebung von Android und iOS zu öffnen und erstellte PDF-Dokumente auszudrucken oder zu speichern. Das folgende Beispiel zeigt das Teilen eines PDF-Dokuments.
 
-```dart
+```{caption="Beispiel zum Teilen eines erzeugten PDFs mit Printing.sharePdf" .dart}
 await Printing.sharePdf(
   bytes: await pdf.save(),
   filename: 'my-document.pdf',
 );
-
 ```
 [@printing]
 
@@ -410,7 +408,7 @@ Das Package `flutter_localization` stellt jedoch keine automatische Übersetzung
 
 Das folgende Codebeispiel zeigt die Formatierung eines Geldbetrags im österreichischen Zahlenformat. [@intl, @flutter_docs]
 
-```dart
+```{caption="Beispiel für Währungsformatierung mit NumberFormat (de_AT, EUR) in Dart" .dart}
 final eur = NumberFormat.currency(locale: 'de_AT', symbol: 'EUR');
 print(eur.format(1234.56)); // 1.234,56 EUR
 ```
@@ -511,7 +509,7 @@ Für den Zugriff auf sensible Funktionen eines Endgeräts, wie Kamera oder Stand
 Die Anfrage von Berechtigungen erfolgt asynchron. Der Benutzer kann verschiedene Entscheidungen treffen, beispielsweise das dauerhafte Erteilen, das einmalige Verweigern oder das permanente Ablehnen einer Berechtigung („Nie wieder fragen“). Das folgende Codebeispiel zeigt eine mögliche Implementierung zur Anforderung der Standortberechtigung. [@permission_handler]
 
 
-```dart
+```{caption="Beispiel für das Prüfen und Anfragen von Standortberechtigungen mit permission_handler" .dart}
 Future<bool> ensureLocationPermission() async {
   // 1) Aktuellen Status abfragen
   var status = await Permission.location.status;
@@ -560,12 +558,11 @@ Zur Darstellung von Karten in Flutter kann das Package `flutter_map` verwendet w
 ![Beispiel einer mit flutter_map eingebundenen OpenStreetMap-Karte](img/Winter/mapExample.png){width=300px}
 
 Für die Arbeit mit geografischen Koordinaten wird ergänzend das Package `latlong2` eingesetzt. Es stellt Datentypen für Längen- und Breitengrade bereit und ermöglicht unter anderem die Berechnung von Distanzen zwischen zwei Koordinatenpunkten. [@latlong2]
-```dart
+```{caption="Beispiel zur Distanzberechnung zwischen zwei Koordinaten mit LatLng" .dart}
 final int meters = distance(
   LatLng(52.518611, 13.408056),
   LatLng(51.519475, 7.46694444),
 );
-
 ```
 
 #### Live-Position & Marker (flutter_map_location_marker)
@@ -603,7 +600,7 @@ Ein Sandbox-Konto kann über das SumUp Developer Portal angelegt werden. Es ist 
 
 Die Kommunikation mit der SumUp-Plattform erfolgt über eine REST-API. Zahlungen beziehungsweise Checkouts werden dabei über HTTP-Anfragen erstellt. Ein Checkout kann beispielsweise mittels einer `POST`-Anfrage angelegt werden:
 
-```bash
+```{caption="Beispiel für eine POST-Anfrage zum Erstellen eines Checkouts über die SumUp-API" .bash}
 curl https://api.sumup.com/v0.1/checkouts \
  -X POST \
  -H "Authorization: Bearer $SUMUP_API_KEY" \
@@ -615,7 +612,7 @@ curl https://api.sumup.com/v0.1/checkouts \
   }'
 ```
 In Flutter kann dieselbe Anfrage mithilfe des `http`-Packages umgesetzt werden. Dabei wird zunächst ein Checkout erstellt, die eigentliche Kartenzahlung erfolgt anschließend über den von SumUp bereitgestellten Zahlungsfluss. Ein Beispiel für eine Anfrage in Flutter ist:
-```dart
+```{caption="Beispiel für einen HTTP-POST-Request mit Timeout zur SumUp-API in Dart" .dart}
 final response = await http.post(
   Uri.parse('$_baseUrl/v0.1/checkouts'),
   headers: {
@@ -645,7 +642,7 @@ Zur Umsetzung lokaler Benachrichtigungen in Flutter wird häufig das Package `fl
 
 In einer eigenen Service-Klasse (z. B. `LocalNotificationService`) kann eine statische Instanz des Plugins angelegt und über die Methode `initialize()` konfiguriert werden. Das folgende Beispiel zeigt eine einfache Implementierung für Android:
 
-```dart
+```{caption="Beispiel für einen lokalen Benachrichtigungsservice mit flutter_local_notifications" .dart}
 class LocalNotificationService {
   static final _plugin = FlutterLocalNotificationsPlugin();
 
@@ -673,7 +670,7 @@ class LocalNotificationService {
   }
 }
 ```
-```dart
+```{caption="Beispiel für Initialisierung und Auslösen einer einfachen lokalen Notification" .dart}
 // z.B. im initState
 LocalNotificationService.init();
 
@@ -723,7 +720,7 @@ Die Authentifizierung in Supabase basiert auf dem Auth-Dienst und lässt sich ü
 
 Das folgende Beispiel zeigt die Initialisierung von Supabase in einer Flutter-App sowie die Registrierung eines Benutzers mittels E-Mail und Passwort.
 
-```dart
+```{caption="Beispiel für die Initialisierung von Supabase und Benutzerregistrierung per E-Mail/Passwort in Flutter" .dart}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -750,7 +747,7 @@ Der Zugriff auf Daten in Supabase erfolgt in Flutter über den Supabase-Client. 
 
 Das folgende Beispiel zeigt das Auslesen und Einfügen von Datensätzen in einer Tabelle mittels Supabase-Client. Auf erweiterte sicherheitsrelevante Aspekte, wie Row Level Security (RLS), wird in einem späteren Kapitel noch näher eingegangen.
 
-```dart
+```{caption="Beispiel für SELECT mit Filtern und INSERT-Operation auf einer Supabase-Tabelle" .dart}
 // Datensätze lesen (SELECT) mit Filtern
 final data = await supabase
     .from('cities')
@@ -770,7 +767,7 @@ Die Realtime-Funktion von Supabase ermöglicht es, Datenbankänderungen in Echtz
 
 Damit Realtime genutzt werden kann, muss die Funktion für die betreffende Tabelle in Supabase aktiviert werden. In Flutter können anschließend sogenannte Subscriptions eingerichtet werden. Dabei „abonniert“ der Client eine Tabelle oder einzelne Ereignisarten (Insert, Update, Delete) und erhält bei Änderungen entsprechende Benachrichtigungen. [@supabase_flutter]
 
-```dart
+```{caption="Beispiel für eine Realtime-Subscription auf die Supabase-Tabelle orders" .dart}
 // Subscription auf eine Supabase-Tabelle
 final channel = supabase.channel('public:orders')
   ..onPostgresChanges(
@@ -831,7 +828,7 @@ Policies können für alle grundlegenden Datenbankoperationen definiert werden, 
 Policies können entweder direkt in SQL formuliert oder über die grafische Oberfläche von Supabase konfiguriert werden. Im folgenden Beispiel wird eine Policy definiert, die bewirkt, dass Benutzer nur ihre eigenen Datensätze lesen dürfen:
 
 
-```sql
+```{caption="Beispiel für eine Row-Level-Sicherheitsrichtlinie (RLS), die Nutzern nur den Zugriff auf ihre eigenen Datensätze erlaubt" .sql}
 create policy "Individuals can view their own todos."
 on todos
 for select
@@ -880,7 +877,7 @@ Anschließend wurde die Projektstruktur – wie im Theorieteil beschrieben – a
 ![Demo App von Android Studio](img/Winter/erstStartProjekstruktur.png){width=300px}
 
 Anschließend wurden die benötigten Packages als Dependencies in der Datei `pubspec.yaml` eingetragen:
-```yaml
+```{caption="Auszug der verwendeten Dependencies in der Kunden-App (pubspec.yaml)" .yaml}
 dependencies:
   flutter:
     sdk: flutter
@@ -995,7 +992,7 @@ Um Benutzeroberflächen in Echtzeit an Datenbankänderungen anzupassen, wird in 
 Das Szenario ist wie folgt: Ein Benutzer erstellt eine Fahrt, deren Status zunächst auf `requested` gesetzt ist. Diese Fahrt wird im Screen der App angezeigt. Sobald der Status in der Datenbank z. B. auf `assigned` geändert wird, aktualisiert sich die UI automatisch und der neue Status wird angezeigt.
 
 Die folgende Realtime-Subscription zeigt, wie Änderungen an Fahrten des aktuellen Benutzers abonniert und in der UI verarbeitet werden:
-```dart
+```{caption="Realtime-Subscription auf Kundenfahrten mit Supabase und automatischer UI-Aktualisierung" .dart}
 // Realtime-Subscription nur für die Rides des aktuellen Kunden
 RealtimeChannel subscribeToRides(
   String customerId,
@@ -1085,7 +1082,7 @@ Future<void> _refreshSingleRide(int rideId) async {
 ### UI-Grundgerüst & Navigation
 
 Die App nutzt ein Auth-Gate, das auf den Supabase-Auth-Stream hört. Direkt nach dem Start prüft es, ob eine aktive Session vorhanden ist: Nicht eingeloggte Nutzer sehen Login/Registrierung, verifizierte Nutzer gelangen in die Haupt-Shell. Nach erfolgreicher E-Mail-Bestätigung landet der User automatisch im Hauptbereich.
-```dart
+```{caption="Auth-Gate mit StreamBuilder, das je nach Supabase-Session Login oder Haupt-Shell anzeigt" .dart}
 class AuthGate extends StatelessWidget {
   final _supabase = Supabase.instance.client;
 
@@ -1106,7 +1103,7 @@ class AuthGate extends StatelessWidget {
 ![Login und Registrierung](img/Winter/loginundregistrierung.png){width=300px}
 
 Die Hauptnavigation ist als `BottomNavigationBar` (bzw. `NavigationBar`) umgesetzt und hält den aktuellen Tab-Index im State, sodass beim Wechsel kein erneutes Laden der Tabs nötig ist. Typische Tabs sind „Fahrten/Activity“ (Liste eigener Fahrten mit Realtime-Status), „Buchen/Karte“ (Routing, Adresssuche, Fahrer-Tracking) und „Profil/Settings“ (Theme-Umschaltung, Logout).
-```dart
+```{caption="Bottom-Navigation-Shell mit drei Tabs: Fahrten, Buchen und Profil" .dart}
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
@@ -1160,7 +1157,7 @@ Durch dieses Navigations- und UI-Grundgerüst entsteht eine klar strukturierte u
 
 Die Implementierung der Standort- und Kartenfunktionalität ist ein zentrales Element der Kunden-App. Der `LocationService` kapselt die gesamte Logik für Berechtigungen und Positionsbestimmung. Beim Initialisieren der App wird zunächst `initialize()` aufgerufen, das nacheinander prüft, ob Standortdienste aktiviert sind, die erforderliche Berechtigung anfordert und die initiale Position bestimmt. Der Service arbeitet als Singleton und stellt einen `Stream<LatLng>` bereit, über den die UI fortlaufend Positionsupdates erhält.
 
-```dart
+```{caption="Initialisierung des Standort-Services mit Berechtigungsprüfung" .dart}
 Future<bool> initialize() async {
   _isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!_isLocationServiceEnabled) return false;
@@ -1177,7 +1174,7 @@ Im Home-Screen wird dieser Stream abonniert und bei jedem Update wird `_currentL
 
 Für die Kartendarstellung wird das Package `flutter_map` in Kombination mit OpenStreetMap-Tiles eingesetzt. Das zentrale `TaxiMap`-Widget ist theme-aware und rendert je nach Light/Dark-Mode unterschiedliche Kartenkacheln. Dadurch wird eine konsistente visuelle Erfahrung über die gesamte App gewährleistet. Das `CurrentLocationLayer`-Widget, das von `flutter_map_location_marker` bereitgestellt wird, zeigt die Live-Position des Nutzers als dynamischen Marker mit Genauigkeitskreis an. Dieser wird nur angezeigt, wenn der `LocationService` eine gültige Permission und aktive Standortdienste meldet.
 
-```dart
+```{caption="Anzeige der aktuellen Nutzerposition auf der Karte mit CurrentLocationLayer" .dart}
 if (widget.showCurrentLocation && _locationService.isLocationAvailable)
   CurrentLocationLayer(
     alignPositionOnUpdate: widget.followCurrentLocation
@@ -1209,7 +1206,7 @@ Die Kombination aus `geolocator` (Positionsbestimmung), `permission_handler` (Be
 Für die Suche von Abhol- und Zielort werden die Packages `nominatim_flutter` und `flutter_typeahead` kombiniert eingesetzt. Diese ermöglichen es dem Nutzer, Adressen komfortabel zu suchen und auszuwählen, ohne die gesamte Adresse manuell eintippen zu müssen.
 
 Das Package `flutter_typeahead` stellt ein Such-Eingabefeld bereit, das während der Eingabe automatisch Vorschläge anzeigt. Diese Vorschläge werden durch Nominatim (OpenStreetMap-Geocoding-Service) über `nominatim_flutter` generiert. Während der Benutzer tippt, werden entsprechende Ortsvorschläge geladen und angezeigt. Durch das Anklicken eines Vorschlags wird das Textfeld automatisch gefüllt und die entsprechenden Koordinaten (Latitude/Longitude) werden abgerufen.
-```dart
+```{caption="Adresssuche mit Autocomplete per TypeAheadField und Geocoding" .dart}
 TypeAheadField<GeocodingResult>(
   textFieldConfiguration: TextFieldConfiguration(
     controller: _addressController,
@@ -1259,7 +1256,7 @@ Für die Berechnung von Routen zwischen zwei geografischen Punkten wird der Dien
 
 Die Kommunikation mit OSRM erfolgt über HTTP-Anfragen. Der `RoutingService` kapselt diese Logik und sendet die Koordinaten von Start- und Zielpunkt an die OSRM-API. Die API gibt daraufhin die optimale Route sowie zusätzliche Informationen wie Distanz und Fahrtdauer zurück.
 
-```dart
+```{caption="Routenberechnung mit der OSRM-API inklusive Distanz, Dauer und Polyline-Koordinaten" .dart}
 Future<RouteResult> calculateRoute(LatLng start, LatLng end) async {
   try {
     final url = '$_osrmBaseUrl/route/v1/driving/'
@@ -1301,7 +1298,7 @@ Future<RouteResult> calculateRoute(LatLng start, LatLng end) async {
 }
 ```
 Die von OSRM zurückgelieferten Koordinaten werden in eine Liste von `LatLng`-Objekten umgewandelt und anschließend als Polyline auf der Karte dargestellt. Das `TaxiMap`-Widget akzeptiert eine Liste von `Polyline`-Objekten, die über ein spezialisiertes `RoutePolylines-Utility` erstellt werden.
-```dart
+```{caption="Erzeugung einer hervorgehobenen Hauptroute mit Schatteneffekt als Polyline-Liste" .dart}
 static List<Polyline> createMainRoute(List<LatLng> points) {
   if (points.isEmpty) return [];
 
@@ -1323,7 +1320,7 @@ static List<Polyline> createMainRoute(List<LatLng> points) {
 ```
 Aus den Daten von OSRM werden auch die geschätzte Fahrtdauer (ETA – Estimated Time of Arrival) und die Gesamtdistanz extrahiert. Diese Informationen werden dem Nutzer angezeigt und dienen zudem als Grundlage für die Fahrpreisberechnung. Der Preis wird auf Basis eines konfigurierbaren Tarifs berechnet, z. B. Basisbetrag + Kilometerpreis + Zeitpreis.
 
-```dart
+```{caption="Einfache Fahrpreisberechnung basierend auf Distanz und Fahrtdauer" .dart}
 double estimateFare({
   required double distanceKm,
   required double durationMinutes,
@@ -1365,7 +1362,7 @@ Der Zahlungsfluss startet bereits im Booking-Form: Beim Anlegen der Fahrt wird d
 - Keine Doppeleinträge: Payment wird nur einmal bei der Buchung erstellt und anschließend in-place auf paid gesetzt.
 - Realtime-Updates (optional) können den Payment-Status sofort in Listen/Detailansicht spiegeln.
 
-```dart
+```{caption="Buchung mit Wahl der Zahlungsmethode und Zahlungsabwicklung (SumUp-Checkout & Statusanzeige)" .dart}
 // Booking-Form (verkürzt): Zahlungsmethode wählen und Payment anlegen
 Future<void> _submitBooking() async {
   final method = _selectedMethod; // 'cash' oder 'card'
@@ -1481,7 +1478,7 @@ Nach Abschluss einer Fahrt kann der Kunde eine Rechnung als PDF erzeugen und lok
 - Falls Ride/Payment nicht geladen werden kann: Hinweis anzeigen, kein PDF generieren.
 - Bei fehlenden Dateiberechtigungen (Android < 10) Hinweis ausgeben; auf neueren Versionen nur App-intern speichern/teilen.
 
-```dart
+```{caption="Erzeugung und Teilen einer Rechnungs-PDF für eine Fahrt" .dart}
 // PDF-Erzeugung (vereinfacht)
 Future<Uint8List> buildInvoicePdf({
   required Ride ride,
@@ -1541,7 +1538,7 @@ Die App nutzt `flutter_local_notifications`, um Nutzer bei wichtigen Ereignissen
 - Beim Initialisieren: Berechtigung für Notifications einholen (iOS Prompt, Android 13+ `POST_NOTIFICATIONS`).
 - Fällt Realtime aus oder liefert Fehler, wird die UI weiter aktualisiert, aber es gibt keinen Notification-Push; Logging hilft bei Debugging.
 
-```dart
+```{caption="Benachrichtigungen zum Fahrtenstatus per Realtime-Update und Klick-Navigation in den Detail-Screen" .dart}
 // NotificationService (auszugsweise)
 class NotificationService {
   static final _plugin = FlutterLocalNotificationsPlugin();
@@ -1629,7 +1626,7 @@ Die App ist auf Deutsch lokalisiert, sodass systemnahe Widgets (z. B. DatePick
 - Datum/Zeit: `dd.MM.yyyy HH:mm`
 - Währung: `NumberFormat.simpleCurrency(locale: 'de_AT', name: 'EUR')`
 
-```dart
+```{caption="Zentrale Datums-, Zeit- und Währungsformatierung mit deutscher Lokalisierung in der Kunden App" .dart}
 // Beispiel: zentrale Formatter
 class Formatters {
   static final date = DateFormat('dd.MM.yyyy', 'de_DE');
@@ -1668,7 +1665,7 @@ Für globale Zustände wie das App-Theme wird `provider` mit `ChangeNotifier` ei
 - Toggle im UI: Provider aktualisiert State, speichert Auswahl, ruft `notifyListeners()`.
 - `MaterialApp` bezieht `theme`/`darkTheme` aus dem Provider, Widgets rebuilden automatisch.
 
-```dart
+```{caption="Dynamischer Hell/Dunkel-Modus mit ThemeProvider und persistenter Speicherung via SharedPreferences" .dart}
 // ThemeProvider mit Persistenz
 class ThemeProvider extends ChangeNotifier {
   ThemeMode _mode = ThemeMode.system;
@@ -1728,7 +1725,7 @@ Switch(
 - ValidationHelper: kapselt typische Form-Validierungen (E-Mail, Pflichtfeld, Mindestlänge), um Redundanz in Forms zu vermeiden.
 - Custom Widgets: kleine, wiederverwendbare UI-Bausteine wie `PrimaryButton`, `LabeledValue` oder `InfoBadge`, damit Styles und Abstände einheitlich sind.
 
-```dart
+```{caption="Hilfsklassen für Datumsformatierung und Formularvalidierung" .dart}
 class DateFormatter {
   static final _date = DateFormat('dd.MM.yyyy', 'de_DE');
   static final _dateTime = DateFormat('dd.MM.yyyy HH:mm', 'de_DE');
@@ -1752,7 +1749,7 @@ class ValidationHelper {
 }
 ```
 
-```dart
+```{caption="Wiederverwendbare UI-Komponenten: Primärbutton und beschrifteter Wert (PrimaryButton & LabeledValue)" .dart}
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({super.key, required this.label, this.onPressed, this.icon});
   final String label;
